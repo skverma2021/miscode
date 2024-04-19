@@ -1,15 +1,12 @@
 export const errText = (err) => {
+  if (!err.request) return `Request error`;
   if (err.response) {
-    if (typeof err.response.data.msg == 'undefined') {
-      return `API did not respond although server did`;
-    } else {
-      return err.response.data.msg;
-    }
-  } else if (err.request) {
-    return `No response received`;
-  } else {
-    return `Request error`;
+    console.log(err.response);
+    if (typeof err.response.data.msg == 'undefined')
+      return `Server responded but API didn't`;
+    return err.response.data.msg;
   }
+  return `No Response Received`;
 };
 
 export const errNumber = (err) => {

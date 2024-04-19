@@ -151,6 +151,7 @@ function ToolBar() {
           display: 'flex',
           justifyContent: 'space-between',
           backgroundColor: 'lightblue',
+          height: '10%',
         }}
       >
         <div style={{ display: 'flex', marginTop: '0px' }}>
