@@ -4,7 +4,6 @@ const handleError = (err, res) => {
       msg: err.message.toLowerCase(),
       eCode: err.number,
     });
-    // console.log(err.number);
   } else {
     res.status(500).json({ msg: 'Internal Server Error', eCode: 500 });
   }

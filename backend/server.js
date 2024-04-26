@@ -6,7 +6,7 @@ const app = express();
 const emps = require('./routes/emps');
 
 //  Set database password on the command line
-//  $env:cjisPass="theUdemyUser"
+//  $env:cjisPass="cdcbgt"
 
 //  Set jsonwebtoken private key on the command line
 //  $env:cjisJwtPvtKey="xxxyyyzzz"

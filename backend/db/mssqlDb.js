@@ -1,7 +1,7 @@
 const theConfig = require('config');
 
 const config = {
-  server: 'VERMARNCDBG',
+  server: 'SKVERMA',
   database: 'tprojone',
   user: 'udemy',
   password: theConfig.get('thePass'),

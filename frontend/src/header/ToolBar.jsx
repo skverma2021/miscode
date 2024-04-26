@@ -6,11 +6,10 @@ import userContext from '../context/appUser/UserContext';
 function ToolBar() {
   const [theDeptt, setTheDeptt] = useState('');
   const { userId, user, deptt, logOutUser } = useContext(userContext);
-
   useEffect(() => {
     setTheDeptt(deptt);
   }, [deptt]);
-
+  
   const renderHRToolbar = () => (
     <div>
       <Link to='/hr/discp' style={{ marginRight: '15px' }}>

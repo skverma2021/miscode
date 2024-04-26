@@ -9,7 +9,7 @@ const UserState = (props) => {
   const initialState = {
     theUserId: '',
     theUser: '',
-    theDeptt: '',
+    theDeptt: '0',
     // theAuth: '',
   };
 
@@ -20,35 +20,20 @@ const UserState = (props) => {
       const res = await axios.get(
         `http://localhost:3000/api/emps/${theEMailId}/${thePasswd}`
       );
-      // In JavaScript, undefined is a falsy value => !undefined is true
-      if (!res.data.token) {
-        delete axios.defaults.headers.common['Authorization'];
-        dispatch({
-          type: AUTH_USER,
-          payLoad: {
-            usrId: '',
-            usrName: '',
-            usrDeptt: '',
-            // usrAuth: '',
-          },
-        });
-      } else {
-        axios.defaults.headers.common[
-          'Authorization'
-        ] = `Bearer ${res.data.token}`;
-        const decoded = jwtDecode(res.data.token);
-        dispatch({
-          type: AUTH_USER,
-          payLoad: {
-            usrId: decoded.eID,
-            usrName: decoded.eName,
-            usrDeptt: decoded.eDepttID,
-            // usrAuth: decoded.anAuth,
-          },
-        });
-      }
+      axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
+      const decoded = jwtDecode(res.data.token);
+      dispatch({
+        type: AUTH_USER,
+        payLoad: {
+          usrId: decoded.eID,
+          usrName: decoded.eName,
+          usrDeptt: decoded.eDepttID,
+          // usrAuth: decoded.anAuth,
+        },
+      });
     } catch (error) {
       console.log(error);
+      delete axios.defaults.headers.common['Authorization'];
       dispatch({
         type: AUTH_USER,
         payLoad: {
