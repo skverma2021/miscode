@@ -2,7 +2,7 @@ const theConfig = require('config');
 
 const config = {
   server: 'SKVERMA',
-  database: 'tprojone',
+  database: 'sern',
   user: 'udemy',
   password: theConfig.get('thePass'),
   trustServerCertificate: true,

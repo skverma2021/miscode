@@ -1,19 +1,17 @@
-import userContext from './UserContext';
+import UserContext from './UserContext';
 import React, { useReducer } from 'react';
 import axios from 'axios';
-import userReducer from './UserReducer';
+import UserReducer from './UserReducer';
 import { jwtDecode } from 'jwt-decode';
 import { AUTH_USER, LOG_OUT } from '../types';
 
-const UserState = (props) => {
+export default (props) => {
   const initialState = {
     theUserId: '',
     theUser: '',
     theDeptt: '0',
-    // theAuth: '',
   };
-
-  const [state, dispatch] = useReducer(userReducer, initialState);
+  const [state, dispatch] = useReducer(UserReducer, initialState);
 
   const authUser = async (theEMailId, thePasswd) => {
     try {
@@ -28,7 +26,6 @@ const UserState = (props) => {
           usrId: decoded.eID,
           usrName: decoded.eName,
           usrDeptt: decoded.eDepttID,
-          // usrAuth: decoded.anAuth,
         },
       });
     } catch (error) {
@@ -40,7 +37,6 @@ const UserState = (props) => {
           usrId: '',
           usrName: '',
           usrDeptt: -1,
-          // anAuth: 0,
         },
       });
     }
@@ -51,18 +47,16 @@ const UserState = (props) => {
   };
 
   return (
-    <userContext.Provider
+    <UserContext.Provider
       value={{
         user: state.theUser,
         deptt: state.theDeptt,
         userId: state.theUserId,
-        // userAuth: state.theAuth,
         authUser,
         logOutUser,
       }}
     >
       {props.children}
-    </userContext.Provider>
+    </UserContext.Provider>
   );
 };
-export default UserState;

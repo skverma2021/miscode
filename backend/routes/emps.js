@@ -13,10 +13,10 @@ router.get('/', async (req, res) => {
   try {
     
     const pool = await sql.connect(config);
-    const result = await pool.request().execute('getEmpsTest');
+    // const result = await pool.request().execute('getEmpsTest');
+    const result = await pool.request().query('select empFullName from emp');
     res.status(200).json(result.recordset);
   } catch (err) {
-
     handleError(err, res);
   }
 });
@@ -47,7 +47,6 @@ router.get('/:theEMailId/:thePasswd', async (req, res) => {
   try {
     const { theEMailId, thePasswd } = req.params;
     const pool = await sql.connect(config);
-
     const result = await pool
       .request()
       .input('theEMailId', sql.VarChar(150), theEMailId)
@@ -59,7 +58,8 @@ router.get('/:theEMailId/:thePasswd', async (req, res) => {
       });
       return;
     }
-    const empFound = await isOK(thePasswd, result.recordset[0].ePass);
+    // const empFound = await isOK(thePasswd, result.recordset[0].ePass);
+    const empFound = await bcrypt.compare(thePasswd, result.recordset[0].ePass);
     if (empFound) {
       const eRec = result.recordset[0];
       delete eRec.ePass;
@@ -79,6 +79,7 @@ router.get('/:theEMailId/:thePasswd', async (req, res) => {
 });
 
 router.put('/cp/:id', auth, async (req, res) => {
+  
   try {
     const { id } = req.params;
     const { email, oldPass, passwd } = req.body;
@@ -88,9 +89,11 @@ router.put('/cp/:id', auth, async (req, res) => {
       .input('theEMailId', sql.VarChar(150), email)
       .execute(`getEmpEmail`);
     if (result.recordset.length == 0) {
+      
       return res.status(400).json({ msg: 'Invalid User' });
     }
-    const found = await isOK(oldPass, result.recordset[0].ePass);
+    // const found = await isOK(oldPass, result.recordset[0].ePass);
+    const found = await bcrypt.compare(oldPass, result.recordset[0].ePass);
     if (!found) {
       return res.status(400).json({ msg: 'Password did not match' });
     }

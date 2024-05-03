@@ -8,7 +8,6 @@ export default (state, action) => {
         theUser: action.payLoad.usrName,
         theDeptt: action.payLoad.usrDeptt,
         theUserId: action.payLoad.usrId,
-        // theAuth: action.payLoad.usrAuth,
       };
     case LOG_OUT:
       return {
@@ -16,7 +15,6 @@ export default (state, action) => {
         theUser: '',
         theDeptt: '',
         theUserId: '',
-        // theAuth: '',
       };
     default:
       return state;
