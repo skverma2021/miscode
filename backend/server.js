@@ -4,6 +4,7 @@ const cors = require('cors');
 const app = express();
 
 const emps = require('./routes/emps');
+const cities = require('./routes/cities');
 
 //  Set database password on the command line
 //  $env:cjisPass="cdcbgt"
@@ -24,6 +25,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/emps', emps);
+app.use('/api/cities', cities);
 
 app.listen(config.get('thePort'), () =>
   console.log(

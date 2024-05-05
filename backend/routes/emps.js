@@ -8,13 +8,23 @@ const jwt = require('jsonwebtoken');
 const auth = require('../middleware/auth');
 const handleError = require('../util/handleError');
 
-router.get('/', async (req, res) => {
 
+// route for initial testing (do not delete)
+// router.get('/', async (req, res) => {
+//   try { 
+//     const pool = await sql.connect(config);
+//     // const result = await pool.request().execute('getEmpsTest');
+//     const result = await pool.request().query('select empFullName from emp');
+//     res.status(200).json(result.recordset);
+//   } catch (err) {
+//     handleError(err, res);
+//   }
+// });
+
+router.get('/',  async (req, res) => {
   try {
-    
     const pool = await sql.connect(config);
-    // const result = await pool.request().execute('getEmpsTest');
-    const result = await pool.request().query('select empFullName from emp');
+    const result = await pool.request().execute('getEmps');
     res.status(200).json(result.recordset);
   } catch (err) {
     handleError(err, res);
@@ -35,14 +45,6 @@ router.get('/:id', auth, async (req, res) => {
   }
 });
 
-const isOK = async (clearPass, hashPass) => {
-  try {
-    // const hash = await bcrypt.hash(clearPass, 10);
-    const match = await bcrypt.compare(clearPass, hashPass);
-    return match;
-  } catch (error) {}
-};
-
 router.get('/:theEMailId/:thePasswd', async (req, res) => {
   try {
     const { theEMailId, thePasswd } = req.params;
@@ -58,7 +60,6 @@ router.get('/:theEMailId/:thePasswd', async (req, res) => {
       });
       return;
     }
-    // const empFound = await isOK(thePasswd, result.recordset[0].ePass);
     const empFound = await bcrypt.compare(thePasswd, result.recordset[0].ePass);
     if (empFound) {
       const eRec = result.recordset[0];
@@ -92,7 +93,6 @@ router.put('/cp/:id', auth, async (req, res) => {
       
       return res.status(400).json({ msg: 'Invalid User' });
     }
-    // const found = await isOK(oldPass, result.recordset[0].ePass);
     const found = await bcrypt.compare(oldPass, result.recordset[0].ePass);
     if (!found) {
       return res.status(400).json({ msg: 'Password did not match' });
@@ -107,6 +107,59 @@ router.put('/cp/:id', auth, async (req, res) => {
     return res.status(200).json({ msg: 'Password Changed' });
   } catch (err) {
     handleError(err, res);
+  }
+});
+
+router.delete('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const pool = await sql.connect(config);
+    await pool
+      .request()
+      .input('id', sql.Int, id)
+      .query(`delete emp where id = @id`);
+    res.status(200).json({ msg: 'deleted successfully!!!' });
+  } catch (err) {
+    handleError(err, res);
+  }
+});
+
+router.post('/', auth, async (req, res) => {
+  try {
+    const {
+      uId,
+      fName,
+      mName,
+      sName,
+      title,
+      dob,
+      gender,
+      addLine1,
+      cityId,
+      mobile,
+      eMailId,
+      passwd,
+    } = req.body;
+    const hashPass = await bcrypt.hash(passwd, 10);
+    const pool = await sql.connect(config);
+    await pool
+      .request()
+      .input('uId', sql.BigInt, uId)
+      .input('fName', sql.VarChar(50), fName)
+      .input('mName', sql.VarChar(50), mName)
+      .input('sName', sql.VarChar(50), sName)
+      .input('title', sql.NChar(3), title)
+      .input('dob', sql.Date, dob)
+      .input('gender', sql.NChar(1), gender)
+      .input('addLine1', sql.VarChar(100), addLine1)
+      .input('cityId', sql.Int, cityId)
+      .input('mobile', sql.BigInt, mobile)
+      .input('eMailId', sql.VarChar(150), eMailId)
+      .input('passwd', sql.VarChar(150), hashPass)
+      .execute('postEmp');
+    res.status(200).json({ msg: 'Employee added successfully!' });
+  } catch (err) {
+   handleError(err, res);
   }
 });
 
