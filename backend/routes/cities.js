@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const sql = require('mssql');
 const config = require('../db/mssqlDb');
+const handleError = require('../util/handleError');
 
 router.get('/', async (req, res) => {
   try {
@@ -9,8 +10,7 @@ router.get('/', async (req, res) => {
     const result = await pool.request().query('SELECT * FROM cities');
     res.json(result.recordset);
   } catch (err) {
-    console.error('Error fetching cities:', err);
-    res.status(500).send('Internal Server Error');
+    handleError(err, res);
   }
 });
 

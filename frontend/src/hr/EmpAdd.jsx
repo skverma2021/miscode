@@ -57,9 +57,7 @@ const EmpAdd = () => {
         setCities(res.data);
         setStatus('Success');
       } catch (error) {
-        setStatus('Error');
-        setMsg(errText(error));
-        setErrNo(500);
+        setStatus('CityError');
       }
     };
     fetchData();
@@ -84,18 +82,25 @@ const EmpAdd = () => {
     }
   };
 
+  if (status === 'CityError') {
+    timeoutId = setTimeout(goHome, 5000);
+    return <h1 style={{ color: 'red' }}>Error: City Names could not be loaded</h1>;
+  }
   if (status === 'Error' && errNo == 500) {
-    timeoutId = setTimeout(goHome, 10000);
+    timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
   }
-  
+  if (status === 'Error' && errNo !== 2627 && errNo !== 2601) {
+    timeoutId = setTimeout(goHome, 15000);
+    return <h1 style={{ color: 'red' }}>Error {errNo}: {msg}</h1>;
+  }
   if (status === 'Added') return <h1 style={{ color: 'blue' }}>{msg}</h1>;
   if (status === 'busy') return <Spinner />;
 
   return (
     <>
       <h4 style={{ color: 'red' }}>
-        {status === 'Error' && errNo !== 500 && msg}
+        {status === 'Error' && (errNo == 2627 || errNo == 2601) && msg}
       </h4>
       <div
         style={{
