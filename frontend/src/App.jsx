@@ -6,6 +6,8 @@ import Login from './auth/Login';
 import ChangePass from './auth/ChangePass';
 import Emps from './hr/Emps';
 import EmpAdd from './hr/EmpAdd';
+import EmpUpd from './hr/EmpUpd';
+import Disciplines from './hr/Disciplines';
 import Test from './Test';
 
 function App() {
@@ -19,6 +21,8 @@ function App() {
         <Route path='/hr/emp/cp' element={<ChangePass />} />
         <Route path='/hr/emp/all' element={<Emps />} />
         <Route path='/hr/emp/add' element={<EmpAdd />} />
+        <Route path='/hr/emp/all/upd/:id' element={<EmpUpd />} />
+        <Route path='/hr/discp' element={<Disciplines />} />
       </Routes>
     </>
   );
