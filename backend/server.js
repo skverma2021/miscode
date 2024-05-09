@@ -8,6 +8,8 @@ const cities = require('./routes/cities');
 const disciplines = require('./routes/disciplines');
 const designations = require('./routes/designation');
 const grades = require('./routes/grades');
+const tp = require('./routes/tp');
+const departments = require('./routes/departments')
 
 //  Set database password on the command line
 //  $env:cjisPass="cdcbgt"
@@ -32,6 +34,8 @@ app.use('/api/cities', cities);
 app.use('/api/disciplines', disciplines);
 app.use('/api/designations', designations);
 app.use('/api/grades', grades);
+app.use('/api/tp', tp);
+app.use('/api/departments', departments)
 
 app.listen(config.get('thePort'), () =>
   console.log(

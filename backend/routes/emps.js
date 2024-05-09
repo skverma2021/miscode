@@ -45,6 +45,7 @@ router.get('/:id', auth, async (req, res) => {
   }
 });
 
+
 router.get('/:theEMailId/:thePasswd', async (req, res) => {
   try {
     const { theEMailId, thePasswd } = req.params;

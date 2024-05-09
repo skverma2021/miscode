@@ -8,6 +8,8 @@ import Emps from './hr/Emps';
 import EmpAdd from './hr/EmpAdd';
 import EmpUpd from './hr/EmpUpd';
 import Disciplines from './hr/Disciplines';
+import TransferPosting from './hr/TransferPosting';
+import TPState from './context/tp/TPState';
 import Test from './Test';
 
 function App() {
@@ -23,6 +25,14 @@ function App() {
         <Route path='/hr/emp/add' element={<EmpAdd />} />
         <Route path='/hr/emp/all/upd/:id' element={<EmpUpd />} />
         <Route path='/hr/discp' element={<Disciplines />} />
+        <Route
+          path='/hr/emp/all/tp/:id'
+          element={
+            <TPState>
+              <TransferPosting />
+            </TPState>
+          }
+        />
       </Routes>
     </>
   );
