@@ -8,13 +8,15 @@ import {
   UPD_REC_DESIG,
   NEW_REC_DEPTT,
   UPD_REC_DEPTT,
-  REPORT_ERROR,
+  // REPORT_ERROR,
 } from '../types';
 
 const TPState = (props) => {
+
   const TPReducer = (state, action) => {
     return { ...state, ...action.payLoad };
   };
+
   const initialState = {
     postId: '', // empDesigId
     postDesigId: '', // desigId
@@ -30,6 +32,7 @@ const TPState = (props) => {
     newRecDeptt: false,
     updRecDeptt: false,
   };
+  
   const [state, dispatch] = useReducer(TPReducer, initialState);
 
   const setDg = (edgid, dgid, edgfd) => {

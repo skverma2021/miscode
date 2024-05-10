@@ -66,6 +66,7 @@ router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { discpId, description, gradeId } = req.body;
+    // const {  description, gradeId } = req.body;
     const pool = await sql.connect(config);
     await pool
       .request()
