@@ -93,23 +93,12 @@ const DesigList = ({discpId, discp}) => {
             <td>{t.theGrade}</td>
             <td>{t.theHourlyRate}</td>
             <td>
-              <Link
-                onClick={() => {
-                  setEditRow({
-                    id: `${t.id}`,
-                  description: `${t.theDesig}`,
-                  gradeId: `${t.theGradeId}`})
-                }}
-              >
+              <Link onClick={() => { setEditRow({ id: `${t.id}`, description: `${t.theDesig}`, gradeId: `${t.theGradeId}`}) }}>
                 🖍️
               </Link>
             </td>
             <td>
-              <Link
-                onClick={() => {
-                  deleteDesigData(t.id);
-                }}
-              >
+              <Link onClick={() => { deleteDesigData(t.id); }} >
                 ✖️
               </Link>
             </td>

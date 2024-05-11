@@ -77,12 +77,7 @@ const Desig = () => {
                     return (
                       <tr key = {t.id}>
                         <td>
-                          <Link
-                            onClick={() => {
-                              setTheDiscpId(t.id);
-                              setTheDiscp(t.description);
-                            }}
-                          >
+                          <Link onClick={() => { setTheDiscpId(t.id); setTheDiscp(t.description);}}>
                             {' '}
                             {t.description}
                           </Link>

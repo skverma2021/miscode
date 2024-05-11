@@ -5,7 +5,7 @@ import { errText} from '../util/errMsgText';
 import Spinner from '../home/Spinner';
 import { useNavigate } from 'react-router-dom';
 import ContextDesigEdit from './ContextDesigEdit';
-import DesigContext from '../context/desig/DesigContext';
+import {DesigContext} from '../context/desig/DesigContext';
 
 const ContextDesigList = () => {
   const [designations, setDesignations] = useState([]);

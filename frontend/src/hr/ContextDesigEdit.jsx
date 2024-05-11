@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { errText} from '../util/errMsgText';
 import Spinner from '../home/Spinner';
 import { useNavigate } from 'react-router-dom';
-import DesigContext from '../context/desig/DesigContext';
+import {DesigContext} from '../context/desig/DesigContext';
 
 const ContextDesigEdit = () => {
   const [grades, setGrades] = useState([]); 

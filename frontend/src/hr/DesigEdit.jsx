@@ -138,11 +138,7 @@ const DesigEdit = ({theDiscpId, theDiscp, theRow, setFlag}) => {
               </td>
               <td>
                 {' '}
-                <Link
-                  onClick={() =>
-                    handleSubmit()
-                  }
-                >
+                <Link onClick={() => handleSubmit() } >
                   💾
                 </Link>
               </td>

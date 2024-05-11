@@ -16,12 +16,6 @@ const TransferPosting = () => {
   const [status, setStatus] = useState('');
   const tpContext = useContext(TPContext);
   const {
-    // edgId,
-    // dgId,
-    // edgFd,
-    // edpId,
-    // dpId,
-    // edpFd,
     newRecDesig,
     updRecDesig,
     newRecDeptt,
