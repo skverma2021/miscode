@@ -2,29 +2,19 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { errText, errNumber } from '../util/errMsgText';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Spinner from '../home/Spinner';
 
-const EmpAdd = () => {
-  const [emp, setEmp] = useState({
-    uId: '',
-    fName: '',
-    mName: '',
-    sName: '',
-    title: '',
-    dob: '',
-    gender: '',
-    addLine1: '',
-    cityId: '',
-    mobile: '',
-    eMailId: '',
-    passwd: '',
-  });
+const EmpUpd = () => {
+  const [emp, setEmp] = useState({});
   const [cities, setCities] = useState([]);
   const [msg, setMsg] = useState('');
   const [cityStatus, setCityStatus] = useState('');
+  const [recStatus, setRecStatus] = useState('');
   const [status, setStatus] = useState('');
   const [errNo, setErrNo] = useState(0);
+
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const okSubmit = () => {
@@ -51,9 +41,9 @@ const EmpAdd = () => {
   }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setCityStatus('busy');
+    const fetchCityData = async () => {
       try {
+        setCityStatus('busy');
         const res = await axios.get(`http://localhost:3000/api/cities`);
         setCities(res.data);
         setCityStatus('Success');
@@ -61,21 +51,39 @@ const EmpAdd = () => {
         setCityStatus('Error');
       }
     };
-    fetchData();
+    fetchCityData();
   }, []);
+
+  useEffect(() => {
+    const fetchEmpData = async () => {
+      try {
+        setRecStatus('busy');
+        const res = await axios.get(`http://localhost:3000/api/emps/${id}`);
+        setEmp(res.data[0]);
+        setRecStatus('Success');
+        console.log(recStatus)
+      } catch (error) {
+        setRecStatus('Error');
+        setMsg(errText(error));
+        setErrNo(errNumber(error));
+      }
+    };
+    fetchEmpData();
+  }, []);
+
 
   const onValChange = (e) => {
     setEmp({ ...emp, [e.target.name]: e.target.value });
   };
 
-  const postEmpData = async (event) => {
+  const updEmpData = async (event) => {
     event.preventDefault();
     try {
       setStatus('busy');
-      const res = await axios.post('http://localhost:3000/api/emps', emp);
-      setStatus('Added');
+      const res = await axios.put(`http://localhost:3000/api/emps/${id}`, emp);
+      setStatus('Updated');
       setMsg(res.data.msg);
-      timeoutId = setTimeout(goHome, 1000);
+      timeoutId = setTimeout(goHome, 500);
     } catch (error) {
       setStatus('Error');
       setMsg(errText(error));
@@ -87,16 +95,24 @@ const EmpAdd = () => {
     timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error: City Names could not be loaded</h1>;
   }
+  if (recStatus === 'Error') {
+    timeoutId = setTimeout(goHome, 5000);
+    return <h1 style={{ color: 'red' }}>Error: Record for updation could not be loaded</h1>;
+  }
+
   if (status === 'Error' && errNo == 500) {
     timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
   }
+
   if (status === 'Error' && errNo !== 2627 && errNo !== 2601) {
     timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error {errNo}: {msg}</h1>;
   }
-  if (status === 'Added') return <h1 style={{ color: 'blue' }}>{msg}</h1>;
+
   if (status === 'busy') return <Spinner />;
+
+  if (status === 'Updated') return <h1 style={{ color: 'blue' }}>{msg}</h1>;
 
   return (
     <>
@@ -112,12 +128,12 @@ const EmpAdd = () => {
           alignContent: 'center',
         }}
       >
-        <form onSubmit={postEmpData}>
-          <table style={{ lineHeight: '35px' }}>
+        <form onSubmit={updEmpData}>
+          <table style={{ lineHeight: '35px', tableLayout: 'fixed' }}>
             <tbody>
               <tr>
                 <td colSpan={3}>
-                  <h2>Add an Employee</h2>
+                  <h2>Edit an Employee</h2>
                 </td>
                 <td></td>
                 <td></td>
@@ -139,7 +155,7 @@ const EmpAdd = () => {
               </tr>
               <tr>
                 <td>
-                  <strong>First Name</strong>
+                  <strong>First Name:</strong>
                 </td>
                 <td>:</td>
                 <td>
@@ -228,9 +244,9 @@ const EmpAdd = () => {
                     name='dob'
                     type='date'
                     min='1960-01-01'
-                    max='2003-12-31'
-                    required
-                    value={emp.dob}
+                    max='2004-12-31'
+                    value={emp.dob || ''}
+                    //   value={moment(emp.dob).format('YYYY-MM-DD')}
                     onChange={(e) => {
                       return onValChange(e);
                     }}
@@ -296,14 +312,11 @@ const EmpAdd = () => {
                   <select
                     name='cityId'
                     id='cityId'
-                    required
-                    value={emp.cityId}
+                    value={emp.cityId || ''}
                     onChange={(e) => {
                       return onValChange(e);
                     }}
-                    label='City'
                   >
-                    <option value=''>Select City</option>
                     {cities.map((c) => {
                       return (
                         <option key={c.id} value={c.id}>
@@ -356,6 +369,7 @@ const EmpAdd = () => {
                 <td>
                   <input
                     name='passwd'
+                    type='password'
                     value={emp.passwd || ''}
                     onChange={(e) => {
                       return onValChange(e);
@@ -365,6 +379,7 @@ const EmpAdd = () => {
               </tr>
               <tr>
                 <td colSpan={'3'} style={{ textAlign: 'right' }}>
+                  {/* <input type='submit' disabled={status !== 'typing'} /> */}
                   <input type='submit' disabled={!okSubmit()} />
                 </td>
                 <td></td>
@@ -378,4 +393,4 @@ const EmpAdd = () => {
   );
 };
 
-export default EmpAdd;
+export default EmpUpd;

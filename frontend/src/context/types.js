@@ -12,8 +12,7 @@ export const UPD_REC_DESIG = 'UPD_REC_DESIG';
 export const NEW_REC_DEPTT = 'NEW_REC_DEPTT';
 export const UPD_REC_DEPTT = 'UPD_REC_DEPTT';
 
-export const REPORT_ERROR = 'REPORT_ERROR';
-
-// export const SET_LOADING = 'SET_LOADING';
-// export const SET_ALERT = 'SET_ALERT';
-// export const REMOVE_ALERT = 'REMOVE_ALERT';
+export const SET_DISCP = 'SET_DISCP';
+export const SET_DESIG = 'SET_DESIG';
+export const NEW_DEL = 'NEW_DEL';
+export const NEW_ADD_EDIT = 'NEW_ADD_EDIT';

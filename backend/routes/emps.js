@@ -45,6 +45,7 @@ router.get('/:id', auth, async (req, res) => {
   }
 });
 
+
 router.get('/:theEMailId/:thePasswd', async (req, res) => {
   try {
     const { theEMailId, thePasswd } = req.params;
@@ -53,6 +54,7 @@ router.get('/:theEMailId/:thePasswd', async (req, res) => {
       .request()
       .input('theEMailId', sql.VarChar(150), theEMailId)
       .execute(`getEmpEmail`);
+    // getEmpEmail: eID, eName, eDesigID, eDesig, eGrade, eDepttID, eDeptt, ePass
     if (result.recordset.length == 0) {
       res.status(400).json({
         msg: 'authentication failed',
@@ -110,7 +112,7 @@ router.put('/cp/:id', auth, async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth,async (req, res) => {
   try {
     const { id } = req.params;
     const pool = await sql.connect(config);
@@ -160,6 +162,52 @@ router.post('/', auth, async (req, res) => {
     res.status(200).json({ msg: 'Employee added successfully!' });
   } catch (err) {
    handleError(err, res);
+  }
+});
+
+router.put('/:id', auth,async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      uId,
+      fName,
+      mName,
+      sName,
+      title,
+      dob,
+      gender,
+      addLine1,
+      cityId,
+      mobile,
+      eMailId,
+      passwd,
+    } = req.body;
+    const hashPass = await bcrypt.hash(passwd, 10);
+
+    // Create a SQL Server connection pool
+    const pool = await sql.connect(config);
+
+    // Update employee data in the Employees table
+    await pool
+      .request()
+      .input('id', sql.Int, id)
+      .input('uId', sql.BigInt, uId)
+      .input('fName', sql.VarChar(50), fName)
+      .input('mName', sql.VarChar(50), mName)
+      .input('sName', sql.VarChar(50), sName)
+      .input('title', sql.NChar(3), title)
+      .input('dob', sql.Date, dob)
+      .input('gender', sql.NChar(1), gender)
+      .input('addLine1', sql.VarChar(100), addLine1)
+      .input('cityId', sql.Int, cityId)
+      .input('mobile', sql.BigInt, mobile)
+      .input('eMailId', sql.VarChar(150), eMailId)
+      .input('passwd', sql.VarChar(150), hashPass)
+      .execute('putEmp');
+
+    res.status(200).json({ msg: 'updated successfully!!!' });
+  } catch (err) {
+    handleError(err, res);
   }
 });
 
