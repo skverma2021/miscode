@@ -1,5 +1,6 @@
 {
     "thePass": "cjisPass",
     "jwtPrivateKey": "cjisJwtPvtKey",
-    "thePort": "cjisPort"
+    "thePort": "cjisPort",
+    "theDB": "dbName"
 }
