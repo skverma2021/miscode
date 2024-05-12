@@ -17,6 +17,9 @@ const departments = require('./routes/departments')
 //  Set jsonwebtoken private key on the command line
 //  $env:cjisJwtPvtKey="xxxyyyzzz"
 
+//  Set Database  on the command line
+//  $env:dbName="VERMARNCDBG"
+
 //  Set the environment - development or production on the command line
 //  default is development
 //  $env:NODE_ENV="development"
