@@ -8,19 +8,16 @@ const TPState = (props) => {
   };
 
   const initialState = {
-    postId: '', // empDesigId
-    postDesigId: '', // desigId
-    postFromDt: '', // fromDt
+    postId: '',       // empDesigId
+    postDesigId: '',  // desigId
+    postFromDt: '',   // fromDt
 
-    trId: '', // empDepttId
-    trDepttId: '', // depttId
-    trFromDt: '', // fromDt
+    trId: '',         // empDepttId
+    trDepttId: '',    // depttId
+    trFromDt: '',     // fromDt
 
-    newRecDesig: false,
-    updRecDesig: false,
-
-    newRecDeptt: false,
-    updRecDeptt: false,
+    desigFlag: false,
+    depttFlag: false
   };
   
   const [state, dispatch] = useReducer(TPReducer, initialState);
@@ -35,37 +32,16 @@ const TPState = (props) => {
       payLoad: { trId: edpid, trDepttId: dpid, trFromDt: edpfd },
     });
   };
-  const newDesigRec = () => {
+
+  const toggleDesigFlag = () => {
     dispatch({
-      payLoad: { newRecDesig: (t) => !t },
-    });
-  };
-  const updDesigRec = () => {
-    dispatch({
-      payLoad: { updRecDesig: (t) => !t },
-    });
-  };
-  const newDepttRec = () => {
-    dispatch({
-      payLoad: { newRecDeptt: (t) => !t },
-    });
-  };
-  const updDepttRec = () => {
-    dispatch({
-      payLoad: { updRecDeptt: (t) => !t },
+      payLoad: { desigFlag: (t) => !t },
     });
   };
 
-  const resetTP = () => {
+  const toggleDepttFlag = () => {
     dispatch({
-      payLoad: {
-        postId: '',
-        postDesigId: '',
-        postFromDt: '',
-        trId: '',
-        trDepttId: '',
-        trFromDt: '',
-      },
+      payLoad: { depttFlag: (t) => !t },
     });
   };
 
@@ -75,11 +51,10 @@ const TPState = (props) => {
         tpState: state,
         setDg,
         setDp,
-        resetTP,
-        newDesigRec,
-        updDesigRec,
-        newDepttRec,
-        updDepttRec,
+
+        toggleDesigFlag,
+        toggleDepttFlag
+
       }}
     >
       {props.children}

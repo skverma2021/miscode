@@ -9,8 +9,8 @@ import Spinner from '../home/Spinner';
 const TransferTrail = ({ theEmp }) => {
   const [transfers, setTransfers] = useState([]);
   const tpContext = useContext(TPContext);
-  const { newRecDeptt, updRecDeptt } = tpContext.tpState;
-  const { resetTP, updDepttRec, setDp } = tpContext;
+  const { depttFlag } = tpContext.tpState;
+  const {  toggleDepttFlag, setDp } = tpContext;
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
 
@@ -40,7 +40,7 @@ const TransferTrail = ({ theEmp }) => {
       }
     };
     fetchData();
-  }, [newRecDeptt, updRecDeptt]);
+  }, [depttFlag]);
 
   const deleteEmpDeptt = async (theEmpDepttId) => {
     // if (transfers.length == 1) return;
@@ -49,9 +49,7 @@ const TransferTrail = ({ theEmp }) => {
       const res = await axios.delete(
         `http://localhost:3000/api/tp/empdeptt/${theEmpDepttId}`
       );
-      resetTP();
-      // will cause the trail window to refresh because of useEffect
-      updDepttRec();
+      toggleDepttFlag();
       setStatus('Success');
     } catch (error) {
       setStatus('Error');
@@ -102,7 +100,7 @@ const TransferTrail = ({ theEmp }) => {
             </div>
             {/* will execute delete and also reset trail window */}
             <div style={{ width: '5%', border: '1px solid black' }}>
-              <Link onClick={() => deleteEmpDeptt(`${t.theId}`)}> 🗑️</Link>
+              <Link onClick={() => deleteEmpDeptt(`${t.theId}`)}> ✖️</Link>
             </div>
           </div>
         );

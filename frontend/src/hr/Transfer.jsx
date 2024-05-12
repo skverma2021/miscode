@@ -12,7 +12,7 @@ const Transfer = ({ theEmp }) => {
   const [theDeptt, setTheDeptt] = useState('');
   const tpContext = useContext(TPContext);
   const { trId, trDepttId, trFromDt } = tpContext.tpState;
-  const { resetTP, updDepttRec, newDepttRec } = tpContext;
+  const { setDp, toggleDepttFlag } = tpContext;
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
 
@@ -61,9 +61,8 @@ const Transfer = ({ theEmp }) => {
           depttId: theDeptt, // state variable
           fromDt: fromDt, // state variable
         });
-        resetTP();
-        // will cause the trail window to refresh because of useEffect
-        updDepttRec();
+        toggleDepttFlag();
+
       } else {
         await axios.post('http://localhost:3000/api/tp/empdeptt', {
           empId: theEmp, // parameter received
@@ -71,7 +70,8 @@ const Transfer = ({ theEmp }) => {
           fromDt: fromDt, // state variable
         });
         // will cause the trail window to refresh because of useEffect
-        newDepttRec();
+        // newDepttRec();
+        toggleDepttFlag()
       }
       setStatus('Success');
     } catch (error) {
@@ -87,14 +87,10 @@ const Transfer = ({ theEmp }) => {
 
   return (
     <>
+      <h5>
+            <button onClick={() => setDp('', '', '')}>Add</button>
+       </h5>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <h5>
-          {trId ? (
-            <button onClick={() => resetTP()}>✖️</button>
-          ) : (
-            'Add Transfer'
-          )}
-        </h5>
         <div style={{ display: 'flex' }}>
           <select
             name='theDeptt'

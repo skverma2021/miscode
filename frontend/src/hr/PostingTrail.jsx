@@ -9,8 +9,8 @@ import Spinner from '../home/Spinner';
 const PostingTrail = ({ theEmp }) => {
   const [postings, setPostings] = useState([]);
   const tpContext = useContext(TPContext);
-  const { newRecDesig, updRecDesig } = tpContext.tpState;
-  const { resetTP, updDesigRec, setDg } = tpContext;
+  const { desigFlag } = tpContext.tpState;
+  const { toggleDesigFlag, setDg } = tpContext;
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
 
@@ -40,7 +40,7 @@ const PostingTrail = ({ theEmp }) => {
       }
     };
     fetchData();
-  }, [newRecDesig, updRecDesig]);
+  }, [desigFlag]);
 
   const deleteEmpDesig = async (theEmpDesigId) => {
     setStatus('busy');
@@ -48,9 +48,7 @@ const PostingTrail = ({ theEmp }) => {
       const res = await axios.delete(
         `http://localhost:3000/api/tp/empDesig/${theEmpDesigId}`
       );
-      resetTP();
-      // will cause the trail window to refresh because of useEffect
-      updDesigRec();
+      toggleDesigFlag();
       setStatus('Success');
       alert('Row Deleted!');
     } catch (error) {
@@ -117,7 +115,7 @@ const PostingTrail = ({ theEmp }) => {
             </div>
             {/* will execute delete and also reset trail window */}
             <div style={{ width: '5%', border: '1px solid black' }}>
-              <Link onClick={() => deleteEmpDesig(`${t.theId}`)}> 🗑️</Link>
+              <Link onClick={() => deleteEmpDesig(`${t.theId}`)}> ✖️</Link>
             </div>
           </div>
         );

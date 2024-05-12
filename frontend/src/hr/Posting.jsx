@@ -12,7 +12,7 @@ const Posting = ({ theEmp }) => {
   const [theDesig, setTheDesig] = useState('');
   const tpContext = useContext(TPContext);
   const { postId, postDesigId, postFromDt } = tpContext.tpState;
-  const { resetTP, updDesigRec, newDesigRec } = tpContext;
+  const { setDg, toggleDesigFlag } = tpContext;
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
 
@@ -61,17 +61,14 @@ const Posting = ({ theEmp }) => {
           desigId: theDesig, // state variable
           fromDt: fromDt, // state variable
         });
-        resetTP();
-        // will cause the trail window to refresh because of useEffect
-        updDesigRec();
+        toggleDesigFlag();
       } else {
         await axios.post('http://localhost:3000/api/tp/empdesig', {
           empId: theEmp, // parameter received
           desigId: theDesig, // state variable
           fromDt: fromDt, // state variable
         });
-        // will cause the trail window to refresh because of useEffect
-        newDesigRec();
+        toggleDesigFlag();
       }
       setStatus('Success');
     } catch (error) {
@@ -87,14 +84,10 @@ const Posting = ({ theEmp }) => {
 
   return (
     <>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
         <h5>
-          {postId ? (
-            <button onClick={() => resetTP()}>✖️</button>
-          ) : (
-            'Add Postings'
-          )}
+            <button onClick={() => setDg('', '', '')}>Add</button>
         </h5>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex' }}>
           <select
             name='theDesig'

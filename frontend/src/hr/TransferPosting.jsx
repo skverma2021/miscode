@@ -15,12 +15,7 @@ const TransferPosting = () => {
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
   const tpContext = useContext(TPContext);
-  const {
-    newRecDesig,
-    updRecDesig,
-    newRecDeptt,
-    updRecDeptt,
-  } = tpContext.tpState;
+  const {desigFlag, depttFlag} = tpContext.tpState;
   const { id } = useParams();
 
   const navigate = useNavigate();
@@ -35,7 +30,7 @@ const TransferPosting = () => {
 
   useEffect(() => {
     getEmpDet();
-  }, [newRecDesig, updRecDesig, newRecDeptt, updRecDeptt]);
+  }, [desigFlag, depttFlag]);
 
   const getEmpDet = async () => {
     setStatus('busy');
@@ -130,7 +125,6 @@ const TransferPosting = () => {
               border: '1px solid black',
             }}
           >
-            {/*  edgId,dgId,edgFd, edpId,dpId,edpFd, newRecDesig,updRecDesig,newRecDeptt,updRecDeptt */}
 
           </table>
         </div>
