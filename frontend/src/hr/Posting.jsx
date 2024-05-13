@@ -61,15 +61,15 @@ const Posting = ({ theEmp }) => {
           desigId: theDesig, // state variable
           fromDt: fromDt, // state variable
         });
-        toggleDesigFlag();
       } else {
         await axios.post('http://localhost:3000/api/tp/empdesig', {
           empId: theEmp, // parameter received
           desigId: theDesig, // state variable
           fromDt: fromDt, // state variable
         });
-        toggleDesigFlag();
       }
+      toggleDesigFlag();
+      setDg('', '', '')
       setStatus('Success');
     } catch (error) {
       setStatus('Error');

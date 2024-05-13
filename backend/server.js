@@ -18,6 +18,7 @@ const departments = require('./routes/departments')
 //  $env:cjisJwtPvtKey="xxxyyyzzz"
 
 //  Set Database  on the command line
+//  $env:dbName="SKVERMA"
 //  $env:dbName="VERMARNCDBG"
 
 //  Set the environment - development or production on the command line

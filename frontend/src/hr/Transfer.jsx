@@ -61,8 +61,6 @@ const Transfer = ({ theEmp }) => {
           depttId: theDeptt, // state variable
           fromDt: fromDt, // state variable
         });
-        toggleDepttFlag();
-
       } else {
         await axios.post('http://localhost:3000/api/tp/empdeptt', {
           empId: theEmp, // parameter received
@@ -71,8 +69,9 @@ const Transfer = ({ theEmp }) => {
         });
         // will cause the trail window to refresh because of useEffect
         // newDepttRec();
-        toggleDepttFlag()
       }
+      toggleDepttFlag();
+      setDp('', '', '');
       setStatus('Success');
     } catch (error) {
       setStatus('Error');
