@@ -10,6 +10,9 @@ const designations = require('./routes/designation');
 const grades = require('./routes/grades');
 const tp = require('./routes/tp');
 const departments = require('./routes/departments')
+// BD routes
+const clients = require('./routes/clients');
+const jobs = require('./routes/jobs');
 
 //  Set database password on the command line
 //  $env:cjisPass="cdcbgt"
@@ -39,7 +42,11 @@ app.use('/api/disciplines', disciplines);
 app.use('/api/designations', designations);
 app.use('/api/grades', grades);
 app.use('/api/tp', tp);
-app.use('/api/departments', departments)
+app.use('/api/departments', departments);
+
+// BD begin
+app.use('/api/clients', clients);
+app.use('/api/jobs', jobs)
 
 app.listen(config.get('thePort'), () =>
   console.log(

@@ -53,12 +53,12 @@ function ToolBar() {
         {' '}
         AddClient
       </Link>
-      <Link to='/bd/job/all' style={{ marginRight: '15px' }}>
+      <Link to='/bd/jobs/all' style={{ marginRight: '15px' }}>
         {' '}
         allJobs
       </Link>
       {` `}
-      <Link to='/bd/job/add' style={{ marginRight: '15px' }}>
+      <Link to='/bd/jobs/add' style={{ marginRight: '15px' }}>
         {' '}
         addJobs
       </Link>

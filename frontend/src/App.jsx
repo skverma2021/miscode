@@ -17,6 +17,14 @@ import Desig from './hr/Desig';
 import ContextDesig from './hr/ContextDesig';
 import {DesigState} from './context/desig/DesigContext';
 
+// BD related
+import Clients from './jobs/Clients';
+import ClientUpd from './jobs/ClientUpd';
+import ClientAdd from './jobs/ClientAdd';
+import JobAll from './jobs/JobAll';
+import JobUpd from './jobs/JobUpd';
+import JobAdd from './jobs/JobAdd';
+
 function App() {
   return (
     <>
@@ -39,6 +47,14 @@ function App() {
         <Route path='/hr/discp' element={<DesigState><ContextDesig /></DesigState>} />
 
         <Route path='/hr/emp/all/tp/:id' element={<TPState><TransferPosting /></TPState>}/>
+
+        {/* BD related */}
+        <Route path='/bd/clients/all' element={<Clients />} />
+        <Route path='/bd/clients/all/upd/:id' element={<ClientUpd />} />
+        <Route path='/bd/clients/add' element={<ClientAdd />} />
+        <Route path='/bd/jobs/all' element={<JobAll />} />
+        <Route path='/bd/jobs/all/upd/:id' element={<JobUpd />} />
+        <Route path='/bd/jobs/add' element={<JobAdd />} />
       </Routes>
     </>
   );
