@@ -23,7 +23,9 @@ import ClientUpd from './jobs/ClientUpd';
 import ClientAdd from './jobs/ClientAdd';
 import JobAll from './jobs/JobAll';
 import JobUpd from './jobs/JobUpd';
-import JobAdd from './jobs/JobAdd';
+import JobAdd from './jobs/JobAdd'; 
+import JobExPlan from './jobs/JobExPlan';
+import JobExPlanAdd from './jobs/JobExPlanAdd';
 
 function App() {
   return (
@@ -55,6 +57,8 @@ function App() {
         <Route path='/bd/jobs/all' element={<JobAll />} />
         <Route path='/bd/jobs/all/upd/:id' element={<JobUpd />} />
         <Route path='/bd/jobs/add' element={<JobAdd />} />
+        <Route path='/bd/jobs/all/exPlan/:jobId' element={<JobExPlan />} />
+        <Route path='/bd/jobs/all/exAdd/:jobId' element={<JobExPlanAdd />} />
       </Routes>
     </>
   );

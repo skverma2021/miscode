@@ -11,6 +11,7 @@ function JobUpd() {
   const [formTouched, setFormTouched] = useState(false);
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
+  const [clientStatus, setClientStatus] = useState('');
   const [errNo, setErrNo] = useState(0);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -53,13 +54,13 @@ function JobUpd() {
 
   useEffect(() => {
     const fetchData = async () => {
-      setStatus('busy');
+      setClientStatus('busy');
       try {
         const res = await axios.get(`http://localhost:3000/api/clients/short`);
         setClients(res.data);
-        setStatus('Success');
+        setClientStatus('Success');
       } catch (error) {
-        setStatus('Error');
+        setClientStatus('Error');
         setMsg(errText(error));
       }
     };
@@ -86,6 +87,10 @@ function JobUpd() {
     }
   };
 
+  if (clientStatus === 'Error') {
+    timeoutId = setTimeout(goHome, 5000);
+    return <h1 style={{ color: 'red' }}>Error: Clients could not be loaded</h1>;
+  }
   if (status === 'Error' && errNo == 500) {
     timeoutId = setTimeout(goHome, 10000);
     return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;

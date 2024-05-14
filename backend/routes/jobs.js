@@ -80,7 +80,7 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-// // GET one Job
+// // GET one Job 
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;

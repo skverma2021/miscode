@@ -1,6 +1,5 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-// import AddOneStage from './AddOneStage';
 import axios from 'axios';
 import { errText, errNumber } from '../util/errMsgText';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -12,9 +11,12 @@ function JobExPlanAdd() {
   const [deptts, setDeptts] = useState([]); // for dropDown to select department
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
+  const [depttStatus, setDepttStatus] = useState('');
+  const [stageStatus, setStageStatus] = useState('');
+  const [jobStatus, setJobStatus] = useState('');
   const [errNo, setErrNo] = useState(0);
 
-  const { id } = useParams();
+  const { jobId } = useParams();
   const navigate = useNavigate();
 
   let timeoutId;
@@ -24,7 +26,6 @@ function JobExPlanAdd() {
   // t: {stageId, theStage, depttId, startDt, endDt, theVal}
   // arguments passed as values and not a as reference
   const okSubmit = (depttId, startDt, endDt, theVal) => {
-    theVal = 5; // it would not affect the original stsges array
     if (!depttId) return false;
     if (!startDt) return false;
     if (!endDt) return false;
@@ -33,7 +34,7 @@ function JobExPlanAdd() {
     return true;
   };
 
-  // since the current row has been passed as okSubmit(t) , it is a reference
+  // since the current row (t) can be passed as okSubmit(t) in which case it would be a reference
 
   // const okSubmit = (rec) => {
   //   if (!rec.depttId) return false;
@@ -45,14 +46,14 @@ function JobExPlanAdd() {
   // };
 
   useEffect(() => {
-    setStatus('busy');
+    setDepttStatus('busy');
     const fetchData = async () => {
       try {
         const res = await axios.get(`http://localhost:3000/api/departments`);
         setDeptts(res.data);
-        setStatus('Success');
+        setDepttStatus('Success');
       } catch (error) {
-        setStatus('Error');
+        setDepttStatus('Error');
         setMsg(errText(error));
         setErrNo(500);
       }
@@ -67,15 +68,15 @@ function JobExPlanAdd() {
   // fetches job attributes alongwith client for the header
   useEffect(() => {
     const fetchData = async () => {
-      setStatus('busy');
+      setJobStatus('busy');
       try {
         const res = await axios.get(
-          `http://localhost:3000/api/jobs/client/${id}`
+          `http://localhost:3000/api/jobs/client/${jobId}`
         );
         setTheJob(res.data[0]);
-        setStatus('Success');
+        setJobStatus('Success');
       } catch (error) {
-        setStatus('Error');
+        setJobStatus('Error');
         setMsg(errText(error));
       }
     };
@@ -86,28 +87,41 @@ function JobExPlanAdd() {
     getAllStages();
   }, []);
 
+  // Note:
+  // if there are no workPlans belonging to the jobId, 
+  // stageId and theStage will have values pulled from jobExStages,
+  // toUpd and inError will be 0,
+  // and depttId, startDt, endDt, and theVal will be NULL
+
   const getAllStages = async () => {
-    setStatus('busy');
+    setStageStatus('busy');
     try {
       const res = await axios.get(
-        `http://localhost:3000/api/jobs/ExStages/${id}`
+        `http://localhost:3000/api/jobs/ExStages/${jobId}`
       );
       setStages(res.data);
-      setStatus('Success');
+      setStageStatus('Success');
     } catch (error) {
-      setStatus('Error');
+      setStageStatus('Error');
       setMsg(errText(error));
     }
   };
 
+  // All stages have been pulled from jobExStages
+  // where stageId starts with 1 and goes up to 10
+  // the parameter index has been passed after deducting 1 from stageId
   const handleInputChange = (index, e) => {
     const newValue = e.target.value;
     setStages((prevStages) => {
       const updatedStages = [...prevStages];
+      // third bracket makes it property name
       updatedStages[index][e.target.name] = newValue;
       return updatedStages;
     });
   };
+  
+  // even if it is an insert case with toUpd = 0
+  // it qualifies for update after saving once
   const handleSaveCount = (index) => {
     // const newValue = e.target.value;
     setStages((prevStages) => {
@@ -124,13 +138,14 @@ function JobExPlanAdd() {
       return updatedStages;
     });
   };
+
   //  t: {stageId, theStage, depttId, startDt, endDt, theVal}
   const saveRec = async (stageId, depttId, startDt, endDt, theVal, toUpd) => {
     // setStatus('busy');
     try {
       if (toUpd == 0) {
-        await axios.post('http://localhost:3000/api/WorkPlans', {
-          jobId: id,
+        await axios.post('http://localhost:3000/api/workplans', {
+          jobId: jobId,
           stageId: stageId,
           depttId: depttId,
           schDtStart: startDt,
@@ -139,7 +154,7 @@ function JobExPlanAdd() {
         });
       } else {
         await axios.put(
-          `http://localhost:3000/api/WorkPlans/${id}/${stageId}`,
+          `http://localhost:3000/api/workplans/${jobId}/${stageId}`,
           {
             depttId: depttId,
             schDtStart: startDt,
@@ -150,47 +165,16 @@ function JobExPlanAdd() {
       }
       // setStatus('Success');
       handleSaveCount(stageId - 1);
+      // 0 indicates No Error
       setRowError(stageId - 1, 0);
     } catch (error) {
       setStatus('Error');
       setMsg(errText(error));
       setErrNo(errNumber(error));
+      // 1 indicates Error
       setRowError(stageId - 1, 1);
     }
   };
-  // const saveRec = async (rec) => {
-  //   // setStatus('busy');
-  //   try {
-  //     if (rec.toUpd == 0) {
-  //       await axios.post('http://localhost:3000/api/WorkPlans', {
-  //         jobId: id,
-  //         stageId: rec.stageId,
-  //         depttId: rec.depttId,
-  //         schDtStart: rec.startDt,
-  //         schDtEnd: rec.endDt,
-  //         shareVal: rec.theVal,
-  //       });
-  //     } else {
-  //       await axios.put(
-  //         `http://localhost:3000/api/WorkPlans/${id}/${rec.stageId}`,
-  //         {
-  //           depttId: rec.depttId,
-  //           schDtStart: rec.startDt,
-  //           schDtEnd: rec.endDt,
-  //           shareVal: rec.theVal,
-  //         }
-  //       );
-  //     }
-  //     // setStatus('Success');
-  //     handleSaveCount(rec.stageId - 1);
-  //     setRowError(rec.stageId - 1, 0);
-  //   } catch (error) {
-  //     setStatus('Error');
-  //     setMsg(errText(error));
-  //     setErrNo(errNumber(error));
-  //     setRowError(rec.stageId - 1, 1);
-  //   }
-  // };
 
   const bgColor = (theStage) => {
     if (theStage % 2 === 0) {
@@ -204,6 +188,18 @@ function JobExPlanAdd() {
     timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
   }
+  if (depttStatus === 'Error') {
+    timeoutId = setTimeout(goHome, 5000);
+    return <h1 style={{ color: 'red' }}>Error: Departments could not be loaded</h1>;
+  }
+  if (stageStatus === 'Error') {
+    timeoutId = setTimeout(goHome, 5000);
+    return <h1 style={{ color: 'red' }}>Error: Stages could not be loaded</h1>;
+  }
+  if (jobStatus === 'Error') {
+    timeoutId = setTimeout(goHome, 5000);
+    return <h1 style={{ color: 'red' }}>Error: the Job could not be loaded</h1>;
+  }
 
   if (status === 'busy') return <Spinner />;
 
@@ -213,71 +209,25 @@ function JobExPlanAdd() {
         style={{
           width: '100%',
           height: '20vh',
-          // height: '40vh',
-          // border: '1px solid black',
           display: 'flex',
         }}
       >
         <table style={{ marginTop: '15px', lineHeight: '25px' }}>
           <tbody>
             <tr>
-              <td colSpan={2}>
-                Client:<b>{theJob.jobClient}</b>
-              </td>
+              <td colSpan={2}>Client:<b>{theJob.jobClient}</b></td>
               <td></td>
             </tr>
             <tr>
-              <td>
-                Job:<b>{theJob.jobDes}</b>
-              </td>
-              <td>
-                Value Rs.<b>{theJob.jobValue}</b>
-              </td>
+              <td>Job:<b>{theJob.jobDes}</b></td>
+              <td>Value Rs.<b>{theJob.jobValue}</b></td>
             </tr>
             <tr>
-              <td>
-                <i>
-                  From:<u>{theJob.jobStart}</u>
-                </i>
-              </td>
-              <td>
-                <i>
-                  To:<u>{theJob.jobEnd}</u>
-                </i>
-              </td>
+              <td><i>From:<u>{theJob.jobStart}</u></i></td>
+              <td><i>To:<u>{theJob.jobEnd}</u></i></td>
             </tr>
           </tbody>
         </table>
-        {/* <table style={{ marginTop: '15px', lineHeight: '25px' }}>
-          <thead align='left'>
-            <tr style={{ background: 'skyBlue' }}>
-              <th>stageId</th>
-              <th>theStage</th>
-              <th>depttId</th>
-              <th>startDt</th>
-              <th>endDt</th>
-              <th>theVal</th>
-              <th>toUpd</th>
-              <th>inError</th>
-            </tr>
-          </thead>
-          <tbody>
-            {stages.map((r) => {
-              return (
-                <tr>
-                  <td>{r.stageId}</td>
-                  <td>{r.theStage}</td>
-                  <td>{r.depttId}</td>
-                  <td>{r.startDt}</td>
-                  <td>{r.endDt}</td>
-                  <td>{r.theVal}</td>
-                  <td>{r.toUpd}</td>
-                  <td>{r.inError}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table> */}
       </div>
 
       <div
@@ -407,9 +357,6 @@ function JobExPlanAdd() {
                     >
                       save
                     </button>
-                    {/* <button onClick={() => saveRec(t)} disabled={!okSubmit(t)}>
-                      save
-                    </button> */}
                   </td>
                 </tr>
               );
