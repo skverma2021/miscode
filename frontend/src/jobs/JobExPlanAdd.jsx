@@ -19,6 +19,12 @@ function JobExPlanAdd() {
   const { jobId } = useParams();
   const navigate = useNavigate();
 
+  const sumTheVal = ()=>{
+    let s=0;
+    for (let i=0; i < stages.length; i++) s = s + parseFloat(stages[i].theVal)
+    return s;
+  }
+
   let timeoutId;
   const goHome = () => {
     navigate('/');
@@ -55,7 +61,7 @@ function JobExPlanAdd() {
       } catch (error) {
         setDepttStatus('Error');
         setMsg(errText(error));
-        setErrNo(500);
+        // setErrNo(500);
       }
     };
     fetchData();
@@ -90,8 +96,8 @@ function JobExPlanAdd() {
   // Note:
   // if there are no workPlans belonging to the jobId, 
   // stageId and theStage will have values pulled from jobExStages,
-  // toUpd and inError will be 0,
-  // and depttId, startDt, endDt, and theVal will be NULL
+  // toUpd, inError, and theVal will be 0,
+  // and depttId, startDt, and endDt will be NULL
 
   const getAllStages = async () => {
     setStageStatus('busy');
@@ -141,7 +147,14 @@ function JobExPlanAdd() {
 
   //  t: {stageId, theStage, depttId, startDt, endDt, theVal}
   const saveRec = async (stageId, depttId, startDt, endDt, theVal, toUpd) => {
-    // setStatus('busy');
+    // console.log(theJob.jobValue, sumTheVal());
+    if (theJob.jobValue < sumTheVal() ) {
+      // setStatus('Error');
+      // 1 indicates Error
+      setRowError(stageId - 1, 1);
+      return;
+    }
+    setStatus('busy');
     try {
       if (toUpd == 0) {
         await axios.post('http://localhost:3000/api/workplans', {
@@ -163,7 +176,7 @@ function JobExPlanAdd() {
           }
         );
       }
-      // setStatus('Success');
+      setStatus('Success');
       handleSaveCount(stageId - 1);
       // 0 indicates No Error
       setRowError(stageId - 1, 0);
@@ -171,6 +184,7 @@ function JobExPlanAdd() {
       setStatus('Error');
       setMsg(errText(error));
       setErrNo(errNumber(error));
+
       // 1 indicates Error
       setRowError(stageId - 1, 1);
     }
@@ -184,9 +198,9 @@ function JobExPlanAdd() {
     }
   };
 
-  if (status === 'Error' && errNo == 500) {
+  if (status === 'Error') {
     timeoutId = setTimeout(goHome, 5000);
-    return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
+    return <h1 style={{ color: 'red' }}>System Error ({errNo}): {msg}</h1>;
   }
   if (depttStatus === 'Error') {
     timeoutId = setTimeout(goHome, 5000);
@@ -220,7 +234,7 @@ function JobExPlanAdd() {
             </tr>
             <tr>
               <td>Job:<b>{theJob.jobDes}</b></td>
-              <td>Value Rs.<b>{theJob.jobValue}</b></td>
+              <td>Value Rs.<b>{theJob.jobValue}/[Allocated:{sumTheVal()}]</b></td>
             </tr>
             <tr>
               <td><i>From:<u>{theJob.jobStart}</u></i></td>
@@ -295,11 +309,11 @@ function JobExPlanAdd() {
                       max={theJob.jobEnd}
                       required
                       onChange={(e) => handleInputChange(t.stageId - 1, e)}
-                      style={{
-                        color: `${
-                          t.inError == 1 && errNo !== 500 ? 'red' : 'black'
-                        }`,
-                      }}
+                      // style={{
+                      //   color: `${
+                      //     t.inError == 1  ? 'red' : 'black'
+                      //   }`,
+                      // }}
                     />
                   </td>
                   <td>
@@ -312,11 +326,11 @@ function JobExPlanAdd() {
                       max={theJob.jobEnd}
                       required
                       onChange={(e) => handleInputChange(t.stageId - 1, e)}
-                      style={{
-                        color: `${
-                          t.inError == 1 && errNo !== 500 ? 'red' : 'black'
-                        }`,
-                      }}
+                      // style={{
+                      //   color: `${
+                      //     t.inError == 1 ? 'red' : 'black'
+                      //   }`,
+                      // }}
                     />
                   </td>
                   <td>
@@ -333,8 +347,12 @@ function JobExPlanAdd() {
                       // procedure and finally to catch block of the API call
                       style={{
                         color: `${
-                          t.inError == 1 && errNo !== 500 ? 'red' : 'black'
+                          t.inError == 1  ? 'red' : 'black'
                         }`,
+                        fontWeight:`${
+                          t.inError == 1  ? 'bold' : 'normal'
+                        }`
+                        
                       }}
                       onChange={(e) => handleInputChange(t.stageId - 1, e)}
                     />

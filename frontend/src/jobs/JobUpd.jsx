@@ -8,7 +8,7 @@ import Spinner from '../home/Spinner';
 function JobUpd() {
   const [job, setJob] = useState({});
   const [clients, setClients] = useState([]);
-  const [formTouched, setFormTouched] = useState(false);
+  // const [formTouched, setFormTouched] = useState(false);
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
   const [clientStatus, setClientStatus] = useState('');
@@ -69,7 +69,7 @@ function JobUpd() {
 
   const onValChange = (e) => {
     setJob({ ...job, [e.target.name]: e.target.value });
-    setFormTouched(true);
+    // setFormTouched(true);
   };
 
   const updJobData = async (event) => {
@@ -209,7 +209,7 @@ function JobUpd() {
               </tr>
               <tr>
                 <td>
-                  <button type='submit' disabled={!okSubmit()}>
+                  <button type='submit' disabled={!okSubmit() }>
                     Update
                   </button>
                 </td>
