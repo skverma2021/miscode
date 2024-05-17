@@ -31,6 +31,7 @@ router.get('/',  async (req, res) => {
   }
 });
 
+// EmpUpd.jsx
 router.get('/:id', auth, async (req, res) => {
   try {
     const { id } = req.params;
@@ -45,7 +46,7 @@ router.get('/:id', auth, async (req, res) => {
   }
 });
 
-
+// Login.jsx
 router.get('/:theEMailId/:thePasswd', async (req, res) => {
   try {
     const { theEMailId, thePasswd } = req.params;
@@ -81,6 +82,7 @@ router.get('/:theEMailId/:thePasswd', async (req, res) => {
   }
 });
 
+// ChangePass.jsx
 router.put('/cp/:id', auth, async (req, res) => {
   
   try {
@@ -112,6 +114,7 @@ router.put('/cp/:id', auth, async (req, res) => {
   }
 });
 
+// Emps.jsx
 router.delete('/:id', auth,async (req, res) => {
   try {
     const { id } = req.params;
@@ -126,6 +129,7 @@ router.delete('/:id', auth,async (req, res) => {
   }
 });
 
+// EmpAdd.jsx
 router.post('/', auth, async (req, res) => {
   try {
     const {
@@ -165,6 +169,7 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
+// EmpUpd.jsx
 router.put('/:id', auth,async (req, res) => {
   try {
     const { id } = req.params;
