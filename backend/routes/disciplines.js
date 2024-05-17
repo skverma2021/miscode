@@ -6,6 +6,7 @@ const auth = require('../middleware/auth');
 const handleError = require('../util/handleError');
 
 
+// ContextDesig.jsx, Desig.jsx, Disciplines.jsx
 router.get('/', async (req, res) => {
   try {
     const pool = await sql.connect(config);

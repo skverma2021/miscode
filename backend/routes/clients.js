@@ -30,10 +30,6 @@ router.get('/short', async (req, res) => {
 router.post('/', async (req, res) => {
   console.log('Reached Here ADDDD');
   try {
-    // const { error } = validate(req.body);
-    // if (error)
-    //   return res.status(400).send(`Invalid input: ${error.details[0].message}`);
-    
     const {
       shortName,
       longName,
@@ -59,8 +55,6 @@ router.post('/', async (req, res) => {
       .input('street', sql.VarChar(50), street)
       .input('cityId', sql.Int, cityId)
       .execute('postClient');
-
-    // res;
     res
       .status(201)
       .send(`client data inserted successfully ${JSON.stringify(req.body)}`);

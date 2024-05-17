@@ -4,6 +4,7 @@ const sql = require('mssql');
 const config = require('../db/mssqlDb');
 const handleError = require('../util/handleError');
 
+// Used by EmpUpd.jsx, EmpAdd.jsx
 router.get('/', async (req, res) => {
   try {
     const pool = await sql.connect(config);

@@ -5,6 +5,7 @@ const sql = require('mssql');
 const auth = require('../middleware/auth');
 const handleError = require('../util/handleError');
 
+// used by TransferPosting.jsx, 
 router.get('/empheader/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -19,6 +20,7 @@ router.get('/empheader/:id', async (req, res) => {
   }
 });
 
+// PostingTrail.jsx
 router.get('/empDesig/:empId', async (req, res) => {
   const { empId } = req.params;
   try {
@@ -33,6 +35,7 @@ router.get('/empDesig/:empId', async (req, res) => {
   }
 });
 
+// TransferTrail.jsx
 router.get('/empdeptt/:empId', async (req, res) => {
   const { empId } = req.params;
   try {
@@ -47,6 +50,7 @@ router.get('/empdeptt/:empId', async (req, res) => {
   }
 });
 
+// Posting.jsx
 router.post('/empdesig', async (req, res) => {
   try {
     const { empId, desigId, fromDt } = req.body;
@@ -63,6 +67,7 @@ router.post('/empdesig', async (req, res) => {
   }
 });
 
+// Transfer.jsx
 router.post('/empdeptt', async (req, res) => {
   try {
     const { empId, depttId, fromDt } = req.body;
@@ -79,6 +84,7 @@ router.post('/empdeptt', async (req, res) => {
   }
 });
 
+// Posting.jsx
 router.put('/empDesig/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -97,6 +103,7 @@ router.put('/empDesig/:id', async (req, res) => {
   }
 });
 
+// Transfer.jsx
 router.put('/empdeptt/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -116,6 +123,7 @@ router.put('/empdeptt/:id', async (req, res) => {
   }
 });
 
+// PostingTrail.jsx
 router.delete('/empDesig/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -130,6 +138,7 @@ router.delete('/empDesig/:id', async (req, res) => {
   }
 });
 
+// TransferTrail.jsx
 router.delete('/empdeptt/:id', async (req, res) => {
   try {
     const { id } = req.params;

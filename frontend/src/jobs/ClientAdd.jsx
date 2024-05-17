@@ -83,7 +83,6 @@ function ClientAdd() {
     setStatus('busy');
     try {
       await axios.post(`http://localhost:3000/api/clients`, client);
-      console.log('f')
       setStatus('Added');
       setMsg('Added Successfully');
       timeoutId = setTimeout(goHome, 1000);
@@ -95,12 +94,12 @@ function ClientAdd() {
   };
 
   if (cityStatus === 'Error') {
-    timeoutId = setTimeout(goHome, 10000);
+    timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error: Cities could not be loaded</h1>;
   }
 
   if (status === 'Error' && errNo == 500) {
-    timeoutId = setTimeout(goHome, 10000);
+    timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
   }
 
@@ -140,7 +139,6 @@ function ClientAdd() {
                     onChange={(e) => {
                       return onValChange(e);
                     }}
-                    // labelProps={{ shrink: !!job.description }}
                   />
                 </td>
               </tr>
