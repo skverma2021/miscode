@@ -27,6 +27,10 @@ import JobAdd from './jobs/JobAdd';
 import JobExPlan from './jobs/JobExPlan';
 import JobExPlanAdd from './jobs/JobExPlanAdd';
 
+// Booking related
+import BookMonthYear from './book/BookMonthYear';
+import BookHead from './book/BookHead';
+
 function App() {
   return (
     <>
@@ -59,6 +63,10 @@ function App() {
         <Route path='/bd/jobs/add' element={<JobAdd />} />
         <Route path='/bd/jobs/all/exPlan/:jobId' element={<JobExPlan />} />
         <Route path='/bd/jobs/all/exAdd/:jobId' element={<JobExPlanAdd />} />
+
+        {/* Booking related */}
+        <Route path='/booking' element={<BookMonthYear />} />
+        <Route path='/booking/:m/:y' element={<BookHead />} />
       </Routes>
     </>
   );

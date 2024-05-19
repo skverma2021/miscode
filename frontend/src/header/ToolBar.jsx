@@ -68,7 +68,7 @@ function ToolBar() {
         Reports
       </Link>
       {` `}
-      <Link to={`/booking/${userId}`} style={{ marginRight: '15px' }}>
+      <Link to={`/booking`} style={{ marginRight: '15px' }}>
         {' '}
         bookings
       </Link>
@@ -87,7 +87,7 @@ function ToolBar() {
   const renderBookingToolbar = () => (
     // console.log('reached here')
     <div>
-      <Link to={`/booking/${userId}`} style={{ marginRight: '15px' }}>
+      <Link to={`/booking`} style={{ marginRight: '15px' }}>
         {' '}
         bookings
       </Link>

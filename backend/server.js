@@ -17,6 +17,9 @@ const clients = require('./routes/clients');
 const jobs = require('./routes/jobs');
 const workplans = require('./routes/WorkPlans');
 
+// Bookings related
+const bookings = require('./routes/bookings');
+
 //  Set database password on the command line
 //  $env:cjisPass="cdcbgt"
 
@@ -52,6 +55,9 @@ app.use('/api/departments', departments);
 app.use('/api/clients', clients);
 app.use('/api/jobs', jobs);
 app.use('/api/workplans', workplans);
+
+// Bookings
+app.use('/api/bookings', bookings)
 
 app.listen(config.get('thePort'), () =>
   console.log(
