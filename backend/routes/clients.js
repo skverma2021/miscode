@@ -28,7 +28,6 @@ router.get('/short', async (req, res) => {
 
 // POST route to insert city data
 router.post('/', async (req, res) => {
-  console.log('Reached Here ADDDD');
   try {
     const {
       shortName,

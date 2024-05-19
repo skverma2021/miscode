@@ -5,6 +5,8 @@ import { errText, errNumber } from '../util/errMsgText';
 import { useNavigate, useParams } from 'react-router-dom';
 import Spinner from '../home/Spinner';
 
+import CityList from '../util/CityList'
+
 // id	int	Unchecked
 // shortName	nchar(10)	Unchecked
 // longName	varchar(100)	Checked
@@ -18,7 +20,7 @@ import Spinner from '../home/Spinner';
 
 function ClientUpd() {
   const [client, setClient] = useState({});
-  const [cities, setCities] = useState([]);
+  // const [cities, setCities] = useState([]);
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
   const [cityStatus, setCityStatus] = useState('');
@@ -64,24 +66,29 @@ function ClientUpd() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setCityStatus('busy');
-      try {
-        const res = await axios.get(`http://localhost:3000/api/cities`);
-        setCities(res.data);
-        setCityStatus('Success');
-      } catch (error) {
-        setCityStatus('Error');
-        setMsg(errText(error));
-      }
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     setCityStatus('busy');
+  //     try {
+  //       const res = await axios.get(`http://localhost:3000/api/cities`);
+  //       setCities(res.data);
+  //       setCityStatus('Success');
+  //     } catch (error) {
+  //       setCityStatus('Error');
+  //       setMsg(errText(error));
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
 
   const onValChange = (e) => {
     setClient({ ...client, [e.target.name]: e.target.value });
     // setFormTouched(true);
+  };
+
+   // added to use the select (CityList) component
+  const handleCitySelection = (selectedCityId) => {
+    setClient({ ...client, "cityId": selectedCityId });
   };
 
   const updClientData = async (event) => {
@@ -145,7 +152,6 @@ function ClientUpd() {
                     onChange={(e) => {
                       return onValChange(e);
                     }}
-                    // labelProps={{ shrink: !!job.description }}
                   />
                 </td>
               </tr>
@@ -239,7 +245,6 @@ function ClientUpd() {
                     onChange={(e) => {
                       return onValChange(e);
                     }}
-                    // labelProps={{ shrink: !!job.ordDateEnd }}
                   />
                 </td>
               </tr>
@@ -248,7 +253,7 @@ function ClientUpd() {
                   <label>City:</label>
                 </td>
                 <td>
-                  <select
+                  {/* <select
                     name='cityId'
                     id='cityId'
                     value={client.cityId || ''}
@@ -256,16 +261,17 @@ function ClientUpd() {
                     onChange={(e) => {
                       return onValChange(e);
                     }}
-                  >
+                  > */}
                     {/* <option value=''>Select Client</option> */}
-                    {cities.map((c) => {
+                    {/* {cities.map((c) => {
                       return (
                         <option key={c.id} value={c.id}>
                           {c.cityName}
                         </option>
                       );
                     })}
-                  </select>
+                  </select> */}
+                  <CityList onSelectCity={handleCitySelection} theCityId={client.cityId} reportCityStatus={setCityStatus}  />
                 </td>
               </tr>
               <tr>
@@ -280,7 +286,6 @@ function ClientUpd() {
                     onChange={(e) => {
                       return onValChange(e);
                     }}
-                    // labelProps={{ shrink: !!job.ordDateEnd }}
                   />
                 </td>
               </tr>
