@@ -4,7 +4,6 @@ import axios from 'axios';
 import { errText, errNumber } from '../util/errMsgText';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '../home/Spinner';
-
 import CityList from '../util/CityList'
 
 // id	int	Unchecked
@@ -59,22 +58,6 @@ function ClientAdd() {
   useEffect(() => {
     return () => clearTimeout(timeoutId);
   }, []);
-
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     setCityStatus('busy');
-  //     try {
-  //       const res = await axios.get(`http://localhost:3000/api/cities`);
-  //       setCities(res.data);
-  //       setCityStatus('Success');
-  //     } catch (error) {
-  //       setCityStatus('Error');
-  //       setMsg(errText(error));
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
 
   const onValChange = (e) => {
     setClient({ ...client, [e.target.name]: e.target.value });
@@ -247,24 +230,6 @@ function ClientAdd() {
                   <label>City:</label>
                 </td>
                 <td>
-                  {/* <select
-                    name='cityId'
-                    id='cityId'
-                    value={client.cityId || ''}
-                    required
-                    onChange={(e) => {
-                      return onValChange(e);
-                    }}
-                  > */}
-                    {/* <option value=''>Select Client</option> */}
-                    {/* {cities.map((c) => {
-                      return (
-                        <option key={c.id} value={c.id}>
-                          {c.cityName}
-                        </option>
-                      );
-                    })}
-                  </select> */}
                   <CityList onSelectCity={handleCitySelection}  theCityId={client.cityId} reportCityStatus={setCityStatus} />
                 </td>
               </tr>
