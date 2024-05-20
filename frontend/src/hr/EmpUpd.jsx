@@ -4,10 +4,11 @@ import axios from 'axios';
 import { errText, errNumber } from '../util/errMsgText';
 import { useNavigate, useParams } from 'react-router-dom';
 import Spinner from '../home/Spinner';
+import RadioButton from '../util/RadioButton';
+import CityList from '../util/CityList'
 
 const EmpUpd = () => {
   const [emp, setEmp] = useState({});
-  const [cities, setCities] = useState([]);
   const [msg, setMsg] = useState('');
   const [cityStatus, setCityStatus] = useState('');
   const [recStatus, setRecStatus] = useState('');
@@ -41,20 +42,6 @@ const EmpUpd = () => {
   }, []);
 
   useEffect(() => {
-    const fetchCityData = async () => {
-      try {
-        setCityStatus('busy');
-        const res = await axios.get(`http://localhost:3000/api/cities`);
-        setCities(res.data);
-        setCityStatus('Success');
-      } catch (error) {
-        setCityStatus('Error');
-      }
-    };
-    fetchCityData();
-  }, []);
-
-  useEffect(() => {
     const fetchEmpData = async () => {
       try {
         setRecStatus('busy');
@@ -74,6 +61,10 @@ const EmpUpd = () => {
 
   const onValChange = (e) => {
     setEmp({ ...emp, [e.target.name]: e.target.value });
+  };
+
+  const handleCitySelection = (selectedCityId) => {
+    setEmp({ ...emp, "cityId": selectedCityId });
   };
 
   const updEmpData = async (event) => {
@@ -206,32 +197,15 @@ const EmpUpd = () => {
                 </td>
                 <td>:</td>
                 <td>
-                  <div style={{ display: 'flex' }}>
-                    <input
-                      type='radio'
-                      id='Mr'
-                      name='title'
-                      value='Mr'
-                      checked={emp.title == 'Mr'}
-                      onChange={(e) => {
-                        return onValChange(e);
-                      }}
-                    />
-                      <label htmlFor='Mr'>Mr</label>
-                  </div>
-                  <div style={{ display: 'flex' }}>
-                    <input
-                      type='radio'
-                      id='Ms'
-                      name='title'
-                      value='Ms'
-                      checked={emp.title == 'Ms'}
-                      onChange={(e) => {
-                        return onValChange(e);
-                      }}
-                    />
-                      <label htmlFor='Ms'>Ms</label>
-                  </div>
+                  <RadioButton
+                    options={[
+                              { value: 'Mr', label: 'Mr' },
+                              { value: 'Ms', label: 'Ms' },
+                            ]}
+                    selectedOption={emp.title}
+                    onChange={(value) => setEmp({ ...emp, "title": value })}
+                    radioName='title'
+                  />
                 </td>
               </tr>
               <tr>
@@ -259,32 +233,15 @@ const EmpUpd = () => {
                 </td>
                 <td>:</td>
                 <td>
-                  <div style={{ display: 'flex' }}>
-                    <input
-                      type='radio'
-                      id='male'
-                      name='gender'
-                      value='M'
-                      checked={emp.gender == 'M'}
-                      onChange={(e) => {
-                        return onValChange(e);
-                      }}
-                    />
-                      <label htmlFor='male'>Male</label>
-                  </div>
-                  <div style={{ display: 'flex' }}>
-                    <input
-                      type='radio'
-                      id='female'
-                      name='gender'
-                      value='F'
-                      checked={emp.gender == 'F'}
-                      onChange={(e) => {
-                        return onValChange(e);
-                      }}
-                    />
-                      <label htmlFor='female'>Female</label>
-                  </div>
+                  <RadioButton
+                    options={[
+                              { value: "M", label: "Male" },
+                              { value: "F", label: "Female" },
+                            ]}
+                    selectedOption={emp.gender}
+                    onChange={(value) => setEmp({ ...emp, "gender": value })}
+                    radioName="gender"
+                  />
                 </td>
               </tr>
               <tr>
@@ -308,23 +265,7 @@ const EmpUpd = () => {
                 </td>
                 <td>:</td>
                 <td>
-                  {' '}
-                  <select
-                    name='cityId'
-                    id='cityId'
-                    value={emp.cityId || ''}
-                    onChange={(e) => {
-                      return onValChange(e);
-                    }}
-                  >
-                    {cities.map((c) => {
-                      return (
-                        <option key={c.id} value={c.id}>
-                          {c.cityName}
-                        </option>
-                      );
-                    })}
-                  </select>
+                  <CityList onSelectCity={handleCitySelection}  theCityId={emp.cityId} reportCityStatus={setCityStatus} />
                 </td>
               </tr>
               <tr>
@@ -379,7 +320,6 @@ const EmpUpd = () => {
               </tr>
               <tr>
                 <td colSpan={'3'} style={{ textAlign: 'right' }}>
-                  {/* <input type='submit' disabled={status !== 'typing'} /> */}
                   <input type='submit' disabled={!okSubmit()} />
                 </td>
                 <td></td>

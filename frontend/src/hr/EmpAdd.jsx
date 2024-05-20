@@ -4,6 +4,8 @@ import axios from 'axios';
 import { errText, errNumber } from '../util/errMsgText';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '../home/Spinner';
+import RadioButton from '../util/RadioButton';
+import CityList from '../util/CityList'
 
 const EmpAdd = () => {
   const [emp, setEmp] = useState({
@@ -66,6 +68,10 @@ const EmpAdd = () => {
 
   const onValChange = (e) => {
     setEmp({ ...emp, [e.target.name]: e.target.value });
+  };
+
+  const handleCitySelection = (selectedCityId) => {
+    setEmp({ ...emp, "cityId": selectedCityId });
   };
 
   const postEmpData = async (event) => {
@@ -190,7 +196,7 @@ const EmpAdd = () => {
                 </td>
                 <td>:</td>
                 <td>
-                  <div style={{ display: 'flex' }}>
+                  {/* <div style={{ display: 'flex' }}>
                     <input
                       type='radio'
                       id='Mr'
@@ -202,8 +208,8 @@ const EmpAdd = () => {
                       }}
                     />
                       <label htmlFor='Mr'>Mr</label>
-                  </div>
-                  <div style={{ display: 'flex' }}>
+                  </div> */}
+                  {/* <div style={{ display: 'flex' }}>
                     <input
                       type='radio'
                       id='Ms'
@@ -215,7 +221,16 @@ const EmpAdd = () => {
                       }}
                     />
                       <label htmlFor='Ms'>Ms</label>
-                  </div>
+                  </div> */}
+                  <RadioButton
+                    options={[
+                              { value: 'Mr', label: 'Mr' },
+                              { value: 'Ms', label: 'Ms' },
+                            ]}
+                    selectedOption={emp.title}
+                    onChange={(value) => setEmp({ ...emp, "title": value })}
+                    radioName='title'
+                  />
                 </td>
               </tr>
               <tr>
@@ -243,7 +258,7 @@ const EmpAdd = () => {
                 </td>
                 <td>:</td>
                 <td>
-                  <div style={{ display: 'flex' }}>
+                  {/* <div style={{ display: 'flex' }}>
                     <input
                       type='radio'
                       id='male'
@@ -268,7 +283,16 @@ const EmpAdd = () => {
                       }}
                     />
                       <label htmlFor='female'>Female</label>
-                  </div>
+                  </div> */}
+                  <RadioButton
+                    options={[
+                              { value: 'M', label: 'Male' },
+                              { value: 'F', label: 'Female' },
+                            ]}
+                    selectedOption={emp.gender}
+                    onChange={(value) => setEmp({ ...emp, "gender": value })}
+                    radioName='gender'
+                  />
                 </td>
               </tr>
               <tr>
@@ -292,26 +316,7 @@ const EmpAdd = () => {
                 </td>
                 <td>:</td>
                 <td>
-                  {' '}
-                  <select
-                    name='cityId'
-                    id='cityId'
-                    required
-                    value={emp.cityId}
-                    onChange={(e) => {
-                      return onValChange(e);
-                    }}
-                    label='City'
-                  >
-                    <option value=''>Select City</option>
-                    {cities.map((c) => {
-                      return (
-                        <option key={c.id} value={c.id}>
-                          {c.cityName}
-                        </option>
-                      );
-                    })}
-                  </select>
+                  <CityList onSelectCity={handleCitySelection}  theCityId={emp.cityId} reportCityStatus={setCityStatus} />
                 </td>
               </tr>
               <tr>
