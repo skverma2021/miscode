@@ -4,11 +4,10 @@ import axios from 'axios';
 import { errText, errNumber } from '../util/errMsgText';
 import { useNavigate, useParams } from 'react-router-dom';
 import Spinner from '../home/Spinner';
+import ClientList from '../util/ClientList'
 
 function JobUpd() {
   const [job, setJob] = useState({});
-  const [clients, setClients] = useState([]);
-  // const [formTouched, setFormTouched] = useState(false);
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
   const [clientStatus, setClientStatus] = useState('');
@@ -52,25 +51,15 @@ function JobUpd() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setClientStatus('busy');
-      try {
-        const res = await axios.get(`http://localhost:3000/api/clients/short`);
-        setClients(res.data);
-        setClientStatus('Success');
-      } catch (error) {
-        setClientStatus('Error');
-        setMsg(errText(error));
-      }
-    };
-    fetchData();
-  }, []);
-
   const onValChange = (e) => {
     setJob({ ...job, [e.target.name]: e.target.value });
     // setFormTouched(true);
   };
+
+    // added to use the select (ClientList) component
+    const handleClientSelection = (selectedClientId) => {
+      setJob({ ...job, "clientId": selectedClientId });
+    };
 
   const updJobData = async (event) => {
     event.preventDefault();
@@ -141,23 +130,7 @@ function JobUpd() {
                   <label>Client:</label>
                 </td>
                 <td>
-                  <select
-                    name='clientId'
-                    id='clientId'
-                    value={job.clientId || ''}
-                    onChange={(e) => {
-                      return onValChange(e);
-                    }}
-                  >
-                    {/* <option value=''>Select Client</option> */}
-                    {clients.map((c) => {
-                      return (
-                        <option key={c.id} value={c.id}>
-                          {c.shortName}
-                        </option>
-                      );
-                    })}
-                  </select>
+                  <ClientList onSelectClient={handleClientSelection}  theClientId={job.clientId} reportClientStatus={setClientStatus} />
                 </td>
               </tr>
               <tr>
@@ -172,7 +145,6 @@ function JobUpd() {
                     onChange={(e) => {
                       return onValChange(e);
                     }}
-                    // labelProps={{ shrink: !!job.ordDateStart }}
                   />
                 </td>
               </tr>
@@ -188,7 +160,6 @@ function JobUpd() {
                     onChange={(e) => {
                       return onValChange(e);
                     }}
-                    // labelProps={{ shrink: !!job.ordDateEnd }}
                   />
                 </td>
               </tr>
@@ -203,7 +174,6 @@ function JobUpd() {
                     onChange={(e) => {
                       return onValChange(e);
                     }}
-                    // labelProps={{ shrink: !!job.ordValue }}
                   />
                 </td>
               </tr>

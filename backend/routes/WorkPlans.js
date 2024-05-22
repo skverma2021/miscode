@@ -41,7 +41,7 @@ router.get('/:jobId', async (req, res) => {
     const result = await pool
       .request()
       .input('jobId', sql.Int, jobId)
-      .execute('getJobWorkPlan');
+      .execute('getJobWorkPlan1');
     res.json(result.recordset);
   } catch (err) {
     handleError(err, res);

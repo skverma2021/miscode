@@ -4,6 +4,7 @@ import axios from 'axios';
 import { errText, errNumber } from '../util/errMsgText';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '../home/Spinner';
+import ClientList from '../util/ClientList'
 
 // id	int identity
 // description	varchar(50)
@@ -20,8 +21,6 @@ const JobAdd = () => {
     ordDateEnd: '',
     ordValue: '',
   });
-  const [clients, setClients] = useState([]);
-  const [formTouched, setFormTouched] = useState(false);
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
   const [clientStatus, setClientStatus] = useState('');
@@ -48,25 +47,14 @@ const JobAdd = () => {
     return () => clearTimeout(timeoutId);
   }, []);
 
-  useEffect(() => {
-    setClientStatus('busy');
-    const fetchData = async () => {
-      try {
-        const res = await axios.get(`http://localhost:3000/api/clients/short`);
-        setClients(res.data);
-        setClientStatus('Success');
-      } catch (error) {
-        setClientStatus('Error');
-        setMsg(errText(error));
-        setErrNo(500);
-      }
-    };
-    fetchData();
-  }, []);
-
   const onValChange = (e) => {
     setJob({ ...job, [e.target.name]: e.target.value });
     setFormTouched(true);
+  };
+
+  // added to use the select (ClientList) component
+  const handleClientSelection = (selectedClientId) => {
+    setJob({ ...job, "clientId": selectedClientId });
   };
 
   const postJobData = async (event) => {
@@ -138,22 +126,7 @@ const JobAdd = () => {
                   <label>Client:</label>
                 </td>
                 <td>
-                  <select
-                    name='clientId'
-                    value={job.clientId}
-                    onChange={(e) => {
-                      return onValChange(e);
-                    }}
-                    label='Client'
-                  >
-                    {clients.map((c) => {
-                      return (
-                        <option key={c.id} value={c.id}>
-                          {c.shortName}
-                        </option>
-                      );
-                    })}
-                  </select>
+                  <ClientList onSelectClient={handleClientSelection}  theClientId={job.clientId} reportClientStatus={setClientStatus} />
                 </td>
               </tr>
               <tr>

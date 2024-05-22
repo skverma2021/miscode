@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 function JobExPlan() {
+  // theExStage, theStageId, theWpDepttName, theSchStart, theSchEnd, theWpAllottedAmt, theWpUsedAmt
   const [stages, setStages] = useState([]);
   const [theJob, setTheJob] = useState({});
   const { jobId } = useParams();
@@ -106,19 +107,20 @@ function JobExPlan() {
             </tr>
           </thead>
           <tbody>
+            {/* theExStage, theStageId, theWpDepttName, theSchStart, theSchEnd, theWpAllottedAmt, theWpUsedAmt */}
             {stages.map((t) => {
               return (
                 <tr
-                  key={t.id}
-                  style={{ backgroundColor: `${bgColor(t.stageId)}` }}
+                  key={t.theStageId}
+                  style={{ backgroundColor: `${bgColor(t.theStageId)}` }}
                 >
-                  <td>{t.id}</td>
-                  <td>{t.theStage}</td>
-                  <td>{t.theDeptt}</td>
-                  <td>{t.dtStart}</td>
-                  <td>{t.dtEnd}</td>
-                  <td>{t.allotted}</td>
-                  <td>{t.booked}</td>
+                  <td>{t.theStageId}</td>
+                  <td>{t.theExStage}</td>
+                  <td>{t.theWpDepttName}</td>
+                  <td>{t.theSchStart}</td>
+                  <td>{t.theSchEnd}</td>
+                  <td>{t.theWpAllottedAmt}</td>
+                  <td>{t.theWpUsedAmt}</td>
                 </tr>
               );
             })}
