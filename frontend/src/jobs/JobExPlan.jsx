@@ -4,10 +4,22 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 function JobExPlan() {
+  // stageId, theStage, depttId, depttName, startDt, endDt, theVal, theUsedVal
   // theExStage, theStageId, theWpDepttName, theSchStart, theSchEnd, theWpAllottedAmt, theWpUsedAmt
   const [stages, setStages] = useState([]);
   const [theJob, setTheJob] = useState({});
   const { jobId } = useParams();
+
+  const sumTheAllocatedVal = ()=>{
+    let s=0;
+    for (let i=0; i < stages.length; i++) s = s + parseFloat(stages[i].theVal)
+    return s;
+  }
+  const sumTheUsedVal = ()=>{
+    let s=0;
+    for (let i=0; i < stages.length; i++) s = s + parseFloat(stages[i].theUsedVal)
+    return s;
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,7 +42,8 @@ function JobExPlan() {
   const getAllStages = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:3000/api/workplans/${jobId}`
+        // `http://localhost:3000/api/workplans/${jobId}`
+        `http://localhost:3000/api/jobs/ExStages/${jobId}`
       );
       setStages(res.data);
     } catch (error) {
@@ -38,8 +51,8 @@ function JobExPlan() {
     }
   };
 
-  const bgColor = (theStage) => {
-    if (theStage % 2 === 0) {
+  const bgColor = (stageId) => {
+    if (stageId % 2 === 0) {
       return 'lightBlue';
     } else {
       return 'lightGray';
@@ -66,6 +79,14 @@ function JobExPlan() {
           </tr>
           <tr>
             <td>
+              Allocated Rs:<b>{sumTheAllocatedVal()}</b>
+            </td>
+            <td>
+              Used Rs.<b>{sumTheUsedVal()}</b>
+            </td>
+          </tr> 
+          <tr>
+            <td>
               <i>
                 From:<u>{theJob.jobStart}</u>
               </i>
@@ -76,6 +97,7 @@ function JobExPlan() {
               </i>
             </td>
           </tr>
+        
         </tbody>
       </table>
       <div
@@ -107,20 +129,20 @@ function JobExPlan() {
             </tr>
           </thead>
           <tbody>
-            {/* theExStage, theStageId, theWpDepttName, theSchStart, theSchEnd, theWpAllottedAmt, theWpUsedAmt */}
+            {/* theStage, theStageId, depttName, startDt, endDt, theVal, theUsedVal */}
             {stages.map((t) => {
               return (
                 <tr
-                  key={t.theStageId}
-                  style={{ backgroundColor: `${bgColor(t.theStageId)}` }}
+                  key={t.stageId}
+                  style={{ backgroundColor: `${bgColor(t.stageId)}` }}
                 >
-                  <td>{t.theStageId}</td>
-                  <td>{t.theExStage}</td>
-                  <td>{t.theWpDepttName}</td>
-                  <td>{t.theSchStart}</td>
-                  <td>{t.theSchEnd}</td>
-                  <td>{t.theWpAllottedAmt}</td>
-                  <td>{t.theWpUsedAmt}</td>
+                  <td>{t.stageId}</td>
+                  <td>{t.theStage}</td>
+                  <td>{t.depttName}</td>
+                  <td>{t.startDt}</td>
+                  <td>{t.endDt}</td>
+                  <td>{t.theVal}</td>
+                  <td>{t.theUsedVal}</td>
                 </tr>
               );
             })}
