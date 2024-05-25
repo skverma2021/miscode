@@ -35,21 +35,10 @@ function JobExPlanAdd() {
     if (!depttId) return false;
     if (!startDt) return false;
     if (!endDt) return false;
-    if (!theVal) return false;
-    if (Date.parse(endDt) - Date.parse(startDt) < 0) return false;
+    if (!theVal ) return false;
+    // if (Date.parse(endDt) - Date.parse(startDt) < 0) return false;
     return true;
   };
-
-  // since the current row (t) can be passed as okSubmit(t) in which case it would be a reference
-
-  // const okSubmit = (rec) => {
-  //   if (!rec.depttId) return false;
-  //   if (!rec.startDt) return false;
-  //   if (!rec.endDt) return false;
-  //   if (!rec.theVal) return false;
-  //   if (Date.parse(rec.endDt) - Date.parse(rec.startDt) < 0) return false;
-  //   return true;
-  // };
 
   useEffect(() => {
     setDepttStatus('busy');
@@ -61,7 +50,6 @@ function JobExPlanAdd() {
       } catch (error) {
         setDepttStatus('Error');
         setMsg(errText(error));
-        // setErrNo(500);
       }
     };
     fetchData();
@@ -95,7 +83,7 @@ function JobExPlanAdd() {
 
   // Note:
   // if there are no workPlans belonging to the jobId, 
-  // stageId and theStage will have values pulled from jobExStages,
+  // stageId and theStage will still have values pulled from jobExStages,
   // toUpd, inError, and theVal will be 0,
   // and depttId, startDt, and endDt will be NULL
 
@@ -117,19 +105,17 @@ function JobExPlanAdd() {
   // where stageId starts with 1 and goes up to 10
   // the parameter index has been passed after deducting 1 from stageId
   const handleInputChange = (index, e) => {
-    const newValue = e.target.value;
     setStages((prevStages) => {
       const updatedStages = [...prevStages];
       // third bracket makes it property name
-      updatedStages[index][e.target.name] = newValue;
+      updatedStages[index][e.target.name] = e.target.value;
       return updatedStages;
     });
   };
   
   // even if it is an insert case with toUpd = 0
-  // it qualifies for update after saving once
+  // it qualifies for update after it has been saved once
   const handleSaveCount = (index) => {
-    // const newValue = e.target.value;
     setStages((prevStages) => {
       const updatedStages = [...prevStages];
       updatedStages[index].toUpd = updatedStages[index].toUpd + 1;
@@ -137,7 +123,6 @@ function JobExPlanAdd() {
     });
   };
   const setRowError = (index, val) => {
-    // const newValue = e.target.value;
     setStages((prevStages) => {
       const updatedStages = [...prevStages];
       updatedStages[index].inError = val;
@@ -147,11 +132,22 @@ function JobExPlanAdd() {
 
   //  t: {stageId, theStage, depttId, startDt, endDt, theVal}
   const saveRec = async (stageId, depttId, startDt, endDt, theVal, toUpd) => {
-    // console.log(theJob.jobValue, sumTheVal());
     if (theJob.jobValue < sumTheVal() ) {
-      // setStatus('Error');
       // 1 indicates Error
       setRowError(stageId - 1, 1);
+      alert('Allocation exceeded the Job Value!')
+      return;
+    }
+    if (theVal < 0 ) {
+      // 1 indicates Error
+      setRowError(stageId - 1, 1);
+      alert('Allocation cannot be negative!')
+      return;
+    }
+    if (endDt < startDt ) {
+      // 1 indicates Error
+      setRowError(stageId - 1, 1);
+      alert('Job cannot end before it has started!')
       return;
     }
     setStatus('busy');
@@ -184,9 +180,6 @@ function JobExPlanAdd() {
       setStatus('Error');
       setMsg(errText(error));
       setErrNo(errNumber(error));
-
-      // 1 indicates Error
-      setRowError(stageId - 1, 1);
     }
   };
 
@@ -280,7 +273,14 @@ function JobExPlanAdd() {
                   style={{ backgroundColor: `${bgColor(t.stageId)}` }}
                 >
                   <td>{t.stageId}</td>
-                  <td>{t.theStage}</td>
+                  <td style={{
+                        color: `${
+                          t.inError == 1  ? 'red' : 'black'
+                        }`,
+                        fontWeight:`${
+                          t.inError == 1  ? 'bold' : 'normal'
+                        }`
+                      }}>{t.theStage}</td>
                   <td>
                     <select
                       name='depttId'
@@ -309,11 +309,6 @@ function JobExPlanAdd() {
                       max={theJob.jobEnd}
                       required
                       onChange={(e) => handleInputChange(t.stageId - 1, e)}
-                      // style={{
-                      //   color: `${
-                      //     t.inError == 1  ? 'red' : 'black'
-                      //   }`,
-                      // }}
                     />
                   </td>
                   <td>
@@ -326,11 +321,6 @@ function JobExPlanAdd() {
                       max={theJob.jobEnd}
                       required
                       onChange={(e) => handleInputChange(t.stageId - 1, e)}
-                      // style={{
-                      //   color: `${
-                      //     t.inError == 1 ? 'red' : 'black'
-                      //   }`,
-                      // }}
                     />
                   </td>
                   <td>
@@ -342,32 +332,13 @@ function JobExPlanAdd() {
                       min={0}
                       max={theJob.jobValue}
                       required
-                      // a true value for (status === 'Error' && errNo !== 500) will indicate that trigger
-                      // has rolled back the transaction and error has traveled from trigger to stored
-                      // procedure and finally to catch block of the API call
-                      style={{
-                        color: `${
-                          t.inError == 1  ? 'red' : 'black'
-                        }`,
-                        fontWeight:`${
-                          t.inError == 1  ? 'bold' : 'normal'
-                        }`
-                        
-                      }}
                       onChange={(e) => handleInputChange(t.stageId - 1, e)}
                     />
                   </td>
                   <td>
                     <button
                       onClick={() =>
-                        saveRec(
-                          t.stageId,
-                          t.depttId,
-                          t.startDt,
-                          t.endDt,
-                          t.theVal,
-                          t.toUpd
-                        )
+                        saveRec(t.stageId, t.depttId, t.startDt, t.endDt, t.theVal, t.toUpd)
                       }
                       disabled={
                         !okSubmit(t.depttId, t.startDt, t.endDt, t.theVal)
