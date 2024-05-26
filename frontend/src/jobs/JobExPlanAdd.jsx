@@ -36,7 +36,6 @@ function JobExPlanAdd() {
     if (!startDt) return false;
     if (!endDt) return false;
     if (!theVal ) return false;
-    // if (Date.parse(endDt) - Date.parse(startDt) < 0) return false;
     return true;
   };
 
@@ -106,9 +105,12 @@ function JobExPlanAdd() {
   // the parameter index has been passed after deducting 1 from stageId
   const handleInputChange = (index, e) => {
     setStages((prevStages) => {
+      // create a copy of stages
       const updatedStages = [...prevStages];
+      // update the e.target.name property at location 'index' with new value or e.target.value
       // third bracket makes it property name
       updatedStages[index][e.target.name] = e.target.value;
+      // returning updatedStages replaces stages with its updated version
       return updatedStages;
     });
   };
@@ -132,8 +134,10 @@ function JobExPlanAdd() {
 
   //  t: {stageId, theStage, depttId, startDt, endDt, theVal}
   const saveRec = async (stageId, depttId, startDt, endDt, theVal, toUpd) => {
+    console.log(stages)
     if (theJob.jobValue < sumTheVal() ) {
-      // 1 indicates Error
+      // parameter-1: stageId-1 is required because stages is an array and starts with 0
+      // parameter-2:  1 indicates Error
       setRowError(stageId - 1, 1);
       alert('Allocation exceeded the Job Value!')
       return;
@@ -174,7 +178,8 @@ function JobExPlanAdd() {
       }
       setStatus('Success');
       handleSaveCount(stageId - 1);
-      // 0 indicates No Error
+      // parameter-1: stageId-1 is required because stages is an array and starts with 0
+      // parameter-2:  0 indicates No Error
       setRowError(stageId - 1, 0);
     } catch (error) {
       setStatus('Error');
@@ -329,9 +334,10 @@ function JobExPlanAdd() {
                       id='theVal'
                       type='number'
                       value={t.theVal || ''}
-                      min={0}
-                      max={theJob.jobValue}
-                      required
+                      // these are not going to work as we are not inside a form
+                      // min={0}
+                      // max={theJob.jobValue}
+                      // required
                       onChange={(e) => handleInputChange(t.stageId - 1, e)}
                     />
                   </td>
@@ -340,6 +346,7 @@ function JobExPlanAdd() {
                       onClick={() =>
                         saveRec(t.stageId, t.depttId, t.startDt, t.endDt, t.theVal, t.toUpd)
                       }
+                      type='submit' 
                       disabled={
                         !okSubmit(t.depttId, t.startDt, t.endDt, t.theVal)
                       }
