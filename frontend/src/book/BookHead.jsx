@@ -15,6 +15,7 @@ const BookHead = () => {
   const [dtStatus, setDtStatus] = useState('');
   const [empStatus, setEmpStatus] = useState('');
   const [wpStatus, setWpStatus] = useState('');
+  const [bookingStatus, setBookingStatus] = useState('');
   const [err, setErr] = useState(false);
 
   const { userId } = useContext(userContext);
@@ -90,6 +91,8 @@ const BookHead = () => {
   if (empStatus === 'Error') return <h1 style={{ color: 'red' }}>Employee Details could not be loaded[Error: {msg}]</h1>;
   if (wpStatus === 'Error') return <h1 style={{ color: 'red' }}>WorkPlan Details could not be loaded[Error: {msg}]</h1>;
   if (dtStatus === 'Error') return <h1 style={{ color: 'red' }}>Dates could not be loaded[Error: {msg}]</h1>;
+  if (bookingStatus === 'Error') return <h1 style={{ color: 'red' }}>Error encountered in booking</h1>;
+
 
   if (!userId) return <h1>Login again</h1>;
 
@@ -159,6 +162,7 @@ const BookHead = () => {
                   empId={userId}
                   bookDay={d}
                   hourlyRate={empDet.theHrRate}
+                  reportBookingStatus={setBookingStatus}
                 />
               </tr>
             );
