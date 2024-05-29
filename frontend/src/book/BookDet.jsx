@@ -23,9 +23,13 @@ const BookDet = ({ empId, bookDay, hourlyRate, reportBookingStatus }) => {
   };
 
   const handleInputChange = (index, e) => {
+    if (isNaN(e.target.value)) return;
     setBData((prevBData) => {
+      const oldBooking = parseFloat(prevBData[index].theBooking);
       const updatedBData = [...prevBData];
       updatedBData[index].theBooking = e.target.value;
+      const deltaBooking = parseFloat(e.target.value - oldBooking);
+      updatedBData[index].remainingVal = parseFloat(updatedBData[index].remainingVal - deltaBooking * hourlyRate);
       return updatedBData;
     });
   };
@@ -51,7 +55,12 @@ const BookDet = ({ empId, bookDay, hourlyRate, reportBookingStatus }) => {
 
   const handleUpdAdd = () => {
     bData.map((t) => {
-      if ((isNaN(t.theBooking)) ||(t.theBooking < 0) || ((t.theBooking * hourlyRate) > t.remainingVal)){
+
+      // if ((isNaN(t.theBooking)) ||(t.theBooking < 0) || (t.changeInBooking * hourlyRate > t.remainingVal)){
+      //   setError(t.idx, 1)
+      //   return;
+      // }
+      if ((t.theBooking < 0)  || (t.remainingVal < 0)){
         setError(t.idx, 1)
         return;
       }
@@ -150,7 +159,7 @@ const BookDet = ({ empId, bookDay, hourlyRate, reportBookingStatus }) => {
               // theWpId, idx, inError, toSave, theBooking, toUpd, d1, d2
               // d1 is +ve when schedule start is before booking date
               // d2 is +ve when booking date is before schedule end date
-              title={ 'wpId:' + t.theWpId + ' idx:' + t.idx + ' inError:' + t.inError +  ' booking:' +  t.theBooking +
+              title={ 'wpId:' + t.theWpId + ' idx:' + t.idx + ' remaining:' + t.remainingVal + ' inError:' + t.inError +  ' booking:' +  t.theBooking +
                 ' toUpd:' + t.toUpd + ' d1:' +  t.d1 +  ' d2:' + t.d2 }
               disabled={t.d1 < 0 || t.d2 < 0}
               style={{
