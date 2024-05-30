@@ -141,7 +141,7 @@ const BookHead = () => {
                     <br />
                     {t.dtStart} to {t.dtEnd}
                     <br />
-                    {t.workPlanDepttShare}/{t.consumed}
+                    Allocated/Consumed:Rs.{t.workPlanDepttShare}/{t.consumed}
                     <br />
                   </small>
                 </th>

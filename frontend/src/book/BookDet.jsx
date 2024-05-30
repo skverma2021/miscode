@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { errNumber } from '../util/errMsgText';
 
 const BookDet = ({ empId, bookDay, hourlyRate, reportBookingStatus }) => {
   const [bData, setBData] = useState([]);
@@ -16,14 +17,13 @@ const BookDet = ({ empId, bookDay, hourlyRate, reportBookingStatus }) => {
         `http://localhost:3000/api/bookings/${empId}/${bookDay.id}`
       );
       setBData(res.data);
-      reportBookingStatus('Sucess')
+      reportBookingStatus('Success')
     } catch (error) {
       reportBookingStatus('Error');
     }
   };
 
   const handleInputChange = (index, e) => {
-    if (isNaN(e.target.value)) return;
     setBData((prevBData) => {
       const oldBooking = parseFloat(prevBData[index].theBooking);
       const updatedBData = [...prevBData];
@@ -55,12 +55,7 @@ const BookDet = ({ empId, bookDay, hourlyRate, reportBookingStatus }) => {
 
   const handleUpdAdd = () => {
     bData.map((t) => {
-
-      // if ((isNaN(t.theBooking)) ||(t.theBooking < 0) || (t.changeInBooking * hourlyRate > t.remainingVal)){
-      //   setError(t.idx, 1)
-      //   return;
-      // }
-      if ((t.theBooking < 0)  || (t.remainingVal < 0)){
+      if ((isNaN(t.theBooking)) ||(t.theBooking < 0) ){
         setError(t.idx, 1)
         return;
       }
@@ -108,7 +103,12 @@ const BookDet = ({ empId, bookDay, hourlyRate, reportBookingStatus }) => {
       setError(i, 0); // it helps to provide feedback to user in case of error inError=0 => no error in ith row
       reportBookingStatus('Success')
     } catch (error) {
-      reportBookingStatus('Error');
+      if (errNumber(error) == 500){
+        reportBookingStatus('Error');
+      }
+      else{
+        setError(i,1);
+      }
     }
   };
 
@@ -128,7 +128,12 @@ const BookDet = ({ empId, bookDay, hourlyRate, reportBookingStatus }) => {
       handleSaveCount(i)
       reportBookingStatus('Success')
     } catch (error) {
-      reportBookingStatus('Error');
+      if (errNumber(error) == 500){
+        reportBookingStatus('Error');
+      }
+      else{
+        setError(i,1)
+      }
     }
   };
 
@@ -159,8 +164,10 @@ const BookDet = ({ empId, bookDay, hourlyRate, reportBookingStatus }) => {
               // theWpId, idx, inError, toSave, theBooking, toUpd, d1, d2
               // d1 is +ve when schedule start is before booking date
               // d2 is +ve when booking date is before schedule end date
-              title={ 'wpId:' + t.theWpId + ' idx:' + t.idx + ' remaining:' + t.remainingVal + ' inError:' + t.inError +  ' booking:' +  t.theBooking +
-                ' toUpd:' + t.toUpd + ' d1:' +  t.d1 +  ' d2:' + t.d2 }
+
+              // title={ 'wpId:' + t.theWpId + 'remainingVal' + t.remainingVal + 'idx:' + t.idx  + ' inError:' + t.inError +  ' booking:' +  t.theBooking +
+              //   ' toUpd:' + t.toUpd + ' d1:' +  t.d1 +  ' d2:' + t.d2 }
+              title={  'Remaining Value: ' + t.remainingVal  }
               disabled={t.d1 < 0 || t.d2 < 0}
               style={{
                 border: 'none',
