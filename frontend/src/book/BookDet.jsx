@@ -25,11 +25,8 @@ const BookDet = ({ empId, bookDay, hourlyRate, reportBookingStatus }) => {
 
   const handleInputChange = (index, e) => {
     setBData((prevBData) => {
-      const oldBooking = parseFloat(prevBData[index].theBooking);
       const updatedBData = [...prevBData];
       updatedBData[index].theBooking = e.target.value;
-      const deltaBooking = parseFloat(e.target.value - oldBooking);
-      updatedBData[index].remainingVal = parseFloat(updatedBData[index].remainingVal - deltaBooking * hourlyRate);
       return updatedBData;
     });
   };
@@ -64,24 +61,10 @@ const BookDet = ({ empId, bookDay, hourlyRate, reportBookingStatus }) => {
       // even if API returns tpUpd as 0 (POST/append case) it becomes an update case after 1 save
       // when the form remains open and user revisits and saves it again
       if (t.toUpd > 0 ) {
-        updBooking(
-          t.idx,
-          empId,
-          t.theWpId,
-          bookDay.id,
-          t.theBooking,
-          hourlyRate
-        );
+        updBooking( t.idx, empId, t.theWpId, bookDay.id, t.theBooking, hourlyRate );
       } else {
         if (t.theBooking > 0)
-          addBooking(
-            t.idx,
-            empId,
-            t.theWpId,
-            bookDay.id,
-            t.theBooking,
-            hourlyRate
-          );
+          addBooking( t.idx, empId, t.theWpId, bookDay.id, t.theBooking, hourlyRate );
       }
 
     });
@@ -89,14 +72,8 @@ const BookDet = ({ empId, bookDay, hourlyRate, reportBookingStatus }) => {
 
   // update or delete when booking = 0
   const updBooking = async (i, e, wp, d, b, h) => {
-    const rec = {
-      empId: e,
-      workPlanId: wp,
-      dateId: d,
-      booking: b ? b : 0,
-      // value of booking = hours worked x hourly rate
-      bookingVal: b * h,
-    };
+    const rec = { empId: e, workPlanId: wp, dateId: d, booking: b ? b : 0, bookingVal: b * h, };
+    // value of booking = hours worked x hourly rate
     reportBookingStatus('busy')
     try {
       const res = await axios.put(`http://localhost:3000/api/bookings/`, rec);
@@ -113,14 +90,8 @@ const BookDet = ({ empId, bookDay, hourlyRate, reportBookingStatus }) => {
   };
 
   const addBooking = async (i, e, wp, d, b, h) => {
-    const rec = {
-      empId: e,
-      workPlanId: wp,
-      dateId: d,
-      booking: b,
-      // value of booking = hours worked x hourly rate
-      bookingVal: b * h,
-    };
+    const rec = { empId: e, workPlanId: wp, dateId: d,  booking: b, bookingVal: b * h, };
+    // value of booking = hours worked x hourly rate
     reportBookingStatus('busy')
     try {
       const res = await axios.post(`http://localhost:3000/api/bookings/`, rec);
@@ -164,10 +135,6 @@ const BookDet = ({ empId, bookDay, hourlyRate, reportBookingStatus }) => {
               // theWpId, idx, inError, toSave, theBooking, toUpd, d1, d2
               // d1 is +ve when schedule start is before booking date
               // d2 is +ve when booking date is before schedule end date
-
-              // title={ 'wpId:' + t.theWpId + 'remainingVal' + t.remainingVal + 'idx:' + t.idx  + ' inError:' + t.inError +  ' booking:' +  t.theBooking +
-              //   ' toUpd:' + t.toUpd + ' d1:' +  t.d1 +  ' d2:' + t.d2 }
-              title={  'Remaining Value: ' + t.remainingVal  }
               disabled={t.d1 < 0 || t.d2 < 0}
               style={{
                 border: 'none',
@@ -179,19 +146,30 @@ const BookDet = ({ empId, bookDay, hourlyRate, reportBookingStatus }) => {
                   t.inError ? 'bold' : 'normal'
                 }`
               }}
+              title={
+                'wpId:' +
+                t.theWpId +
+                ' idx:' +
+                t.idx +
+                ' inError:' +
+                t.inError +
+                ' booking:' +
+                t.theBooking +
+                ' toUpd:' +
+                t.toUpd +
+                ' d1:' +
+                t.d1 +
+                ' d2:' +
+                t.d2
+              }
+
             />
           </td>
         );
       })}
-      <td
-        style={{
-          border: '1px solid',
-          textAlign: 'center',
-        }}
-      >
+      <td style={{ border: '1px solid', textAlign: 'center' }} >
         <button onClick={handleUpdAdd}>💾</button>
       </td>
-      {/* <div style={{ width: '5%' }}>action</div>💾🖍️💽 */}
     </>
   );
 };

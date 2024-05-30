@@ -30,10 +30,7 @@ const BookMonthYear = () => {
         />
         <div>
           <Link
-            to={`/booking/${mtext.substring(5, 7)}/${mtext.substring(
-              0,
-              4
-            )}`}
+            to={`/booking/${mtext.substring(5, 7)}/${mtext.substring(0, 4 )}`}
           >
             {' '}
             Log Hours Booked
