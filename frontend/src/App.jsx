@@ -31,6 +31,9 @@ import JobExPlanAdd from './jobs/JobExPlanAdd';
 import BookMonthYear from './book/BookMonthYear';
 import BookHead from './book/BookHead';
 
+// Reports
+import ReportsHR from './hr/ReportsHR';
+
 function App() {
   return (
     <>
@@ -67,6 +70,9 @@ function App() {
         {/* Booking related */}
         <Route path='/booking' element={<BookMonthYear />} />
         <Route path='/booking/:m/:y' element={<BookHead />} />
+
+        {/* Reports related */}
+        <Route path='/hr/reports' element={<ReportsHR />} />
       </Routes>
     </>
   );

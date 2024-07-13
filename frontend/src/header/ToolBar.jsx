@@ -92,6 +92,10 @@ function ToolBar() {
         bookings
       </Link>
       {` `}
+      <Link to='/hr/reports' style={{ marginRight: '15px' }}>
+        {' '}
+        Reports
+      </Link>
       <Link to='/hr/emp/cp' style={{ marginRight: '15px' }}>
         {' '}
         ChangePassword

@@ -20,6 +20,10 @@ const workplans = require('./routes/WorkPlans');
 // Bookings related
 const bookings = require('./routes/bookings');
 
+// Reports related
+const reports = require('./routes/reports');
+
+
 //  Set database password on the command line
 //  $env:cjisPass="cdcbgt"
 
@@ -58,6 +62,9 @@ app.use('/api/workplans', workplans);
 
 // Bookings
 app.use('/api/bookings', bookings)
+
+// Reports
+app.use('/api/reports', reports)
 
 app.listen(config.get('thePort'), () =>
   console.log(
