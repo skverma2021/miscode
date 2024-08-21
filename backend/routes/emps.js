@@ -8,10 +8,9 @@ const jwt = require('jsonwebtoken');
 const auth = require('../middleware/auth');
 const handleError = require('../util/handleError');
 
-
 // route for initial testing (do not delete)
 // router.get('/', async (req, res) => {
-//   try { 
+//   try {
 //     const pool = await sql.connect(config);
 //     // const result = await pool.request().execute('getEmpsTest');
 //     const result = await pool.request().query('select empFullName from emp');
@@ -21,7 +20,7 @@ const handleError = require('../util/handleError');
 //   }
 // });
 
-router.get('/',  async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const pool = await sql.connect(config);
     const result = await pool.request().execute('getEmps');
@@ -82,9 +81,44 @@ router.get('/:theEMailId/:thePasswd', async (req, res) => {
   }
 });
 
+// Post route for login
+router.post('/:login', async (req, res) => {
+  try {
+    const { theEMailId, thePasswd } = req.body;
+    const pool = await sql.connect(config);
+    const result = await pool
+      .request()
+      .input('theEMailId', sql.VarChar(150), theEMailId)
+      .execute(`getEmpEmail`);
+    // getEmpEmail: eID, eName, eDesigID, eDesig, eGrade, eDepttID, eDeptt, ePass
+    if (result.recordset.length == 0) {
+      res.status(400).json({
+        msg: 'authentication failed',
+        token: '',
+      });
+      return;
+    }
+    const empFound = await bcrypt.compare(thePasswd, result.recordset[0].ePass);
+    if (empFound) {
+      const eRec = result.recordset[0];
+      delete eRec.ePass;
+      const token = jwt.sign(eRec, configJwt.get('jwtPrivateKey'), {
+        expiresIn: 600,
+      });
+      res.json({ msg: 'authenticated successfuly', token: token });
+    } else {
+      res.status(400).json({
+        msg: 'authentication failed',
+        token: '',
+      });
+    }
+  } catch (err) {
+    handleError(err, res);
+  }
+});
+
 // ChangePass.jsx
 router.put('/cp/:id', auth, async (req, res) => {
-  
   try {
     const { id } = req.params;
     const { email, oldPass, passwd } = req.body;
@@ -94,7 +128,6 @@ router.put('/cp/:id', auth, async (req, res) => {
       .input('theEMailId', sql.VarChar(150), email)
       .execute(`getEmpEmail`);
     if (result.recordset.length == 0) {
-      
       return res.status(400).json({ msg: 'Invalid User' });
     }
     const found = await bcrypt.compare(oldPass, result.recordset[0].ePass);
@@ -115,7 +148,7 @@ router.put('/cp/:id', auth, async (req, res) => {
 });
 
 // Emps.jsx
-router.delete('/:id', auth,async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
   try {
     const { id } = req.params;
     const pool = await sql.connect(config);
@@ -165,12 +198,12 @@ router.post('/', auth, async (req, res) => {
       .execute('postEmp');
     res.status(200).json({ msg: 'Employee added successfully!' });
   } catch (err) {
-   handleError(err, res);
+    handleError(err, res);
   }
 });
 
 // EmpUpd.jsx
-router.put('/:id', auth,async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
   try {
     const { id } = req.params;
     const {
