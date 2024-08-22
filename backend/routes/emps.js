@@ -82,7 +82,7 @@ router.get('/:theEMailId/:thePasswd', async (req, res) => {
 });
 
 // Post route for login
-router.post('/:login', async (req, res) => {
+router.post('/login', async (req, res) => {
   try {
     const { theEMailId, thePasswd } = req.body;
     const pool = await sql.connect(config);

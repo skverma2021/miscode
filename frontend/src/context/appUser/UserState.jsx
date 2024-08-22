@@ -15,10 +15,6 @@ export default (props) => {
 
   const authUser = async (theEMailId, thePasswd) => {
     try {
-      // Avoid sending login credential as part of URL
-      // const res = await axios.get(
-      //   `http://localhost:3000/api/emps/${theEMailId}/${thePasswd}`
-      // );
       const res = await axios.post(`http://localhost:3000/api/emps/login`, {
         theEMailId,
         thePasswd,
