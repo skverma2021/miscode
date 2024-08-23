@@ -11,7 +11,7 @@ import EmpUpd from './hr/EmpUpd';
 import TransferPosting from './hr/TransferPosting';
 import TPState from './context/tp/TPState';
 
-import Test from './Test';
+// import Test from './Test';
 import Disciplines from './hr/Disciplines';
 import Desig from './hr/Desig';
 import ContextDesig from './hr/ContextDesig';

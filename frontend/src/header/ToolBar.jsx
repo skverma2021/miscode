@@ -5,7 +5,7 @@ import userContext from '../context/appUser/UserContext';
 
 function ToolBar() {
   const [theDeptt, setTheDeptt] = useState('');
-  const { userId, user, deptt, logOutUser } = useContext(userContext);
+  const { user, deptt, logOutUser } = useContext(userContext);
 
   useEffect(() => {
     setTheDeptt(deptt);
@@ -85,7 +85,6 @@ function ToolBar() {
     </div>
   );
   const renderBookingToolbar = () => (
-    // console.log('reached here')
     <div>
       <Link to={`/booking`} style={{ marginRight: '15px' }}>
         {' '}
@@ -133,19 +132,19 @@ function ToolBar() {
       case 11:
       case 12:
         return renderBookingToolbar();
-        break;
+
       case 6:
         return renderBDToolbar();
-        break;
+
       case 13:
         return renderHRToolbar();
-        break;
+
       case -1:
         return renderFailedAuthToolbar();
-        break;
+
       default:
         return renderDefaultToolbar(); // Unknown department
-        break;
+
     }
   };
   return (
