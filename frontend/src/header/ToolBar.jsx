@@ -9,8 +9,8 @@ function ToolBar() {
 
   useEffect(() => {
     setTheDeptt(deptt);
-  },[deptt]);
-  
+  }, [deptt]);
+
   const renderHRToolbar = () => (
     <div>
       <Link to='/hr/discp' style={{ marginRight: '15px' }}>
@@ -144,7 +144,6 @@ function ToolBar() {
 
       default:
         return renderDefaultToolbar(); // Unknown department
-
     }
   };
   return (
@@ -159,6 +158,7 @@ function ToolBar() {
       >
         <div style={{ display: 'flex', marginTop: '0px' }}>
           <div>
+            {/* window + . search for abacus */}
             <font size='5'>🧮</font>
           </div>
           <div style={{ marginLeft: '10px', marginTop: '6px' }}>
