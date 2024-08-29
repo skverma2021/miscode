@@ -45,42 +45,6 @@ router.get('/:id', auth, async (req, res) => {
   }
 });
 
-// Login.jsx
-// router.get('/:theEMailId/:thePasswd', async (req, res) => {
-//   try {
-//     const { theEMailId, thePasswd } = req.params;
-//     const pool = await sql.connect(config);
-//     const result = await pool
-//       .request()
-//       .input('theEMailId', sql.VarChar(150), theEMailId)
-//       .execute(`getEmpEmail`);
-//     // getEmpEmail: eID, eName, eDesigID, eDesig, eGrade, eDepttID, eDeptt, ePass
-//     if (result.recordset.length == 0) {
-//       res.status(400).json({
-//         msg: 'authentication failed',
-//         token: '',
-//       });
-//       return;
-//     }
-//     const empFound = await bcrypt.compare(thePasswd, result.recordset[0].ePass);
-//     if (empFound) {
-//       const eRec = result.recordset[0];
-//       delete eRec.ePass;
-//       const token = jwt.sign(eRec, configJwt.get('jwtPrivateKey'), {
-//         expiresIn: 600,
-//       });
-//       res.json({ msg: 'authenticated successfuly', token: token });
-//     } else {
-//       res.status(400).json({
-//         msg: 'authentication failed',
-//         token: '',
-//       });
-//     }
-//   } catch (err) {
-//     handleError(err, res);
-//   }
-// });
-
 // Post route for login
 router.post('/login', async (req, res) => {
   try {
