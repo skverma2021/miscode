@@ -35,8 +35,9 @@ const ChangePass = () => {
     event.preventDefault();
     try {
       const res = await axios.put(
-        `http://localhost:3000/api/emps/cp/${parseInt(userId)}`,
+        `http://localhost:3000/api/emps/cp`,
         {
+          id:parseInt(userId),
           email: pass.email,
           oldPass: pass.oldPass,
           passwd: pass.repeatPass,

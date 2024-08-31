@@ -82,10 +82,10 @@ router.post('/login', async (req, res) => {
 });
 
 // ChangePass.jsx
-router.put('/cp/:id', auth, async (req, res) => {
+router.put('/cp', auth, async (req, res) => {
   try {
-    const { id } = req.params;
-    const { email, oldPass, passwd } = req.body;
+    // const { id } = req.params;
+    const { id, email, oldPass, passwd } = req.body;
     let pool = await sql.connect(config);
     let result = await pool
       .request()
