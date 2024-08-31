@@ -23,6 +23,8 @@ export default (props) => {
         'Authorization'
       ] = `Bearer ${res.data.token}`;
       const decoded = jwtDecode(res.data.token);
+      const expDate = new Date(decoded.exp * 1000);
+      console.log('Token will expire at Hrs:', expDate.getHours(), ' Min:', expDate.getMinutes(), ' Sec:', expDate.getSeconds())
       dispatch({
         type: AUTH_USER,
         payLoad: {

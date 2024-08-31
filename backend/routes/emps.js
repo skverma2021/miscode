@@ -9,7 +9,7 @@ const auth = require('../middleware/auth');
 const handleError = require('../util/handleError');
 
 // route for initial testing (do not delete)
-router.get('/test', async (req, res) => {
+router.get('/test', auth, async (req, res) => {
   try {
     const pool = await sql.connect(config);
     const result = await pool.request().execute('getEmpsTest');
