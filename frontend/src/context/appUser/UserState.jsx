@@ -10,6 +10,7 @@ export default (props) => {
     theUserId: '',
     theUser: '',
     theDeptt: '0',
+    expMsg: '',
   };
   const [state, dispatch] = useReducer(UserReducer, initialState);
 
@@ -24,13 +25,21 @@ export default (props) => {
       ] = `Bearer ${res.data.token}`;
       const decoded = jwtDecode(res.data.token);
       const expDate = new Date(decoded.exp * 1000);
-      console.log('Token will expire at Hrs:', expDate.getHours(), ' Min:', expDate.getMinutes(), ' Sec:', expDate.getSeconds())
+      console.log(
+        'Token will expire at Hrs:',
+        expDate.getHours(),
+        ' Min:',
+        expDate.getMinutes(),
+        ' Sec:',
+        expDate.getSeconds()
+      );
       dispatch({
         type: AUTH_USER,
         payLoad: {
           usrId: decoded.eID,
           usrName: decoded.eName,
           usrDeptt: decoded.eDepttID,
+          usrExpMsg: `Token Expires at ${expDate.getHours()}:${expDate.getMinutes()}:${expDate.getSeconds()}`,
         },
       });
     } catch (error) {
@@ -57,6 +66,7 @@ export default (props) => {
         user: state.theUser,
         deptt: state.theDeptt,
         userId: state.theUserId,
+        expMsg: state.expMsg,
         authUser,
         logOutUser,
       }}

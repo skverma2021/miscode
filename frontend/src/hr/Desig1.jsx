@@ -7,24 +7,26 @@ import { useNavigate } from 'react-router-dom';
 
 // [id] ,[discpId] ,[description] ,[gradeId]
 
-const Disciplines = () => {
+const Desig1 = () => {
   const [disciplines, setDisciplines] = useState([]); // for the discipline window
   const [theDiscp, setTheDiscp] = useState(0); // for designation window - both edit and browse window - foreign key
   const [theDiscpName, setTheDiscpName] = useState(''); // for display in the designation edit window
   const [designations, setDesignations] = useState([]); // all designations belonging to the discipline
   const [grades, setGrades] = useState([]); // for the select control in edit window
+  // the designation record to be edited
+  // the foreign key is available as theDiscp
   const [theDesig, setTheDesig] = useState({
-    // the designation record to be edited
     id: '',
     description: '',
     gradeId: '',
-  }); // the foreign key is available as theDiscp
+  });
   const [desigFlag, setDesigFlag] = useState(false);
 
-  const [msg, setMsg] = useState('');
   const [discpStatus, setDiscpStatus] = useState('');
   const [desigStatus, setDesigStatus] = useState('');
   const [gradeStatus, setGradeStatus] = useState('');
+
+  const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
   const [errNo, setErrNo] = useState(0);
   const navigate = useNavigate();
@@ -41,9 +43,9 @@ const Disciplines = () => {
   useEffect(() => {
     getAllDisciplines();
   }, []);
+
   useEffect(() => {
     getAllDesignations();
-    // }, [theDiscp, newRec, updRec]);
   }, [theDiscp, desigFlag]);
 
   useEffect(() => {
@@ -93,7 +95,7 @@ const Disciplines = () => {
   };
 
   // [id] ,[discpId] ,[description] ,[gradeId]
-  const handleSubmit = async (theDescription, theGrade) => {
+  const handleSubmit = async () => {
     setStatus('busy');
     try {
       if (theDesig.id == 0) {
@@ -128,9 +130,7 @@ const Disciplines = () => {
   const deleteDesigData = async (t) => {
     setStatus('busy');
     try {
-      const res = await axios.delete(
-        `http://localhost:3000/api/designations/${t}`
-      );
+      await axios.delete(`http://localhost:3000/api/designations/${t}`);
       setStatus('Deleted');
       setMsg('Successfully Deleted.');
       setDesigFlag((t) => !t);
@@ -143,11 +143,15 @@ const Disciplines = () => {
 
   if (discpStatus === 'Error') {
     timeoutId = setTimeout(goHome, 5000);
-    return <h1 style={{ color: 'red' }}>Error: Disciplines could not be loaded</h1>;
+    return (
+      <h1 style={{ color: 'red' }}>Error: Disciplines could not be loaded</h1>
+    );
   }
   if (desigStatus === 'Error') {
     timeoutId = setTimeout(goHome, 5000);
-    return <h1 style={{ color: 'red' }}>Error: Designations could not be loaded</h1>;
+    return (
+      <h1 style={{ color: 'red' }}>Error: Designations could not be loaded</h1>
+    );
   }
   if (gradeStatus === 'Error') {
     timeoutId = setTimeout(goHome, 5000);
@@ -322,16 +326,7 @@ const Disciplines = () => {
                           </td>
                           <td>
                             {' '}
-                            <Link
-                              onClick={() =>
-                                handleSubmit(
-                                  theDesig.description,
-                                  theDesig.gradeId
-                                )
-                              }
-                            >
-                              💾
-                            </Link>
+                            <Link onClick={() => handleSubmit()}>💾</Link>
                           </td>
                         </tr>
                       </tbody>
@@ -348,4 +343,4 @@ const Disciplines = () => {
 };
 // [id] ,[discpId] ,[description] ,[gradeId]
 
-export default Disciplines;
+export default Desig1;

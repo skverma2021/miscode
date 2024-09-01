@@ -1,20 +1,22 @@
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { errText} from '../util/errMsgText';
+import { errText } from '../util/errMsgText';
 import Spinner from '../home/Spinner';
 import { useNavigate } from 'react-router-dom';
-import {DesigContext} from '../context/desig/DesigContext';
+import { DesigContext } from '../context/desig/DesigContext';
 import ContextDesigList from './ContextDesigList';
 
 const ContextDesig = () => {
-  const [disciplines, setDisciplines] = useState([]); 
+  const [disciplines, setDisciplines] = useState([]);
   const [discpStatus, setDiscpStatus] = useState('');
-  const {setDiscp, setDesig} = useContext(DesigContext);
-  const {discpId} = useContext(DesigContext).desigState;
+  // const { setDiscp, setDesig, xxx } = useContext(DesigContext);
+  const { setDiscp, setDesig, discpId } = useContext(DesigContext);
+  // const { discpId } = useContext(DesigContext).desigState;
   const [msg, setMsg] = useState('');
   const navigate = useNavigate();
 
+  // console.log('xxx is:', xxx);
   let timeoutId;
   const goHome = () => {
     navigate('/');
@@ -27,7 +29,7 @@ const ContextDesig = () => {
   useEffect(() => {
     getAllDisciplines();
   }, []);
-  
+
   const getAllDisciplines = async () => {
     setDiscpStatus('busy');
     try {
@@ -41,13 +43,16 @@ const ContextDesig = () => {
     }
   };
 
-  if (discpStatus === 'Error') { 
+  if (discpStatus === 'Error') {
     timeoutId = setTimeout(goHome, 5000);
-    return <h1 style={{ color: 'red' }}>Error: Disciplines could not be loaded [ {msg} ]</h1>;
+    return (
+      <h1 style={{ color: 'red' }}>
+        Error: Disciplines could not be loaded [ {msg} ]
+      </h1>
+    );
   }
 
-  if (discpStatus === 'busy')
-    return <Spinner />;
+  if (discpStatus === 'busy') return <Spinner />;
 
   return (
     <>
@@ -76,7 +81,7 @@ const ContextDesig = () => {
                 <tbody>
                   {disciplines.map((t) => {
                     return (
-                      <tr key = {t.id}>
+                      <tr key={t.id}>
                         <td>
                           <Link
                             onClick={() => {
@@ -96,10 +101,9 @@ const ContextDesig = () => {
             </td>
             {/*  Designation window on the right */}
             <td style={{ verticalAlign: 'top' }}>
-            {discpId && <ContextDesigList />}
+              {discpId && <ContextDesigList />}
             </td>
           </tr>
-
         </tbody>
       </table>
     </>

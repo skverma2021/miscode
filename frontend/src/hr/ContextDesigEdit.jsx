@@ -1,27 +1,34 @@
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { errText} from '../util/errMsgText';
+import { errText } from '../util/errMsgText';
 import Spinner from '../home/Spinner';
 import { useNavigate } from 'react-router-dom';
-import {DesigContext} from '../context/desig/DesigContext';
+import { DesigContext } from '../context/desig/DesigContext';
 
 const ContextDesigEdit = () => {
-  const [grades, setGrades] = useState([]); 
+  const [grades, setGrades] = useState([]);
   const [theDesig, setTheDesig] = useState({
     id: 0,
     description: '',
     gradeId: '',
-  }); 
+  });
   const [msg, setMsg] = useState('');
   const [gradeStatus, setGradeStatus] = useState('');
   const [status, setStatus] = useState('');
   const navigate = useNavigate();
-  const {setAddEditFlag, setDesig} = useContext(DesigContext);
-  const {discpId, discp, desigId, desigDes, desigGrade} = useContext(DesigContext).desigState;
+  const {
+    setAddEditFlag,
+    setDesig,
+    discpId,
+    discp,
+    desigId,
+    desigDes,
+    desigGrade,
+  } = useContext(DesigContext);
 
   useEffect(() => {
-    setTheDesig({id:desigId, description:desigDes, gradeId:desigGrade})
+    setTheDesig({ id: desigId, description: desigDes, gradeId: desigGrade });
   }, [desigId, desigDes, desigGrade]);
 
   let timeoutId;
@@ -98,8 +105,9 @@ const ContextDesigEdit = () => {
     <>
       <form>
         <h3>Update Designation in {discp}</h3>
-        <p style={{textAlign:'right'}}><Link onClick={() => setDesig('', '', '') }>AddNew</Link></p>
-        
+        <p style={{ textAlign: 'right' }}>
+          <Link onClick={() => setDesig('', '', '')}>AddNew</Link>
+        </p>
 
         <table style={{ width: '100%', border: '1px solid blue' }}>
           <thead>
@@ -144,18 +152,12 @@ const ContextDesigEdit = () => {
               </td>
               <td>
                 {' '}
-                <Link
-                  onClick={() =>
-                    handleSubmit()
-                  }
-                >
-                  💾
-                </Link>
+                <Link onClick={() => handleSubmit()}>💾</Link>
               </td>
             </tr>
           </tbody>
         </table>
-  </form>
+      </form>
     </>
   );
 };

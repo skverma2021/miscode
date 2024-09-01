@@ -5,7 +5,7 @@ import userContext from '../context/appUser/UserContext';
 
 function ToolBar() {
   const [theDeptt, setTheDeptt] = useState('');
-  const { user, deptt, logOutUser } = useContext(userContext);
+  const { user, deptt, logOutUser, expMsg } = useContext(userContext);
 
   useEffect(() => {
     setTheDeptt(deptt);
@@ -13,9 +13,9 @@ function ToolBar() {
 
   const renderHRToolbar = () => (
     <div>
-      <Link to='/hr/discp' style={{ marginRight: '15px' }}>
+      <Link to='/hr/desig' style={{ marginRight: '15px' }}>
         {' '}
-        Discipline
+        Discp-Desig
       </Link>
       <Link to='/hr/emp/all' style={{ marginRight: '15px' }}>
         {' '}
@@ -164,6 +164,9 @@ function ToolBar() {
           <div style={{ marginLeft: '10px', marginTop: '6px' }}>
             <font size='4'>Consultancy Jobs - MIS</font>
           </div>
+        </div>
+        <div style={{ marginTop: '6px' }}>
+          <small>[{expMsg}]</small>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div style={{ textAlign: 'right' }}>{renderToolbar()}</div>

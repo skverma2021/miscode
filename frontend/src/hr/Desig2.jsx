@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { errText} from '../util/errMsgText';
+import { errText } from '../util/errMsgText';
 import Spinner from '../home/Spinner';
 import { useNavigate } from 'react-router-dom';
 import DesigList from './DesigList';
 
-const Desig = () => {
-  const [disciplines, setDisciplines] = useState([]); 
+const Desig2 = () => {
+  const [disciplines, setDisciplines] = useState([]);
   const [theDiscpId, setTheDiscpId] = useState('');
   const [theDiscp, setTheDiscp] = useState('');
   const [discpStatus, setDiscpStatus] = useState('');
@@ -26,7 +26,7 @@ const Desig = () => {
   useEffect(() => {
     getAllDisciplines();
   }, []);
-  
+
   const getAllDisciplines = async () => {
     setDiscpStatus('busy');
     try {
@@ -40,13 +40,16 @@ const Desig = () => {
     }
   };
 
-  if (discpStatus === 'Error') { 
+  if (discpStatus === 'Error') {
     timeoutId = setTimeout(goHome, 5000);
-    return <h1 style={{ color: 'red' }}>Error: Disciplines could not be loaded [ {msg} ]</h1>;
+    return (
+      <h1 style={{ color: 'red' }}>
+        Error: Disciplines could not be loaded [ {msg} ]
+      </h1>
+    );
   }
 
-  if (discpStatus === 'busy')
-    return <Spinner />;
+  if (discpStatus === 'busy') return <Spinner />;
 
   return (
     <>
@@ -59,7 +62,9 @@ const Desig = () => {
         <thead>
           <tr>
             <th style={{ width: '50%' }}>DISCIPLINES</th>
-            <th style={{ width: '50%' }}>DESIGNATIONS  {theDiscpId && ` in ${theDiscp}`}</th>
+            <th style={{ width: '50%' }}>
+              DESIGNATIONS {theDiscpId && ` in ${theDiscp}`}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -75,9 +80,14 @@ const Desig = () => {
                 <tbody>
                   {disciplines.map((t) => {
                     return (
-                      <tr key = {t.id}>
+                      <tr key={t.id}>
                         <td>
-                          <Link onClick={() => { setTheDiscpId(t.id); setTheDiscp(t.description);}}>
+                          <Link
+                            onClick={() => {
+                              setTheDiscpId(t.id);
+                              setTheDiscp(t.description);
+                            }}
+                          >
                             {' '}
                             {t.description}
                           </Link>
@@ -90,10 +100,11 @@ const Desig = () => {
             </td>
             {/*  Designation window on the right */}
             <td style={{ verticalAlign: 'top' }}>
-                 {theDiscpId && <DesigList discpId = {theDiscpId} discp = {theDiscp} />} 
+              {theDiscpId && (
+                <DesigList discpId={theDiscpId} discp={theDiscp} />
+              )}
             </td>
           </tr>
-
         </tbody>
       </table>
     </>
@@ -101,4 +112,4 @@ const Desig = () => {
 };
 // [id] ,[discpId] ,[description] ,[gradeId]
 
-export default Desig;
+export default Desig2;

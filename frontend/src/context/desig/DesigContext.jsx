@@ -4,35 +4,34 @@ import React, { useReducer } from 'react';
 export const DesigContext = createContext();
 
 export const DesigState = (props) => {
-  
   const DesigReducer = (state, action) => {
-  return { ...state, ...action.payLoad };
+    return { ...state, ...action.payLoad };
   };
 
   const initialState = {
-    discpId:'',
-    discp:'',
+    discpId: '',
+    discp: '',
 
-    desigId:'',
-    desigDes:'',
-    desigGrade:'',
+    desigId: '',
+    desigDes: '',
+    desigGrade: '',
 
-    delFlag:false,
-    addEditFlag:false,
+    delFlag: false,
+    addEditFlag: false,
   };
-  
+
   const [state, dispatch] = useReducer(DesigReducer, initialState);
 
-  const setDiscp = (id, des) =>{
+  const setDiscp = (id, des) => {
     dispatch({
-      payLoad:{discpId:id, discp:des}
-    })
-  }
-  const setDesig = (id, des, grade) =>{
+      payLoad: { discpId: id, discp: des },
+    });
+  };
+  const setDesig = (id, des, grade) => {
     dispatch({
-      payLoad:{desigId:id, desigDes:des, desigGrade:grade}
-    })
-  }
+      payLoad: { desigId: id, desigDes: des, desigGrade: grade },
+    });
+  };
 
   const setDelFlag = () => {
     dispatch({
@@ -48,11 +47,17 @@ export const DesigState = (props) => {
   return (
     <DesigContext.Provider
       value={{
-        desigState: state,
+        discpId: state.discpId,
+        addEditFlag: state.addEditFlag,
+        delFlag: state.delFlag,
+        discp: state.discp,
+        desigId: state.desigId,
+        desigDes: state.desigDes,
+        desigGrade: state.desigGrade,
         setDiscp,
         setDesig,
         setDelFlag,
-        setAddEditFlag
+        setAddEditFlag,
       }}
     >
       {props.children}
