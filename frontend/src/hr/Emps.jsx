@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 
 // npm i @mui/material @emotion/react @emotion/styled
 // npm i @mui/x-data-grid
-
 
 // @@ Thinking about UI declaratively
 
@@ -109,7 +108,7 @@ const Emps = () => {
   const deleteEmpData = async (t) => {
     setStatus('busy');
     try {
-      const res = await axios.delete(`http://localhost:3000/api/emps/${t}`);
+      await axios.delete(`http://localhost:3000/api/emps/${t}`);
       setStatus('Deleted');
       setMsg('Successfully Deleted.');
       timeoutId = setTimeout(goHome, 2000);
@@ -119,11 +118,8 @@ const Emps = () => {
       timeoutId = setTimeout(goHome, 10000);
     }
   };
-  useEffect(() => {
-    getAllEmps();
-  }, []);
 
-  const getAllEmps = async () => {
+  const getAllEmps = useCallback(async () => {
     setStatus('busy');
     try {
       const res = await axios.get(`http://localhost:3000/api/emps`);
@@ -134,7 +130,11 @@ const Emps = () => {
       setMsg(errText(error));
       timeoutId = setTimeout(goHome, 10000);
     }
-  };
+  }, []); // Empty dependency array means the function will only be recreated when the component mounts
+
+  useEffect(() => {
+    getAllEmps();
+  }, []); // Run the function when the component mounts
 
   if (status === 'Error') return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
   if (status === 'Deleted') return <h1 style={{ color: 'blue' }}>{msg}</h1>;
@@ -152,7 +152,7 @@ const Emps = () => {
             },
           },
         }}
-        pageSizeOptions={[10,15,20,25]}
+        pageSizeOptions={[10, 15, 20, 25]}
         // checkboxSelection
         // disableRowSelectionOnClick
       />
