@@ -5,7 +5,7 @@ import { errText, errNumber } from '../util/errMsgText';
 import { useNavigate, useParams } from 'react-router-dom';
 import Spinner from '../home/Spinner';
 import RadioButton from '../util/RadioButton';
-import CityList from '../util/CityList'
+import CityList from '../util/CityList';
 
 const EmpUpd = () => {
   const [emp, setEmp] = useState({});
@@ -41,6 +41,7 @@ const EmpUpd = () => {
     return () => clearTimeout(timeoutId);
   }, []);
 
+  // fetch emp row
   useEffect(() => {
     const fetchEmpData = async () => {
       try {
@@ -48,7 +49,7 @@ const EmpUpd = () => {
         const res = await axios.get(`http://localhost:3000/api/emps/${id}`);
         setEmp(res.data[0]);
         setRecStatus('Success');
-        console.log(recStatus)
+        console.log(recStatus);
       } catch (error) {
         setRecStatus('Error');
         setMsg(errText(error));
@@ -58,15 +59,11 @@ const EmpUpd = () => {
     fetchEmpData();
   }, []);
 
-
   const onValChange = (e) => {
     setEmp({ ...emp, [e.target.name]: e.target.value });
   };
 
-  const handleCitySelection = (selectedCityId) => {
-    setEmp({ ...emp, "cityId": selectedCityId });
-  };
-
+  // update the row with user input
   const updEmpData = async (event) => {
     event.preventDefault();
     try {
@@ -84,11 +81,17 @@ const EmpUpd = () => {
 
   if (cityStatus === 'Error') {
     timeoutId = setTimeout(goHome, 5000);
-    return <h1 style={{ color: 'red' }}>Error: City Names could not be loaded</h1>;
+    return (
+      <h1 style={{ color: 'red' }}>Error: City Names could not be loaded</h1>
+    );
   }
   if (recStatus === 'Error') {
     timeoutId = setTimeout(goHome, 5000);
-    return <h1 style={{ color: 'red' }}>Error: Record for updation could not be loaded</h1>;
+    return (
+      <h1 style={{ color: 'red' }}>
+        Error: Record for updation could not be loaded
+      </h1>
+    );
   }
 
   if (status === 'Error' && errNo == 500) {
@@ -98,7 +101,11 @@ const EmpUpd = () => {
 
   if (status === 'Error' && errNo !== 2627 && errNo !== 2601) {
     timeoutId = setTimeout(goHome, 5000);
-    return <h1 style={{ color: 'red' }}>Error {errNo}: {msg}</h1>;
+    return (
+      <h1 style={{ color: 'red' }}>
+        Error {errNo}: {msg}
+      </h1>
+    );
   }
 
   if (status === 'busy') return <Spinner />;
@@ -199,11 +206,13 @@ const EmpUpd = () => {
                 <td>
                   <RadioButton
                     options={[
-                              { value: 'Mr', label: 'Mr' },
-                              { value: 'Ms', label: 'Ms' },
-                            ]}
+                      { value: 'Mr', label: 'Mr' },
+                      { value: 'Ms', label: 'Ms' },
+                    ]}
                     selectedOption={emp.title}
-                    onChange={(value) => setEmp({ ...emp, "title": value })}
+                    onOptionChange={(selectedValue) =>
+                      setEmp({ ...emp, title: selectedValue })
+                    }
                     radioName='title'
                   />
                 </td>
@@ -235,12 +244,14 @@ const EmpUpd = () => {
                 <td>
                   <RadioButton
                     options={[
-                              { value: "M", label: "Male" },
-                              { value: "F", label: "Female" },
-                            ]}
+                      { value: 'M', label: 'Male' },
+                      { value: 'F', label: 'Female' },
+                    ]}
                     selectedOption={emp.gender}
-                    onChange={(value) => setEmp({ ...emp, "gender": value })}
-                    radioName="gender"
+                    onOptionChange={(selectedValue) =>
+                      setEmp({ ...emp, gender: selectedValue })
+                    }
+                    radioName='gender'
                   />
                 </td>
               </tr>
@@ -265,7 +276,14 @@ const EmpUpd = () => {
                 </td>
                 <td>:</td>
                 <td>
-                  <CityList onSelectCity={handleCitySelection}  theCityId={emp.cityId} reportCityStatus={setCityStatus} />
+                  <CityList
+                    theCityId={emp.cityId}
+                    onSelectCity={(selectedCityId) =>
+                      setEmp({ ...emp, cityId: selectedCityId })
+                    }
+                    // reportCityStatus={setCityStatus}
+                    reportCityStatus={(t) => setCityStatus(t)}
+                  />
                 </td>
               </tr>
               <tr>
