@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import TPContext from '../context/tp/TPContext';
+import { TPContext } from '../context/tp/TPContext';
 import { errText } from '../util/errMsgText';
 import Spinner from '../home/Spinner';
 
@@ -69,7 +69,7 @@ const Posting = ({ theEmp }) => {
         });
       }
       toggleDesigFlag();
-      setDg('', '', '')
+      setDg('', '', '');
       setStatus('Success');
     } catch (error) {
       setStatus('Error');
@@ -84,9 +84,9 @@ const Posting = ({ theEmp }) => {
 
   return (
     <>
-        <h5>
-            <button onClick={() => setDg('', '', '')}>Add</button>
-        </h5>
+      <h5>
+        <button onClick={() => setDg('', '', '')}>Add</button>
+      </h5>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex' }}>
           <select

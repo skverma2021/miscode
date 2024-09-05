@@ -1,3 +1,3 @@
-export default (state, action) => {
-  return { ...state, ...action.payLoad };
-};
+// export default (state, action) => {
+//   return { ...state, ...action.payLoad };
+// };

@@ -10,13 +10,10 @@ import ContextDesigList from './ContextDesigList';
 const ContextDesig = () => {
   const [disciplines, setDisciplines] = useState([]);
   const [discpStatus, setDiscpStatus] = useState('');
-  // const { setDiscp, setDesig, xxx } = useContext(DesigContext);
   const { setDiscp, setDesig, discpId } = useContext(DesigContext);
-  // const { discpId } = useContext(DesigContext).desigState;
   const [msg, setMsg] = useState('');
   const navigate = useNavigate();
 
-  // console.log('xxx is:', xxx);
   let timeoutId;
   const goHome = () => {
     navigate('/');

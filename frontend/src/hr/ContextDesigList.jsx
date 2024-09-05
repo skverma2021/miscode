@@ -74,7 +74,7 @@ const ContextDesigList = () => {
     );
   }
 
-  if (desigStatus === 'busy' || delStatus == 'Error') return <Spinner />;
+  if (desigStatus === 'busy' || delStatus == 'busy') return <Spinner />;
 
   return (
     <>
@@ -99,10 +99,6 @@ const ContextDesigList = () => {
                   <Link
                     onClick={() => {
                       setDesig(t.id, t.theDesig, t.theGradeId);
-                      // setEditRow({
-                      //   id: `${t.id}`,
-                      // description: `${t.theDesig}`,
-                      // gradeId: `${t.theGradeId}`})
                     }}
                   >
                     🖍️

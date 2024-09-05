@@ -5,16 +5,14 @@ import { errText, errNumber } from '../util/errMsgText';
 import Spinner from '../home/Spinner';
 import { useNavigate } from 'react-router-dom';
 
-// [id] ,[discpId] ,[description] ,[gradeId]
-
 const Desig1 = () => {
   const [disciplines, setDisciplines] = useState([]); // for the discipline window
   const [theDiscp, setTheDiscp] = useState(0); // for designation window - both edit and browse window - foreign key
   const [theDiscpName, setTheDiscpName] = useState(''); // for display in the designation edit window
   const [designations, setDesignations] = useState([]); // all designations belonging to the discipline
   const [grades, setGrades] = useState([]); // for the select control in edit window
-  // the designation record to be edited
-  // the foreign key is available as theDiscp
+
+  // the designation record to be edited the foreign key is available as theDiscp
   const [theDesig, setTheDesig] = useState({
     id: '',
     description: '',
@@ -25,33 +23,34 @@ const Desig1 = () => {
   const [discpStatus, setDiscpStatus] = useState('');
   const [desigStatus, setDesigStatus] = useState('');
   const [gradeStatus, setGradeStatus] = useState('');
+  const [status, setStatus] = useState('');
 
   const [msg, setMsg] = useState('');
-  const [status, setStatus] = useState('');
   const [errNo, setErrNo] = useState(0);
+
   const navigate = useNavigate();
 
   let timeoutId;
   const goHome = () => {
     navigate('/');
   };
-
+  // clear timer
   useEffect(() => {
     return () => clearTimeout(timeoutId);
   }, []);
-
+  // get all disciplines when the component loads
   useEffect(() => {
     getAllDisciplines();
   }, []);
-
+  // get all designations whenever  discipline or desigFlag changes
   useEffect(() => {
     getAllDesignations();
   }, [theDiscp, desigFlag]);
-
+  // get all grades
   useEffect(() => {
     getAllGrades();
   }, []);
-
+  // fetch discipline rows
   const getAllDisciplines = async () => {
     setDiscpStatus('busy');
     try {
@@ -64,6 +63,7 @@ const Desig1 = () => {
       timeoutId = setTimeout(goHome, 10000);
     }
   };
+  // fetch all designations belonging to the discipline selected
   const getAllDesignations = async () => {
     setDesigStatus('busy');
     try {
@@ -78,6 +78,7 @@ const Desig1 = () => {
       timeoutId = setTimeout(goHome, 10000);
     }
   };
+  // fetch all grades
   const getAllGrades = async () => {
     setGradeStatus('busy');
     try {
@@ -90,15 +91,17 @@ const Desig1 = () => {
       timeoutId = setTimeout(goHome, 10000);
     }
   };
+  // update editDesig form controls
   const onValChange = (e) => {
     setTheDesig({ ...theDesig, [e.target.name]: e.target.value });
   };
 
-  // [id] ,[discpId] ,[description] ,[gradeId]
+  // insert or update designation rows - [id] ,[discpId] ,[description] ,[gradeId]
   const handleSubmit = async () => {
     setStatus('busy');
     try {
-      if (theDesig.id == 0) {
+      if (theDesig.id === '') {
+        console.log('theDesigId: ', theDesig.id == 0);
         await axios.post('http://localhost:3000/api/designations', {
           // id to be computed by postDesignation stored procedure
           // id: theDesig.id,
@@ -126,7 +129,7 @@ const Desig1 = () => {
       setErrNo(errNumber(error));
     }
   };
-
+  // delete a designation
   const deleteDesigData = async (t) => {
     setStatus('busy');
     try {
@@ -201,7 +204,7 @@ const Desig1 = () => {
                 <tbody>
                   {disciplines.map((t) => {
                     return (
-                      <tr>
+                      <tr key={t.id}>
                         <td>
                           <Link
                             onClick={() => {
@@ -239,7 +242,7 @@ const Desig1 = () => {
                 <tbody>
                   {designations.map((t) => {
                     return (
-                      <tr>
+                      <tr key={t.id}>
                         <td>{t.theDesig}</td>
                         <td>{t.theGrade}</td>
                         <td>{t.theHourlyRate}</td>

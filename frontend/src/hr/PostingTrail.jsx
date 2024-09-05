@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import TPContext from '../context/tp/TPContext';
+import { TPContext } from '../context/tp/TPContext';
 import { errText } from '../util/errMsgText';
 import Spinner from '../home/Spinner';
 

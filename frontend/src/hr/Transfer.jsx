@@ -2,8 +2,8 @@ import React from 'react';
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import TPContext from '../context/tp/TPContext';
-import { errText} from '../util/errMsgText';
+import { TPContext } from '../context/tp/TPContext';
+import { errText } from '../util/errMsgText';
 import Spinner from '../home/Spinner';
 
 const Transfer = ({ theEmp }) => {
@@ -87,8 +87,8 @@ const Transfer = ({ theEmp }) => {
   return (
     <>
       <h5>
-            <button onClick={() => setDp('', '', '')}>Add</button>
-       </h5>
+        <button onClick={() => setDp('', '', '')}>Add</button>
+      </h5>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex' }}>
           <select

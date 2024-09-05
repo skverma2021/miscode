@@ -1,13 +1,14 @@
-import { createContext } from 'react';
 import React, { useReducer } from 'react';
 
+import { createContext } from 'react';
 export const DesigContext = createContext();
 
-export const DesigState = (props) => {
-  const DesigReducer = (state, action) => {
-    return { ...state, ...action.payLoad };
-  };
+// The reducer function
+const DesigReducer = (state, action) => {
+  return { ...state, ...action.payLoad };
+};
 
+export const DesigState = (props) => {
   const initialState = {
     discpId: '',
     discp: '',

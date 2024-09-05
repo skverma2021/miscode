@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import TPContext from '../context/tp/TPContext';
+import { TPContext } from '../context/tp/TPContext';
 import { errText } from '../util/errMsgText';
 import Spinner from '../home/Spinner';
 
@@ -10,7 +10,7 @@ const TransferTrail = ({ theEmp }) => {
   const [transfers, setTransfers] = useState([]);
   const tpContext = useContext(TPContext);
   const { depttFlag } = tpContext.tpState;
-  const {  toggleDepttFlag, setDp } = tpContext;
+  const { toggleDepttFlag, setDp } = tpContext;
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
 

@@ -6,8 +6,9 @@ import Posting from './Posting';
 import Transfer from './Transfer';
 import PostingTrail from './PostingTrail';
 import TransferTrail from './TransferTrail';
-import TPContext from '../context/tp/TPContext';
-import { errText} from '../util/errMsgText';
+// import TPContext from '../context/tp/TPContext';
+import { TPContext } from '../context/tp/TPContext';
+import { errText } from '../util/errMsgText';
 import Spinner from '../home/Spinner';
 
 const TransferPosting = () => {
@@ -15,7 +16,7 @@ const TransferPosting = () => {
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
   const tpContext = useContext(TPContext);
-  const {desigFlag, depttFlag} = tpContext.tpState;
+  const { desigFlag, depttFlag } = tpContext.tpState;
   const { id } = useParams();
 
   const navigate = useNavigate();
@@ -124,9 +125,7 @@ const TransferPosting = () => {
               borderBlock: 'black',
               border: '1px solid black',
             }}
-          >
-
-          </table>
+          ></table>
         </div>
       </div>
     </>
