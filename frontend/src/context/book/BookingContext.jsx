@@ -1,11 +1,11 @@
 import { createContext, useReducer } from 'react';
-export const TPContext = createContext();
+export const BookingContext = createContext();
 
-const TPReducer = (state, action) => {
+const BookingReducer = (state, action) => {
   return { ...state, ...action.payLoad };
 };
 
-export const TPState = (props) => {
+export const BookingState = (props) => {
   const initialState = {
     postId: '', // empDesigId
     postDesigId: '', // desigId
@@ -19,7 +19,7 @@ export const TPState = (props) => {
     depttFlag: false,
   };
 
-  const [state, dispatch] = useReducer(TPReducer, initialState);
+  const [state, dispatch] = useReducer(BookingReducer, initialState);
 
   const setDg = (edgid, dgid, edgfd) => {
     dispatch({
@@ -45,7 +45,7 @@ export const TPState = (props) => {
   };
 
   return (
-    <TPContext.Provider
+    <BookingContext.Provider
       value={{
         tpState: state,
         setDg,
@@ -56,6 +56,6 @@ export const TPState = (props) => {
       }}
     >
       {props.children}
-    </TPContext.Provider>
+    </BookingContext.Provider>
   );
 };

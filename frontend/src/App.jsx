@@ -10,7 +10,6 @@ import ChangePass from './auth/ChangePass';
 import Emps from './hr/Emps';
 import EmpAdd from './hr/EmpAdd';
 import EmpUpd from './hr/EmpUpd';
-// import TPState from './context/tp/TPState';
 import { TPState } from './context/tp/TPContext';
 import TransferPosting from './hr/TransferPosting';
 // import Desig1 from './hr/Desig1';
