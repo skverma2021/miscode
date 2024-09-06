@@ -27,7 +27,8 @@ const Posting = ({ theEmp }) => {
   }, []);
 
   // to initialise lower window with context
-  // the context gets filled by edit button in trail window using setter by context
+  // the context gets filled by edit button in 
+  // trail window using setter by context
   useEffect(() => {
     setTheDesig(postDesigId);
     setFromDt(postFromDt);

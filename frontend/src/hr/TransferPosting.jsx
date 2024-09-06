@@ -6,7 +6,6 @@ import Posting from './Posting';
 import Transfer from './Transfer';
 import PostingTrail from './PostingTrail';
 import TransferTrail from './TransferTrail';
-// import TPContext from '../context/tp/TPContext';
 import { TPContext } from '../context/tp/TPContext';
 import { errText } from '../util/errMsgText';
 import Spinner from '../home/Spinner';
@@ -17,8 +16,8 @@ const TransferPosting = () => {
   const [status, setStatus] = useState('');
   const tpContext = useContext(TPContext);
   const { desigFlag, depttFlag } = tpContext.tpState;
-  const { id } = useParams();
 
+  const { id } = useParams();
   const navigate = useNavigate();
   let timeoutId;
   const goHome = () => {
@@ -116,16 +115,6 @@ const TransferPosting = () => {
               <Transfer theEmp={id} />
             </div>
           </div>
-        </div>
-        <div>
-          <table
-            style={{
-              width: '100%',
-              // height: '80vh',
-              borderBlock: 'black',
-              border: '1px solid black',
-            }}
-          ></table>
         </div>
       </div>
     </>

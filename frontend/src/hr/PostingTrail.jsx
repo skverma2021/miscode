@@ -45,7 +45,7 @@ const PostingTrail = ({ theEmp }) => {
   const deleteEmpDesig = async (theEmpDesigId) => {
     setStatus('busy');
     try {
-      const res = await axios.delete(
+      await axios.delete(
         `http://localhost:3000/api/tp/empDesig/${theEmpDesigId}`
       );
       toggleDesigFlag();
