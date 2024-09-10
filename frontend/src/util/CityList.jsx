@@ -2,18 +2,18 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const CityList = ({ theCityId, onSelectCity, reportCityStatus }) => {
+const CityList = ({ theCityId, onSelectCity, reportStatus }) => {
   const [cities, setCities] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      reportCityStatus('busy');
+      reportStatus('busy');
       try {
         const res = await axios.get(`http://localhost:3000/api/cities`);
         setCities(res.data);
-        reportCityStatus('Success');
+        reportStatus('Success');
       } catch (error) {
-        reportCityStatus('Error');
+        reportStatus('Error');
       }
     };
     fetchData();

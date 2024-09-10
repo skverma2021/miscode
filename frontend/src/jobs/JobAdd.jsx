@@ -4,7 +4,7 @@ import axios from 'axios';
 import { errText, errNumber } from '../util/errMsgText';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '../home/Spinner';
-import ClientList from '../util/ClientList'
+import ClientList from '../util/ClientList';
 
 // id	int identity
 // description	varchar(50)
@@ -54,7 +54,7 @@ const JobAdd = () => {
 
   // added to use the select (ClientList) component
   const handleClientSelection = (selectedClientId) => {
-    setJob({ ...job, "clientId": selectedClientId });
+    setJob({ ...job, clientId: selectedClientId });
   };
 
   const postJobData = async (event) => {
@@ -126,7 +126,11 @@ const JobAdd = () => {
                   <label>Client:</label>
                 </td>
                 <td>
-                  <ClientList onSelectClient={handleClientSelection}  theClientId={job.clientId} reportClientStatus={setClientStatus} />
+                  <ClientList
+                    onSelectClient={handleClientSelection}
+                    theClientId={job.clientId}
+                    reportStatus={(t) => setClientStatus(t)}
+                  />
                 </td>
               </tr>
               <tr>

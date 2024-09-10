@@ -153,8 +153,6 @@ const Emps = () => {
           },
         }}
         pageSizeOptions={[10, 15, 20, 25]}
-        // checkboxSelection
-        // disableRowSelectionOnClick
       />
     </div>
   );

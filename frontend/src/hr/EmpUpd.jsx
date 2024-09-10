@@ -281,8 +281,7 @@ const EmpUpd = () => {
                     onSelectCity={(selectedCityId) =>
                       setEmp({ ...emp, cityId: selectedCityId })
                     }
-                    // reportCityStatus={setCityStatus}
-                    reportCityStatus={(t) => setCityStatus(t)}
+                    reportStatus={(t) => setCityStatus(t)}
                   />
                 </td>
               </tr>

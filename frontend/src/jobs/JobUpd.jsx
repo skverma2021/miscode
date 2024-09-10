@@ -4,7 +4,7 @@ import axios from 'axios';
 import { errText, errNumber } from '../util/errMsgText';
 import { useNavigate, useParams } from 'react-router-dom';
 import Spinner from '../home/Spinner';
-import ClientList from '../util/ClientList'
+import ClientList from '../util/ClientList';
 
 function JobUpd() {
   const [job, setJob] = useState({});
@@ -56,10 +56,10 @@ function JobUpd() {
     // setFormTouched(true);
   };
 
-    // added to use the select (ClientList) component
-    const handleClientSelection = (selectedClientId) => {
-      setJob({ ...job, "clientId": selectedClientId });
-    };
+  // added to use the select (ClientList) component
+  const handleClientSelection = (selectedClientId) => {
+    setJob({ ...job, clientId: selectedClientId });
+  };
 
   const updJobData = async (event) => {
     event.preventDefault();
@@ -130,7 +130,11 @@ function JobUpd() {
                   <label>Client:</label>
                 </td>
                 <td>
-                  <ClientList onSelectClient={handleClientSelection}  theClientId={job.clientId} reportClientStatus={setClientStatus} />
+                  <ClientList
+                    onSelectClient={handleClientSelection}
+                    theClientId={job.clientId}
+                    reportStatus={(t) => setClientStatus(t)}
+                  />
                 </td>
               </tr>
               <tr>
@@ -179,7 +183,7 @@ function JobUpd() {
               </tr>
               <tr>
                 <td>
-                  <button type='submit' disabled={!okSubmit() }>
+                  <button type='submit' disabled={!okSubmit()}>
                     Update
                   </button>
                 </td>
