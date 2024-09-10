@@ -4,7 +4,7 @@ import axios from 'axios';
 import { errText, errNumber } from '../util/errMsgText';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '../home/Spinner';
-import CityList from '../util/CityList'
+import CityList from '../util/CityList';
 
 // id	int	Unchecked
 // shortName	nchar(10)	Unchecked
@@ -65,7 +65,7 @@ function ClientAdd() {
 
   // added to use the select (CityList) component
   const handleCitySelection = (selectedCityId) => {
-    setClient({ ...client, "cityId": selectedCityId });
+    setClient({ ...client, cityId: selectedCityId });
   };
 
   const postClientData = async (event) => {
@@ -230,7 +230,11 @@ function ClientAdd() {
                   <label>City:</label>
                 </td>
                 <td>
-                  <CityList onSelectCity={handleCitySelection}  theCityId={client.cityId} reportCityStatus={setCityStatus} />
+                  <CityList
+                    onSelectCity={handleCitySelection}
+                    theCityId={client.cityId}
+                    reportStatus={(t) => setCityStatus(t)}
+                  />
                 </td>
               </tr>
               <tr>
