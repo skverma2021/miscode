@@ -1,30 +1,16 @@
 import React from 'react';
 import { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { TPContext } from '../context/tp/TPContext';
 import { errText } from '../util/errMsgText';
-import Spinner from '../home/Spinner';
 
-const Transfer = ({ theEmp }) => {
+const Transfer = ({ theEmp, reportStatus, reportMsg }) => {
   const [fromDt, setFromDt] = useState('');
   const [deptts, setDeptts] = useState([]);
   const [theDeptt, setTheDeptt] = useState('');
   const tpContext = useContext(TPContext);
   const { trId, trDepttId, trFromDt } = tpContext.tpState;
   const { setDp, toggleDepttFlag } = tpContext;
-  const [msg, setMsg] = useState('');
-  const [status, setStatus] = useState('');
-
-  const navigate = useNavigate();
-  let timeoutId;
-  const goHome = () => {
-    navigate('/');
-  };
-
-  useEffect(() => {
-    return () => clearTimeout(timeoutId);
-  }, []);
 
   // to initialise lower window with context
   // the context gets filled by edit button in trail window using setter by context
@@ -35,17 +21,16 @@ const Transfer = ({ theEmp }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setStatus('busy');
+      reportStatus('busy');
       try {
         const res = await axios.get(
           `http://localhost:3000/api/departments/short`
         );
         setDeptts(res.data);
-        setStatus('Success');
+        reportStatus('Success');
       } catch (error) {
-        setStatus('Error');
-        setMsg(errText(error));
-        timeoutId = setTimeout(goHome, 10000);
+        reportStatus('Error');
+        reportMsg(errText(error));
       }
     };
     fetchData();
@@ -53,7 +38,7 @@ const Transfer = ({ theEmp }) => {
 
   const saveRec = async () => {
     if (theDeptt == '') return;
-    setStatus('busy');
+    reportStatus('busy');
     try {
       if (trId) {
         await axios.put(`http://localhost:3000/api/tp/empdeptt/${trId}`, {
@@ -72,17 +57,12 @@ const Transfer = ({ theEmp }) => {
       }
       toggleDepttFlag();
       setDp('', '', '');
-      setStatus('Success');
+      reportStatus('Success');
     } catch (error) {
-      setStatus('Error');
-      setMsg(errText(error));
-      timeoutId = setTimeout(goHome, 10000);
+      reportStatus('Error');
+      reportMsg(errText(error));
     }
   };
-
-  if (status === 'busy') return <Spinner />;
-
-  if (status === 'Error') return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
 
   return (
     <>

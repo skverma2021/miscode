@@ -43,14 +43,15 @@ const TransferPosting = () => {
     } catch (error) {
       setStatus('Error');
       setMsg(errText(error));
-      timeoutId = setTimeout(goHome, 10000);
     }
   };
-
+  
   if (status === 'busy') return <Spinner />;
-
-  if (status === 'Error') return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
-
+  
+  if (status === 'Error') {
+    timeoutId = setTimeout(goHome, 10000);
+    return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
+  }
   return (
     <>
       <div
@@ -87,11 +88,11 @@ const TransferPosting = () => {
           >
             {/* Shows all change in designation */}
             <div style={{ padding: '10px', height: '40vh' }}>
-              <PostingTrail theEmp={id} />
+              <PostingTrail theEmp={id} reportStatus = {(s)=>setStatus(s)} reportMsg = {(m)=>setMsg(m)}/>
             </div>
             {/* shows the edit window for adding/updating any change in designation */}
             <div style={{ padding: '10px' }}>
-              <Posting theEmp={id} />
+              <Posting theEmp={id} reportStatus = {(s)=>setStatus(s)} reportMsg = {(m)=>setMsg(m)} />
             </div>
           </div>
 
@@ -108,11 +109,11 @@ const TransferPosting = () => {
           >
             {/* Shows all change in department */}
             <div style={{ padding: '10px', height: '40vh' }}>
-              <TransferTrail theEmp={id} />
+              <TransferTrail theEmp={id}  reportStatus = {(s)=>setStatus(s)} reportMsg = {(m)=>setMsg(m)}/>
             </div>
             {/* shows the edit window for adding/updating any change in department */}
             <div style={{ padding: '10px' }}>
-              <Transfer theEmp={id} />
+              <Transfer theEmp={id}  reportStatus = {(s)=>setStatus(s)} reportMsg = {(m)=>setMsg(m)}/>
             </div>
           </div>
         </div>

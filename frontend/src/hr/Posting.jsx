@@ -1,30 +1,16 @@
 import React from 'react';
 import { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { TPContext } from '../context/tp/TPContext';
 import { errText } from '../util/errMsgText';
-import Spinner from '../home/Spinner';
 
-const Posting = ({ theEmp }) => {
+const Posting = ({ theEmp, reportStatus, reportMsg }) => {
   const [fromDt, setFromDt] = useState('');
   const [desigs, setDesigs] = useState([]);
   const [theDesig, setTheDesig] = useState('');
   const tpContext = useContext(TPContext);
   const { postId, postDesigId, postFromDt } = tpContext.tpState;
   const { setDg, toggleDesigFlag } = tpContext;
-  const [msg, setMsg] = useState('');
-  const [status, setStatus] = useState('');
-
-  const navigate = useNavigate();
-  let timeoutId;
-  const goHome = () => {
-    navigate('/');
-  };
-
-  useEffect(() => {
-    return () => clearTimeout(timeoutId);
-  }, []);
 
   // to initialise lower window with context
   // the context gets filled by edit button in 
@@ -36,17 +22,16 @@ const Posting = ({ theEmp }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setStatus('busy');
+      reportStatus('busy');
       try {
         const res = await axios.get(
           `http://localhost:3000/api/designations/short`
         );
         setDesigs(res.data);
-        setStatus('Success');
+        reportStatus('Success');
       } catch (error) {
-        setStatus('Error');
-        setMsg(errText(error));
-        timeoutId = setTimeout(goHome, 10000);
+        reportStatus('Error');
+        reportMsg(errText(error));
       }
     };
     fetchData();
@@ -54,7 +39,7 @@ const Posting = ({ theEmp }) => {
 
   const saveRec = async () => {
     if (theDesig == '') return;
-    setStatus('busy');
+    reportStatus('busy');
     try {
       if (postId) {
         await axios.put(`http://localhost:3000/api/tp/empDesig/${postId}`, {
@@ -71,17 +56,13 @@ const Posting = ({ theEmp }) => {
       }
       toggleDesigFlag();
       setDg('', '', '');
-      setStatus('Success');
+      reportStatus('Success');
     } catch (error) {
-      setStatus('Error');
-      setMsg(errText(error));
-      timeoutId = setTimeout(goHome, 10000);
+      reportStatus('Error');
+      reportMsg(errText(error));
     }
   };
 
-  if (status === 'busy') return <Spinner />;
-
-  if (status === 'Error') return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
 
   return (
     <>

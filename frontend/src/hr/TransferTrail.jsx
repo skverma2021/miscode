@@ -1,66 +1,46 @@
 import React from 'react';
 import { useState, useEffect, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { TPContext } from '../context/tp/TPContext';
 import { errText } from '../util/errMsgText';
-import Spinner from '../home/Spinner';
 
-const TransferTrail = ({ theEmp }) => {
+const TransferTrail = ({ theEmp, reportStatus, reportMsg }) => {
   const [transfers, setTransfers] = useState([]);
   const tpContext = useContext(TPContext);
   const { depttFlag } = tpContext.tpState;
   const { toggleDepttFlag, setDp } = tpContext;
-  const [msg, setMsg] = useState('');
-  const [status, setStatus] = useState('');
-
-  const navigate = useNavigate();
-  let timeoutId;
-  const goHome = () => {
-    navigate('/');
-  };
-
-  useEffect(() => {
-    return () => clearTimeout(timeoutId);
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
-      setStatus('busy');
+      reportStatus('busy');
       try {
         const res = await axios.get(
           `http://localhost:3000/api/tp/empdeptt/${theEmp}`
         );
         setTransfers(res.data);
-        setStatus('Success');
+        reportStatus('Success');
       } catch (error) {
-        setStatus('Error');
-        setMsg(errText(error));
-        timeoutId = setTimeout(goHome, 10000);
+        reportStatus('Error');
+        reportMsg(errText(error));
       }
     };
     fetchData();
   }, [depttFlag]);
 
   const deleteEmpDeptt = async (theEmpDepttId) => {
-    // if (transfers.length == 1) return;
-    setStatus('busy');
+    reportStatus('busy');
     try {
       const res = await axios.delete(
         `http://localhost:3000/api/tp/empdeptt/${theEmpDepttId}`
       );
       toggleDepttFlag();
-      setStatus('Success');
+      reportStatus('Success');
     } catch (error) {
-      setStatus('Error');
-      setMsg(errText(error));
-      timeoutId = setTimeout(goHome, 10000);
+      reportStatus('Error');
+      reportMsg(errText(error));
     }
   };
-
-  if (status === 'busy') return <Spinner />;
-
-  if (status === 'Error') return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
 
   return (
     <>
