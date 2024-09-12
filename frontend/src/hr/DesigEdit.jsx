@@ -1,49 +1,44 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { errText} from '../util/errMsgText';
-import Spinner from '../home/Spinner';
-import { useNavigate } from 'react-router-dom';
+import { errText } from '../util/errMsgText';
 
-const DesigEdit = ({theDiscpId, theDiscp, theRow, setFlag}) => {
-  const [grades, setGrades] = useState([]); 
+const DesigEdit = ({
+  theDiscpId,
+  theDiscp,
+  theRow,
+  setFlag,
+  reportStatus1,
+  reportMsg1,
+}) => {
+  const [grades, setGrades] = useState([]);
   const [theDesig, setTheDesig] = useState({
     id: 0,
     description: '',
     gradeId: '',
-  }); 
-  const [msg, setMsg] = useState('');
-  const [gradeStatus, setGradeStatus] = useState('');
-  const [status, setStatus] = useState('');
-  const navigate = useNavigate();
+  });
 
   useEffect(() => {
-    setTheDesig({id:theRow.id, description:theRow.description, gradeId:theRow.gradeId})
+    setTheDesig({
+      id: theRow.id,
+      description: theRow.description,
+      gradeId: theRow.gradeId,
+    });
   }, [theDiscp, theRow]);
-
-  let timeoutId;
-  const goHome = () => {
-    navigate('/');
-  };
-
-  useEffect(() => {
-    return () => clearTimeout(timeoutId);
-  }, []);
 
   useEffect(() => {
     getAllGrades();
   }, []);
 
   const getAllGrades = async () => {
-    setGradeStatus('busy');
+    reportStatus1('busy');
     try {
       const res = await axios.get(`http://localhost:3000/api/grades`);
       setGrades(res.data);
-      setGradeStatus('Success');
+      reportStatus1('Success');
     } catch (error) {
-      setGradeStatus('Error');
-      setMsg(errText(error));
-      timeoutId = setTimeout(goHome, 10000);
+      reportStatus1('Error');
+      reportMsg1(errText(error));
     }
   };
   const onValChange = (e) => {
@@ -51,7 +46,7 @@ const DesigEdit = ({theDiscpId, theDiscp, theRow, setFlag}) => {
   };
 
   const handleSubmit = async () => {
-    setStatus('busy');
+    reportStatus1('busy');
     try {
       if (theDesig.id == 0) {
         await axios.post('http://localhost:3000/api/designations', {
@@ -60,7 +55,7 @@ const DesigEdit = ({theDiscpId, theDiscp, theRow, setFlag}) => {
           description: theDesig.description,
           gradeId: theDesig.gradeId,
         });
-        setStatus('Added');
+        reportStatus1('Added');
       } else {
         await axios.put(
           `http://localhost:3000/api/designations/${theDesig.id}`,
@@ -70,26 +65,14 @@ const DesigEdit = ({theDiscpId, theDiscp, theRow, setFlag}) => {
             gradeId: theDesig.gradeId,
           }
         );
-        setStatus('Updated');
+        reportStatus1('Updated');
       }
       setFlag((t) => !t);
     } catch (error) {
-      setStatus('Error');
-      setMsg(errText(error));
+      reportStatus1('Error');
+      reportMsg1(errText(error));
     }
   };
-
-  if (gradeStatus === 'Error') {
-    timeoutId = setTimeout(goHome, 5000);
-    return <h1 style={{ color: 'red' }}>Error: Grades could not be loaded</h1>;
-  }
-
-  if (status === 'Error') {
-    timeoutId = setTimeout(goHome, 5000);
-    return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
-  }
-
-  if (status === 'busy') return <Spinner />;
 
   return (
     <>
@@ -138,14 +121,12 @@ const DesigEdit = ({theDiscpId, theDiscp, theRow, setFlag}) => {
               </td>
               <td>
                 {' '}
-                <Link onClick={() => handleSubmit() } >
-                  💾
-                </Link>
+                <Link onClick={() => handleSubmit()}>💾</Link>
               </td>
             </tr>
           </tbody>
         </table>
-  </form>
+      </form>
     </>
   );
 };

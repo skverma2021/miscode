@@ -10,7 +10,7 @@ const Desig2 = () => {
   const [disciplines, setDisciplines] = useState([]);
   const [theDiscpId, setTheDiscpId] = useState('');
   const [theDiscp, setTheDiscp] = useState('');
-  const [discpStatus, setDiscpStatus] = useState('');
+  const [status, setStatus] = useState('');
   const [msg, setMsg] = useState('');
   const navigate = useNavigate();
 
@@ -28,19 +28,19 @@ const Desig2 = () => {
   }, []);
 
   const getAllDisciplines = async () => {
-    setDiscpStatus('busy');
+    setStatus('busy');
     try {
       const res = await axios.get(`http://localhost:3000/api/disciplines`);
       setDisciplines(res.data);
-      setDiscpStatus('Success');
+      setStatus('Success');
     } catch (error) {
-      setDiscpStatus('Error');
+      setStatus('Error');
       setMsg(errText(error));
       timeoutId = setTimeout(goHome, 10000);
     }
   };
 
-  if (discpStatus === 'Error') {
+  if (status === 'Error') {
     timeoutId = setTimeout(goHome, 5000);
     return (
       <h1 style={{ color: 'red' }}>
@@ -49,7 +49,7 @@ const Desig2 = () => {
     );
   }
 
-  if (discpStatus === 'busy') return <Spinner />;
+  if (status === 'busy') return <Spinner />;
 
   return (
     <>
@@ -101,7 +101,12 @@ const Desig2 = () => {
             {/*  Designation window on the right */}
             <td style={{ verticalAlign: 'top' }}>
               {theDiscpId && (
-                <DesigList discpId={theDiscpId} discp={theDiscp} />
+                <DesigList
+                  discpId={theDiscpId}
+                  discp={theDiscp}
+                  reportStatus={(s) => setStatus(s)}
+                  reportMsg={(m) => setMsg(m)}
+                />
               )}
             </td>
           </tr>

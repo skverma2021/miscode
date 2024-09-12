@@ -6,10 +6,11 @@ import Spinner from '../home/Spinner';
 import { useNavigate } from 'react-router-dom';
 import { DesigContext } from '../context/desig/DesigContext';
 import ContextDesigList from './ContextDesigList';
+import ContextDesigEdit from './ContextDesigEdit';
 
 const ContextDesig = () => {
   const [disciplines, setDisciplines] = useState([]);
-  const [discpStatus, setDiscpStatus] = useState('');
+  const [status, setStatus] = useState('');
   const { setDiscp, setDesig, discpId } = useContext(DesigContext);
   const [msg, setMsg] = useState('');
   const navigate = useNavigate();
@@ -28,28 +29,24 @@ const ContextDesig = () => {
   }, []);
 
   const getAllDisciplines = async () => {
-    setDiscpStatus('busy');
+    setStatus('busy');
     try {
       const res = await axios.get(`http://localhost:3000/api/disciplines`);
       setDisciplines(res.data);
-      setDiscpStatus('Success');
+      setStatus('Success');
     } catch (error) {
-      setDiscpStatus('Error');
+      setStatus('Error');
       setMsg(errText(error));
       timeoutId = setTimeout(goHome, 10000);
     }
   };
 
-  if (discpStatus === 'Error') {
+  if (status === 'Error') {
     timeoutId = setTimeout(goHome, 5000);
-    return (
-      <h1 style={{ color: 'red' }}>
-        Error: Disciplines could not be loaded [ {msg} ]
-      </h1>
-    );
+    return <h1 style={{ color: 'red' }}>Error: [ {msg} ]</h1>;
   }
 
-  if (discpStatus === 'busy') return <Spinner />;
+  if (status === 'busy') return <Spinner />;
 
   return (
     <>
@@ -98,7 +95,23 @@ const ContextDesig = () => {
             </td>
             {/*  Designation window on the right */}
             <td style={{ verticalAlign: 'top' }}>
-              {discpId && <ContextDesigList />}
+              {discpId && (
+                <ContextDesigList
+                  reportStatus={(s) => setStatus(s)}
+                  reportMsg={(m) => setMsg(m)}
+                />
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>
+              {discpId && (
+                <ContextDesigEdit
+                  reportStatus={(s) => setStatus(s)}
+                  reportMsg={(m) => setMsg(m)}
+                />
+              )}
             </td>
           </tr>
         </tbody>

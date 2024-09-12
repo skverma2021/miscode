@@ -278,9 +278,7 @@ const EmpUpd = () => {
                 <td>
                   <CityList
                     theCityId={emp.cityId}
-                    onSelectCity={(c) =>
-                      setEmp({ ...emp, cityId: c })
-                    }
+                    onSelectCity={(c) => setEmp({ ...emp, cityId: c })}
                     reportStatus={(t) => setCityStatus(t)}
                   />
                 </td>
