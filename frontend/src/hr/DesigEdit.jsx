@@ -67,7 +67,7 @@ const DesigEdit = ({
         );
         reportStatus1('Updated');
       }
-      setFlag((t) => !t);
+      setFlag();
     } catch (error) {
       reportStatus1('Error');
       reportMsg1(errText(error));

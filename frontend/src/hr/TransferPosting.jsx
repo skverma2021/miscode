@@ -49,7 +49,7 @@ const TransferPosting = () => {
   if (status === 'busy') return <Spinner />;
   
   if (status === 'Error') {
-    timeoutId = setTimeout(goHome, 10000);
+    timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
   }
   return (

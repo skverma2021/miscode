@@ -101,7 +101,7 @@ const DesigList = ({ discpId, discp, reportStatus, reportMsg }) => {
           theDiscpId={discpId}
           theDiscp={discp}
           theRow={editRow}
-          setFlag={setAddEditFlag}
+          setFlag={() => setAddEditFlag(t => !t)}
           reportStatus1={(s) => reportStatus(s)}
           reportMsg1={(m) => reportMsg(m)}
         />

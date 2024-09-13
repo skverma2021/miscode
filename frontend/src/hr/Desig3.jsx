@@ -8,7 +8,7 @@ import { DesigContext } from '../context/desig/DesigContext';
 import ContextDesigList from './ContextDesigList';
 import ContextDesigEdit from './ContextDesigEdit';
 
-const ContextDesig = () => {
+const Desig3 = () => {
   const [disciplines, setDisciplines] = useState([]);
   const [status, setStatus] = useState('');
   const { setDiscp, setDesig, discpId } = useContext(DesigContext);
@@ -93,7 +93,7 @@ const ContextDesig = () => {
                 </tbody>
               </table>
             </td>
-            {/*  Designation window on the right */}
+            {/*  Designation rows for edit and delete on right */}
             <td style={{ verticalAlign: 'top' }}>
               {discpId && (
                 <ContextDesigList
@@ -105,6 +105,7 @@ const ContextDesig = () => {
           </tr>
           <tr>
             <td></td>
+            {/*  Designation edit/add window on the bottom right */}
             <td>
               {discpId && (
                 <ContextDesigEdit
@@ -121,4 +122,4 @@ const ContextDesig = () => {
 };
 // [id] ,[discpId] ,[description] ,[gradeId]
 
-export default ContextDesig;
+export default Desig3;

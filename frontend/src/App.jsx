@@ -15,7 +15,7 @@ import TransferPosting from './hr/TransferPosting';
 // import Desig1 from './hr/Desig1';
 // import Desig2 from './hr/Desig2';
 import { DesigState } from './context/desig/DesigContext';
-import ContextDesig from './hr/ContextDesig';
+import Desig3 from './hr/Desig3';
 
 // BD
 import Clients from './jobs/Clients';
@@ -54,7 +54,7 @@ function App() {
           path='/hr/desig'
           element={
             <DesigState>
-              <ContextDesig />
+              <Desig3 />
             </DesigState>
           }
         />
