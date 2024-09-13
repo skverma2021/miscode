@@ -9,11 +9,7 @@ const handleError = require('../util/handleError');
 router.get('/', async (req, res) => {
   try {
     const pool = await sql.connect(config);
-    const result = await pool
-      .request()
-      .query(
-        'select id, description, hourlyRate from grade order by description'
-      );
+    const result = await pool.request().execute('getGrades');
     res.json(result.recordset);
   } catch (err) {
     handleError(err, res);
