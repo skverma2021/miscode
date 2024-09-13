@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { errText } from '../util/errMsgText';
 import { DesigContext } from '../context/desig/DesigContext';
 
-const ContextDesigEdit = ({ reportStatus, reportMsg }) => {
+const ContextDesigEdit = () => {
   const [grades, setGrades] = useState([]);
   const [theDesig, setTheDesig] = useState({
     id: 0,
@@ -20,6 +20,8 @@ const ContextDesigEdit = ({ reportStatus, reportMsg }) => {
     desigId,
     desigDes,
     desigGrade,
+    setStatus,
+    setMsg,
   } = useContext(DesigContext);
 
   useEffect(() => {
@@ -31,14 +33,14 @@ const ContextDesigEdit = ({ reportStatus, reportMsg }) => {
   }, []);
 
   const getAllGrades = async () => {
-    reportStatus('busy');
+    setStatus('busy');
     try {
       const res = await axios.get(`http://localhost:3000/api/grades`);
       setGrades(res.data);
-      reportStatus('Success');
+      setStatus('Success');
     } catch (error) {
-      reportStatus('Error');
-      reportMsg(errText(error));
+      setStatus('Error');
+      setMsg(errText(error));
     }
   };
   const onValChange = (e) => {
@@ -46,7 +48,7 @@ const ContextDesigEdit = ({ reportStatus, reportMsg }) => {
   };
 
   const handleSubmit = async () => {
-    reportStatus('busy');
+    setStatus('busy');
     try {
       if (theDesig.id == 0) {
         await axios.post('http://localhost:3000/api/designations', {
@@ -55,7 +57,7 @@ const ContextDesigEdit = ({ reportStatus, reportMsg }) => {
           description: theDesig.description,
           gradeId: theDesig.gradeId,
         });
-        reportStatus('Added');
+        setStatus('Added');
       } else {
         await axios.put(
           `http://localhost:3000/api/designations/${theDesig.id}`,
@@ -65,12 +67,12 @@ const ContextDesigEdit = ({ reportStatus, reportMsg }) => {
             gradeId: theDesig.gradeId,
           }
         );
-        reportStatus('Updated');
+        setStatus('Updated');
       }
       setAddEditFlag((t) => !t);
     } catch (error) {
-      reportStatus('Error');
-      reportMsg(errText(error));
+      setStatus('Error');
+      setMsg(errText(error));
     }
   };
 

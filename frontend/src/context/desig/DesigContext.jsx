@@ -19,6 +19,8 @@ export const DesigState = (props) => {
 
     delFlag: false,
     addEditFlag: false,
+    status: '',
+    msg: '',
   };
 
   const [state, dispatch] = useReducer(DesigReducer, initialState);
@@ -45,6 +47,26 @@ export const DesigState = (props) => {
     });
   };
 
+  const setStatus = (theText) => {
+    dispatch({
+      payLoad: { status: theText },
+    });
+  };
+
+  const setMsg = (theText) => {
+    dispatch({
+      payLoad: { msg: theText },
+    });
+  };
+
+  const getStatus = () => {
+    return state.status;
+  };
+
+  const getMsg = () => {
+    return state.msg;
+  };
+
   return (
     <DesigContext.Provider
       value={{
@@ -59,6 +81,10 @@ export const DesigState = (props) => {
         setDesig,
         setDelFlag,
         setAddEditFlag,
+        setStatus,
+        setMsg,
+        getStatus,
+        getMsg,
       }}
     >
       {props.children}

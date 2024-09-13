@@ -4,39 +4,46 @@ import { Link } from 'react-router-dom';
 import { errText } from '../util/errMsgText';
 import { DesigContext } from '../context/desig/DesigContext';
 
-const ContextDesigList = ({ reportStatus, reportMsg }) => {
+const ContextDesigList = () => {
   const [designations, setDesignations] = useState([]);
-  const { setDesig, setDelFlag, discpId, delFlag, addEditFlag } =
-    useContext(DesigContext);
+  const {
+    setDesig,
+    setDelFlag,
+    discpId,
+    delFlag,
+    addEditFlag,
+    setStatus,
+    setMsg,
+  } = useContext(DesigContext);
 
   useEffect(() => {
     getAllDesignations();
   }, [discpId, addEditFlag, delFlag]);
 
   const getAllDesignations = async () => {
-    reportStatus('busy');
+    setStatus('busy');
     try {
       const res = await axios.get(
         `http://localhost:3000/api/designations/long/${discpId}`
       );
       setDesignations(res.data);
-      reportStatus('Success');
+      setStatus('Success');
     } catch (error) {
-      reportStatus('Error');
-      reportMsg(errText(error));
+      setStatus('Error');
+      setMsg(errText(error));
     }
   };
 
   const deleteDesigData = async (t) => {
-    reportStatus('busy');
+    setStatus('busy');
     try {
       await axios.delete(`http://localhost:3000/api/designations/${t}`);
-      reportStatus('Deleted');
-      reportMsg('Successfully Deleted.');
+      setStatus('Deleted');
+      setMsg('Successfully Deleted.');
       setDelFlag();
     } catch (error) {
-      reportStatus('Error');
-      reportMsg(errText(error));
+      setStatus('Error');
+      setMsg(errText(error));
     }
   };
 

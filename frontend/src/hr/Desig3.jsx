@@ -10,9 +10,10 @@ import ContextDesigEdit from './ContextDesigEdit';
 
 const Desig3 = () => {
   const [disciplines, setDisciplines] = useState([]);
-  const [status, setStatus] = useState('');
-  const { setDiscp, setDesig, discpId } = useContext(DesigContext);
-  const [msg, setMsg] = useState('');
+  // const [status, setStatus] = useState('');
+  const { setDiscp, setDesig, discpId, setStatus, setMsg, getStatus, getMsg } =
+    useContext(DesigContext);
+  // const [msg, setMsg] = useState('');
   const navigate = useNavigate();
 
   let timeoutId;
@@ -41,12 +42,12 @@ const Desig3 = () => {
     }
   };
 
-  if (status === 'Error') {
+  if (getStatus() === 'Error') {
     timeoutId = setTimeout(goHome, 5000);
-    return <h1 style={{ color: 'red' }}>Error: [ {msg} ]</h1>;
+    return <h1 style={{ color: 'red' }}>Error: [ {getMsg()} ]</h1>;
   }
 
-  if (status === 'busy') return <Spinner />;
+  if (getStatus() === 'busy') return <Spinner />;
 
   return (
     <>
@@ -95,25 +96,13 @@ const Desig3 = () => {
             </td>
             {/*  Designation rows for edit and delete on right */}
             <td style={{ verticalAlign: 'top' }}>
-              {discpId && (
-                <ContextDesigList
-                  reportStatus={(s) => setStatus(s)}
-                  reportMsg={(m) => setMsg(m)}
-                />
-              )}
+              {discpId && <ContextDesigList />}
             </td>
           </tr>
           <tr>
             <td></td>
             {/*  Designation edit/add window on the bottom right */}
-            <td>
-              {discpId && (
-                <ContextDesigEdit
-                  reportStatus={(s) => setStatus(s)}
-                  reportMsg={(m) => setMsg(m)}
-                />
-              )}
-            </td>
+            <td>{discpId && <ContextDesigEdit />}</td>
           </tr>
         </tbody>
       </table>
