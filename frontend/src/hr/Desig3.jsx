@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { errText } from '../util/errMsgText';
@@ -6,14 +6,11 @@ import Spinner from '../home/Spinner';
 import { useNavigate } from 'react-router-dom';
 import { DesigContext } from '../context/desig/DesigContext';
 import ContextDesigList from './ContextDesigList';
-import ContextDesigEdit from './ContextDesigEdit';
 
 const Desig3 = () => {
   const [disciplines, setDisciplines] = useState([]);
-  // const [status, setStatus] = useState('');
   const { setDiscp, setDesig, discpId, setStatus, setMsg, getStatus, getMsg } =
     useContext(DesigContext);
-  // const [msg, setMsg] = useState('');
   const navigate = useNavigate();
 
   let timeoutId;
@@ -29,7 +26,7 @@ const Desig3 = () => {
     getAllDisciplines();
   }, []);
 
-  const getAllDisciplines = async () => {
+  const getAllDisciplines = useCallback(async () => {
     setStatus('busy');
     try {
       const res = await axios.get(`http://localhost:3000/api/disciplines`);
@@ -40,7 +37,7 @@ const Desig3 = () => {
       setMsg(errText(error));
       timeoutId = setTimeout(goHome, 10000);
     }
-  };
+  },[]);
 
   if (getStatus() === 'Error') {
     timeoutId = setTimeout(goHome, 5000);
@@ -91,6 +88,7 @@ const Desig3 = () => {
                       </tr>
                     );
                   })}
+
                 </tbody>
               </table>
             </td>
@@ -98,11 +96,6 @@ const Desig3 = () => {
             <td style={{ verticalAlign: 'top' }}>
               {discpId && <ContextDesigList />}
             </td>
-          </tr>
-          <tr>
-            <td></td>
-            {/*  Designation edit/add window on the bottom right */}
-            <td>{discpId && <ContextDesigEdit />}</td>
           </tr>
         </tbody>
       </table>

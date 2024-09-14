@@ -1,8 +1,9 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { errText } from '../util/errMsgText';
 import { DesigContext } from '../context/desig/DesigContext';
+import ContextDesigEdit from './ContextDesigEdit';
 
 const ContextDesigList = () => {
   const [designations, setDesignations] = useState([]);
@@ -20,7 +21,7 @@ const ContextDesigList = () => {
     getAllDesignations();
   }, [discpId, addEditFlag, delFlag]);
 
-  const getAllDesignations = async () => {
+  const getAllDesignations = useCallback(async () => {
     setStatus('busy');
     try {
       const res = await axios.get(
@@ -32,7 +33,7 @@ const ContextDesigList = () => {
       setStatus('Error');
       setMsg(errText(error));
     }
-  };
+  },[]);
 
   const deleteDesigData = async (t) => {
     setStatus('busy');
@@ -87,6 +88,10 @@ const ContextDesigList = () => {
               </tr>
             );
           })}
+          <tr>
+            {/*  Designation edit/add window on the bottom right */}
+            <td colSpan={5}>{discpId && <ContextDesigEdit />}</td>
+          </tr>
         </tbody>
       </table>
     </>
