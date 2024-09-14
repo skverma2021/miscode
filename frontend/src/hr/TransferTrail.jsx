@@ -5,40 +5,40 @@ import axios from 'axios';
 import { TPContext } from '../context/tp/TPContext';
 import { errText } from '../util/errMsgText';
 
-const TransferTrail = ({ theEmp, reportStatus, reportMsg }) => {
+const TransferTrail = ({ theEmp }) => {
   const [transfers, setTransfers] = useState([]);
   const tpContext = useContext(TPContext);
   const { depttFlag } = tpContext.tpState;
-  const { toggleDepttFlag, setDp } = tpContext;
+  const { toggleDepttFlag, setDp, setStatus, setMsg } = tpContext;
 
   useEffect(() => {
     const fetchData = async () => {
-      reportStatus('busy');
+      setStatus('busy');
       try {
         const res = await axios.get(
           `http://localhost:3000/api/tp/empdeptt/${theEmp}`
         );
         setTransfers(res.data);
-        reportStatus('Success');
+        setStatus('Success');
       } catch (error) {
-        reportStatus('Error');
-        reportMsg(errText(error));
+        setStatus('Error');
+        setMsg(errText(error));
       }
     };
     fetchData();
   }, [depttFlag]);
 
   const deleteEmpDeptt = async (theEmpDepttId) => {
-    reportStatus('busy');
+    setStatus('busy');
     try {
       const res = await axios.delete(
         `http://localhost:3000/api/tp/empdeptt/${theEmpDepttId}`
       );
       toggleDepttFlag();
-      reportStatus('Success');
+      setStatus('Success');
     } catch (error) {
-      reportStatus('Error');
-      reportMsg(errText(error));
+      setStatus('Error');
+      setMsg(errText(error));
     }
   };
 

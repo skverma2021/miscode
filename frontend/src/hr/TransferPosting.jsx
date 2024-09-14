@@ -12,12 +12,14 @@ import Spinner from '../home/Spinner';
 
 const TransferPosting = () => {
   const [empDet, setEmpDet] = useState({});
-  const [msg, setMsg] = useState('');
-  const [status, setStatus] = useState('');
+  // const [msg, setMsg] = useState('');
+  // const [status, setStatus] = useState('');
   const tpContext = useContext(TPContext);
   const { desigFlag, depttFlag } = tpContext.tpState;
+  const { setStatus, getStatus, setMsg, getMsg } = tpContext;
 
   const { id } = useParams();
+
   const navigate = useNavigate();
   let timeoutId;
   const goHome = () => {
@@ -45,12 +47,12 @@ const TransferPosting = () => {
       setMsg(errText(error));
     }
   };
-  
-  if (status === 'busy') return <Spinner />;
-  
-  if (status === 'Error') {
+
+  if (getStatus() === 'busy') return <Spinner />;
+
+  if (getStatus() === 'Error') {
     timeoutId = setTimeout(goHome, 5000);
-    return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
+    return <h1 style={{ color: 'red' }}>Error: {getMsg()}</h1>;
   }
   return (
     <>
@@ -88,11 +90,11 @@ const TransferPosting = () => {
           >
             {/* Shows all change in designation */}
             <div style={{ padding: '10px', height: '40vh' }}>
-              <PostingTrail theEmp={id} reportStatus = {(s)=>setStatus(s)} reportMsg = {(m)=>setMsg(m)}/>
+              <PostingTrail theEmp={id} />
             </div>
             {/* shows the edit window for adding/updating any change in designation */}
             <div style={{ padding: '10px' }}>
-              <Posting theEmp={id} reportStatus = {(s)=>setStatus(s)} reportMsg = {(m)=>setMsg(m)} />
+              <Posting theEmp={id} />
             </div>
           </div>
 
@@ -109,11 +111,11 @@ const TransferPosting = () => {
           >
             {/* Shows all change in department */}
             <div style={{ padding: '10px', height: '40vh' }}>
-              <TransferTrail theEmp={id}  reportStatus = {(s)=>setStatus(s)} reportMsg = {(m)=>setMsg(m)}/>
+              <TransferTrail theEmp={id} />
             </div>
             {/* shows the edit window for adding/updating any change in department */}
             <div style={{ padding: '10px' }}>
-              <Transfer theEmp={id}  reportStatus = {(s)=>setStatus(s)} reportMsg = {(m)=>setMsg(m)}/>
+              <Transfer theEmp={id} />
             </div>
           </div>
         </div>

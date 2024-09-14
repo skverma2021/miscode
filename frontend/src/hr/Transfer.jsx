@@ -4,13 +4,13 @@ import axios from 'axios';
 import { TPContext } from '../context/tp/TPContext';
 import { errText } from '../util/errMsgText';
 
-const Transfer = ({ theEmp, reportStatus, reportMsg }) => {
+const Transfer = ({ theEmp }) => {
   const [fromDt, setFromDt] = useState('');
   const [deptts, setDeptts] = useState([]);
   const [theDeptt, setTheDeptt] = useState('');
   const tpContext = useContext(TPContext);
   const { trId, trDepttId, trFromDt } = tpContext.tpState;
-  const { setDp, toggleDepttFlag } = tpContext;
+  const { setDp, toggleDepttFlag, setStatus, setMsg } = tpContext;
 
   // to initialise lower window with context
   // the context gets filled by edit button in trail window using setter by context
@@ -21,16 +21,16 @@ const Transfer = ({ theEmp, reportStatus, reportMsg }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      reportStatus('busy');
+      setStatus('busy');
       try {
         const res = await axios.get(
           `http://localhost:3000/api/departments/short`
         );
         setDeptts(res.data);
-        reportStatus('Success');
+        setStatus('Success');
       } catch (error) {
-        reportStatus('Error');
-        reportMsg(errText(error));
+        setStatus('Error');
+        setMsg(errText(error));
       }
     };
     fetchData();
@@ -38,7 +38,7 @@ const Transfer = ({ theEmp, reportStatus, reportMsg }) => {
 
   const saveRec = async () => {
     if (theDeptt == '') return;
-    reportStatus('busy');
+    setStatus('busy');
     try {
       if (trId) {
         await axios.put(`http://localhost:3000/api/tp/empdeptt/${trId}`, {
@@ -57,10 +57,10 @@ const Transfer = ({ theEmp, reportStatus, reportMsg }) => {
       }
       toggleDepttFlag();
       setDp('', '', '');
-      reportStatus('Success');
+      setStatus('Success');
     } catch (error) {
-      reportStatus('Error');
-      reportMsg(errText(error));
+      setStatus('Error');
+      setMsg(errText(error));
     }
   };
 

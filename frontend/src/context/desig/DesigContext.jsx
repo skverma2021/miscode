@@ -71,16 +71,20 @@ export const DesigState = (props) => {
     <DesigContext.Provider
       value={{
         discpId: state.discpId,
-        addEditFlag: state.addEditFlag,
-        delFlag: state.delFlag,
         discp: state.discp,
+
         desigId: state.desigId,
         desigDes: state.desigDes,
         desigGrade: state.desigGrade,
+
+        addEditFlag: state.addEditFlag,
+        setAddEditFlag,
+        delFlag: state.delFlag,
+        setDelFlag,
+
         setDiscp,
         setDesig,
-        setDelFlag,
-        setAddEditFlag,
+
         setStatus,
         setMsg,
         getStatus,

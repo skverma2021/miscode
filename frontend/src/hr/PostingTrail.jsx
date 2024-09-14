@@ -5,41 +5,41 @@ import axios from 'axios';
 import { TPContext } from '../context/tp/TPContext';
 import { errText } from '../util/errMsgText';
 
-const PostingTrail = ({ theEmp, reportStatus, reportMsg }) => {
+const PostingTrail = ({ theEmp }) => {
   const [postings, setPostings] = useState([]);
   const tpContext = useContext(TPContext);
   const { desigFlag } = tpContext.tpState;
-  const { toggleDesigFlag, setDg } = tpContext;
+  const { toggleDesigFlag, setDg, setStatus, setMsg } = tpContext;
 
   useEffect(() => {
     const fetchData = async () => {
-      reportStatus('busy')
+      setStatus('busy');
       try {
         const res = await axios.get(
           `http://localhost:3000/api/tp/empDesig/${theEmp}`
         );
         setPostings(res.data);
-        reportStatus('Success');
+        setStatus('Success');
       } catch (error) {
-        reportStatus('Error');
-        reportMsg(errText(error));
+        setStatus('Error');
+        setMsg(errText(error));
       }
     };
     fetchData();
   }, [desigFlag]);
 
   const deleteEmpDesig = async (theEmpDesigId) => {
-    reportStatus('busy');
+    setStatus('busy');
     try {
       await axios.delete(
         `http://localhost:3000/api/tp/empDesig/${theEmpDesigId}`
       );
       toggleDesigFlag();
-      reportStatus('Success');
+      setStatus('Success');
       alert('Row Deleted!');
     } catch (error) {
-      reportStatus('Error');
-      reportMsg(errText(error));
+      setStatus('Error');
+      setMsg(errText(error));
     }
   };
 

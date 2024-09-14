@@ -4,16 +4,16 @@ import axios from 'axios';
 import { TPContext } from '../context/tp/TPContext';
 import { errText } from '../util/errMsgText';
 
-const Posting = ({ theEmp, reportStatus, reportMsg }) => {
+const Posting = ({ theEmp }) => {
   const [fromDt, setFromDt] = useState('');
   const [desigs, setDesigs] = useState([]);
   const [theDesig, setTheDesig] = useState('');
   const tpContext = useContext(TPContext);
   const { postId, postDesigId, postFromDt } = tpContext.tpState;
-  const { setDg, toggleDesigFlag } = tpContext;
+  const { setDg, toggleDesigFlag, setStatus, setMsg } = tpContext;
 
   // to initialise lower window with context
-  // the context gets filled by edit button in 
+  // the context gets filled by edit button in
   // trail window using setter by context
   useEffect(() => {
     setTheDesig(postDesigId);
@@ -22,16 +22,16 @@ const Posting = ({ theEmp, reportStatus, reportMsg }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      reportStatus('busy');
+      setStatus('busy');
       try {
         const res = await axios.get(
           `http://localhost:3000/api/designations/short`
         );
         setDesigs(res.data);
-        reportStatus('Success');
+        setStatus('Success');
       } catch (error) {
-        reportStatus('Error');
-        reportMsg(errText(error));
+        setStatus('Error');
+        setMsg(errText(error));
       }
     };
     fetchData();
@@ -39,7 +39,7 @@ const Posting = ({ theEmp, reportStatus, reportMsg }) => {
 
   const saveRec = async () => {
     if (theDesig == '') return;
-    reportStatus('busy');
+    setStatus('busy');
     try {
       if (postId) {
         await axios.put(`http://localhost:3000/api/tp/empDesig/${postId}`, {
@@ -56,13 +56,12 @@ const Posting = ({ theEmp, reportStatus, reportMsg }) => {
       }
       toggleDesigFlag();
       setDg('', '', '');
-      reportStatus('Success');
+      setStatus('Success');
     } catch (error) {
-      reportStatus('Error');
-      reportMsg(errText(error));
+      setStatus('Error');
+      setMsg(errText(error));
     }
   };
-
 
   return (
     <>

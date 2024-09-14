@@ -17,6 +17,9 @@ export const TPState = (props) => {
 
     desigFlag: false,
     depttFlag: false,
+
+    status: '',
+    msg: '',
   };
 
   const [state, dispatch] = useReducer(TPReducer, initialState);
@@ -44,6 +47,23 @@ export const TPState = (props) => {
     });
   };
 
+  const setStatus = (theTxt) => {
+    dispatch({
+      payLoad: { status: theTxt },
+    });
+  };
+  const setMsg = (theTxt) => {
+    dispatch({
+      payLoad: { msg: theTxt },
+    });
+  };
+  const getStatus = () => {
+    return state.status;
+  };
+  const getMsg = () => {
+    return state.msg;
+  };
+
   return (
     <TPContext.Provider
       value={{
@@ -53,6 +73,11 @@ export const TPState = (props) => {
 
         toggleDesigFlag,
         toggleDepttFlag,
+
+        setStatus,
+        getStatus,
+        setMsg,
+        getMsg,
       }}
     >
       {props.children}
