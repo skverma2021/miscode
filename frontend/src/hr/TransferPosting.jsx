@@ -12,13 +12,13 @@ import Spinner from '../home/Spinner';
 
 const TransferPosting = () => {
   const [empDet, setEmpDet] = useState({});
-  // const [msg, setMsg] = useState('');
-  // const [status, setStatus] = useState('');
   const tpContext = useContext(TPContext);
   const { desigFlag, depttFlag } = tpContext.tpState;
-  const { setStatus, getStatus, setMsg, getMsg } = tpContext;
+  const { setStatus, getStatus, setMsg, getMsg, setEmp } = tpContext;
 
   const { id } = useParams();
+
+  useEffect(()=>{setEmp(id)},[id]);
 
   const navigate = useNavigate();
   let timeoutId;
@@ -90,11 +90,11 @@ const TransferPosting = () => {
           >
             {/* Shows all change in designation */}
             <div style={{ padding: '10px', height: '40vh' }}>
-              <PostingTrail theEmp={id} />
+              <PostingTrail />
             </div>
             {/* shows the edit window for adding/updating any change in designation */}
             <div style={{ padding: '10px' }}>
-              <Posting theEmp={id} />
+              <Posting />
             </div>
           </div>
 
@@ -111,11 +111,11 @@ const TransferPosting = () => {
           >
             {/* Shows all change in department */}
             <div style={{ padding: '10px', height: '40vh' }}>
-              <TransferTrail theEmp={id} />
+              <TransferTrail />
             </div>
             {/* shows the edit window for adding/updating any change in department */}
             <div style={{ padding: '10px' }}>
-              <Transfer theEmp={id} />
+              <Transfer />
             </div>
           </div>
         </div>

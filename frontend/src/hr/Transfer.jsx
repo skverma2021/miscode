@@ -4,12 +4,12 @@ import axios from 'axios';
 import { TPContext } from '../context/tp/TPContext';
 import { errText } from '../util/errMsgText';
 
-const Transfer = ({ theEmp }) => {
+const Transfer = () => {
   const [fromDt, setFromDt] = useState('');
   const [deptts, setDeptts] = useState([]);
   const [theDeptt, setTheDeptt] = useState('');
   const tpContext = useContext(TPContext);
-  const { trId, trDepttId, trFromDt } = tpContext.tpState;
+  const { trId, trDepttId, trFromDt, empId } = tpContext.tpState;
   const { setDp, toggleDepttFlag, setStatus, setMsg } = tpContext;
 
   // to initialise lower window with context
@@ -42,13 +42,13 @@ const Transfer = ({ theEmp }) => {
     try {
       if (trId) {
         await axios.put(`http://localhost:3000/api/tp/empdeptt/${trId}`, {
-          empId: theEmp, // parameter received
+          empId: empId, // parameter received
           depttId: theDeptt, // state variable
           fromDt: fromDt, // state variable
         });
       } else {
         await axios.post('http://localhost:3000/api/tp/empdeptt', {
-          empId: theEmp, // parameter received
+          empId: empId, // parameter received
           depttId: theDeptt, // state variable
           fromDt: fromDt, // state variable
         });

@@ -5,10 +5,10 @@ import axios from 'axios';
 import { TPContext } from '../context/tp/TPContext';
 import { errText } from '../util/errMsgText';
 
-const PostingTrail = ({ theEmp }) => {
+const PostingTrail = () => {
   const [postings, setPostings] = useState([]);
   const tpContext = useContext(TPContext);
-  const { desigFlag } = tpContext.tpState;
+  const { desigFlag, empId } = tpContext.tpState;
   const { toggleDesigFlag, setDg, setStatus, setMsg } = tpContext;
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const PostingTrail = ({ theEmp }) => {
       setStatus('busy');
       try {
         const res = await axios.get(
-          `http://localhost:3000/api/tp/empDesig/${theEmp}`
+          `http://localhost:3000/api/tp/empDesig/${empId}`
         );
         setPostings(res.data);
         setStatus('Success');
@@ -25,7 +25,7 @@ const PostingTrail = ({ theEmp }) => {
         setMsg(errText(error));
       }
     };
-    fetchData();
+    if (empId) fetchData();
   }, [desigFlag]);
 
   const deleteEmpDesig = async (theEmpDesigId) => {

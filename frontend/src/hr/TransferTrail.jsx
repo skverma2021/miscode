@@ -5,10 +5,10 @@ import axios from 'axios';
 import { TPContext } from '../context/tp/TPContext';
 import { errText } from '../util/errMsgText';
 
-const TransferTrail = ({ theEmp }) => {
+const TransferTrail = () => {
   const [transfers, setTransfers] = useState([]);
   const tpContext = useContext(TPContext);
-  const { depttFlag } = tpContext.tpState;
+  const { depttFlag, empId } = tpContext.tpState;
   const { toggleDepttFlag, setDp, setStatus, setMsg } = tpContext;
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const TransferTrail = ({ theEmp }) => {
       setStatus('busy');
       try {
         const res = await axios.get(
-          `http://localhost:3000/api/tp/empdeptt/${theEmp}`
+          `http://localhost:3000/api/tp/empdeptt/${empId}`
         );
         setTransfers(res.data);
         setStatus('Success');
@@ -25,13 +25,13 @@ const TransferTrail = ({ theEmp }) => {
         setMsg(errText(error));
       }
     };
-    fetchData();
+    if (empId) fetchData();
   }, [depttFlag]);
 
   const deleteEmpDeptt = async (theEmpDepttId) => {
     setStatus('busy');
     try {
-      const res = await axios.delete(
+      await axios.delete(
         `http://localhost:3000/api/tp/empdeptt/${theEmpDepttId}`
       );
       toggleDepttFlag();

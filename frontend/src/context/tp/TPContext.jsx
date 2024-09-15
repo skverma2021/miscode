@@ -7,6 +7,8 @@ const TPReducer = (state, action) => {
 
 export const TPState = (props) => {
   const initialState = {
+    empId:'',
+
     postId: '', // empDesigId
     postDesigId: '', // desigId
     postFromDt: '', // fromDt
@@ -64,6 +66,12 @@ export const TPState = (props) => {
     return state.msg;
   };
 
+  const setEmp = (theTxt) => {
+    dispatch({
+      payLoad: { empId: theTxt },
+    });
+  };  
+
   return (
     <TPContext.Provider
       value={{
@@ -74,6 +82,7 @@ export const TPState = (props) => {
         toggleDesigFlag,
         toggleDepttFlag,
 
+        setEmp,
         setStatus,
         getStatus,
         setMsg,
