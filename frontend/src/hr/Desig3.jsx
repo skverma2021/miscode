@@ -9,7 +9,7 @@ import ContextDesigList from './ContextDesigList';
 
 const Desig3 = () => {
   const [disciplines, setDisciplines] = useState([]);
-  const { setDiscp, setDesig, discpId, setStatus, setMsg, getStatus, getMsg } =
+  const { setDiscp, setDesig, setStatus, setMsg, getStatus, getMsg } =
     useContext(DesigContext);
   const navigate = useNavigate();
 
@@ -94,7 +94,7 @@ const Desig3 = () => {
             </td>
             {/*  Designation rows for edit and delete on right */}
             <td style={{ verticalAlign: 'top' }}>
-              {discpId && <ContextDesigList />}
+              <ContextDesigList />
             </td>
           </tr>
         </tbody>

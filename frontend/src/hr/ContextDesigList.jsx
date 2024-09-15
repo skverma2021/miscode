@@ -18,7 +18,7 @@ const ContextDesigList = () => {
   } = useContext(DesigContext);
 
   useEffect(() => {
-    getAllDesignations();
+    if (discpId) getAllDesignations();
   }, [discpId, addEditFlag, delFlag]);
 
   const getAllDesignations = useCallback(async () => {
@@ -33,7 +33,7 @@ const ContextDesigList = () => {
       setStatus('Error');
       setMsg(errText(error));
     }
-  },[]);
+  },[discpId]);
 
   const deleteDesigData = async (t) => {
     setStatus('busy');
