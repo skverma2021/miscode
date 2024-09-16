@@ -10,7 +10,7 @@ const Transfer = () => {
   const [theDeptt, setTheDeptt] = useState('');
   const tpContext = useContext(TPContext);
   const { trId, trDepttId, trFromDt, empId } = tpContext.tpState;
-  const { setDp, toggleDepttFlag, setStatus, setMsg } = tpContext;
+  const { setDt, toggleDepttFlag, setStatus, setMsg } = tpContext;
 
   // to initialise lower window with context
   // the context gets filled by edit button in trail window using setter by context
@@ -56,7 +56,7 @@ const Transfer = () => {
         // newDepttRec();
       }
       toggleDepttFlag();
-      setDp('', '', '');
+      setDt('', '', '');
       setStatus('Success');
     } catch (error) {
       setStatus('Error');
@@ -67,7 +67,7 @@ const Transfer = () => {
   return (
     <>
       <h5>
-        <button onClick={() => setDp('', '', '')}>Add</button>
+        <button onClick={() => setDt('', '', '')}>Add</button>
       </h5>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex' }}>

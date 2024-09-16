@@ -9,7 +9,7 @@ const TransferTrail = () => {
   const [transfers, setTransfers] = useState([]);
   const tpContext = useContext(TPContext);
   const { depttFlag, empId } = tpContext.tpState;
-  const { toggleDepttFlag, setDp, setStatus, setMsg } = tpContext;
+  const { toggleDepttFlag, setDt, setStatus, setMsg } = tpContext;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -74,7 +74,7 @@ const TransferTrail = () => {
             {/*  to initialize the context with record to be updated */}
             {/*  The record will be made available in the lower edit window */}
             <div style={{ width: '5%', border: '1px solid black' }}>
-              <Link onClick={() => setDp(t.theId, t.theDepttId, t.theFromDt)}>
+              <Link onClick={() => setDt(t.theId, t.theDepttId, t.theFromDt)}>
                 🖍️
               </Link>
             </div>

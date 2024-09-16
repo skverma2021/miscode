@@ -7,7 +7,7 @@ const TPReducer = (state, action) => {
 
 export const TPState = (props) => {
   const initialState = {
-    empId:'',
+    empId: '',
 
     postId: '', // empDesigId
     postDesigId: '', // desigId
@@ -26,14 +26,17 @@ export const TPState = (props) => {
 
   const [state, dispatch] = useReducer(TPReducer, initialState);
 
+  // detDg for set empDesig details
   const setDg = (edgid, dgid, edgfd) => {
     dispatch({
       payLoad: { postId: edgid, postDesigId: dgid, postFromDt: edgfd },
     });
   };
-  const setDp = (edpid, dpid, edpfd) => {
+
+  // detDt for set empDeptt details
+  const setDt = (edtid, dtid, edtfd) => {
     dispatch({
-      payLoad: { trId: edpid, trDepttId: dpid, trFromDt: edpfd },
+      payLoad: { trId: edtid, trDepttId: dtid, trFromDt: edtfd },
     });
   };
 
@@ -70,14 +73,14 @@ export const TPState = (props) => {
     dispatch({
       payLoad: { empId: theTxt },
     });
-  };  
+  };
 
   return (
     <TPContext.Provider
       value={{
         tpState: state,
         setDg,
-        setDp,
+        setDt,
 
         toggleDesigFlag,
         toggleDepttFlag,
