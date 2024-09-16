@@ -86,13 +86,25 @@ const BookHead = () => {
       timeoutId = setTimeout(goHome, 10000);
     }
   };
-  
 
-  if (empStatus === 'Error') return <h1 style={{ color: 'red' }}>Employee Details could not be loaded[Error: {msg}]</h1>;
-  if (wpStatus === 'Error') return <h1 style={{ color: 'red' }}>WorkPlan Details could not be loaded[Error: {msg}]</h1>;
-  if (dtStatus === 'Error') return <h1 style={{ color: 'red' }}>Dates could not be loaded[Error: {msg}]</h1>;
-  if (bookingStatus === 'Error') return <h1 style={{ color: 'red' }}>Error encountered in booking</h1>;
-
+  if (empStatus === 'Error')
+    return (
+      <h1 style={{ color: 'red' }}>
+        Employee Details could not be loaded[Error: {msg}]
+      </h1>
+    );
+  if (wpStatus === 'Error')
+    return (
+      <h1 style={{ color: 'red' }}>
+        WorkPlan Details could not be loaded[Error: {msg}]
+      </h1>
+    );
+  if (dtStatus === 'Error')
+    return (
+      <h1 style={{ color: 'red' }}>Dates could not be loaded[Error: {msg}]</h1>
+    );
+  if (bookingStatus === 'Error')
+    return <h1 style={{ color: 'red' }}>Error encountered in booking</h1>;
 
   if (!userId) return <h1>Login again</h1>;
 
@@ -159,10 +171,8 @@ const BookHead = () => {
             return (
               <tr key={d.id}>
                 <BookDet
-                  empId={userId}
                   bookDay={d}
-                  hourlyRate={empDet.theHrRate}
-                  reportBookingStatus={setBookingStatus}
+                  reportBookingStatus={(t) => setBookingStatus(t)}
                 />
               </tr>
             );

@@ -5,7 +5,8 @@ import userContext from '../context/appUser/UserContext';
 
 function ToolBar() {
   const [theDeptt, setTheDeptt] = useState('');
-  const { user, deptt, logOutUser, expMsg } = useContext(userContext);
+  const { user, deptt, logOutUser, expMsg, grade, hrRate } =
+    useContext(userContext);
 
   useEffect(() => {
     setTheDeptt(deptt);
@@ -174,7 +175,10 @@ function ToolBar() {
             <small>
               User
               <strong>
-                <i> {user ? user : 'Not Logged in'}</i>
+                <i>
+                  {' '}
+                  {user ? `${user} [${grade}, ${hrRate}]` : 'Not Logged in'}
+                </i>
               </strong>
             </small>
           </div>

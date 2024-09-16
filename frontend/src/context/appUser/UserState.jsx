@@ -10,6 +10,8 @@ export default (props) => {
     theUserId: '',
     theUser: '',
     theDeptt: '0',
+    theGrade: '',
+    theHrRate: '0',
     expMsg: '',
   };
   const [state, dispatch] = useReducer(UserReducer, initialState);
@@ -39,6 +41,8 @@ export default (props) => {
           usrId: decoded.eID,
           usrName: decoded.eName,
           usrDeptt: decoded.eDepttID,
+          usrGrade: decoded.eGrade,
+          usrHrRate: decoded.eHrRate,
           usrExpMsg: `Token Expires at ${expDate.getHours()}:${expDate.getMinutes()}:${expDate.getSeconds()}`,
         },
       });
@@ -51,6 +55,8 @@ export default (props) => {
           usrId: '',
           usrName: '',
           usrDeptt: -1,
+          usrGrade: '',
+          usrHrRate: 0,
         },
       });
     }
@@ -66,6 +72,8 @@ export default (props) => {
         user: state.theUser,
         deptt: state.theDeptt,
         userId: state.theUserId,
+        grade: state.theGrade,
+        hrRate: state.theHrRate,
         expMsg: state.expMsg,
         authUser,
         logOutUser,

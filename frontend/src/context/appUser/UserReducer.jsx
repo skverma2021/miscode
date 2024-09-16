@@ -8,6 +8,8 @@ export default (state, action) => {
         theUser: action.payLoad.usrName,
         theDeptt: action.payLoad.usrDeptt,
         theUserId: action.payLoad.usrId,
+        theGrade: action.payLoad.usrGrade,
+        theHrRate: action.payLoad.usrHrRate,
         expMsg: action.payLoad.usrExpMsg,
       };
     case LOG_OUT:
@@ -16,6 +18,8 @@ export default (state, action) => {
         theUser: '',
         theDeptt: '',
         theUserId: '',
+        theGrade: '',
+        theHrRate: '0',
         expMsg: '',
       };
     default:

@@ -1,10 +1,12 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { errNumber } from '../util/errMsgText';
+import userContext from '../context/appUser/UserContext';
 
-const BookDet = ({ empId, bookDay, hourlyRate, reportBookingStatus }) => {
+const BookDet = ({ bookDay, reportBookingStatus }) => {
   const [bData, setBData] = useState([]);
+  const { userId: empId, hrRate: hourlyRate } = useContext(userContext);
 
   useEffect(() => {
     getBookingDet();
@@ -12,12 +14,12 @@ const BookDet = ({ empId, bookDay, hourlyRate, reportBookingStatus }) => {
 
   const getBookingDet = async () => {
     try {
-      reportBookingStatus('busy')
+      reportBookingStatus('busy');
       const res = await axios.get(
         `http://localhost:3000/api/bookings/${empId}/${bookDay.id}`
       );
       setBData(res.data);
-      reportBookingStatus('Success')
+      reportBookingStatus('Success');
     } catch (error) {
       reportBookingStatus('Error');
     }
@@ -52,58 +54,81 @@ const BookDet = ({ empId, bookDay, hourlyRate, reportBookingStatus }) => {
 
   const handleUpdAdd = () => {
     bData.map((t) => {
-      if ((isNaN(t.theBooking)) ||(t.theBooking < 0) ){
-        setError(t.idx, 1)
+      if (isNaN(t.theBooking) || t.theBooking < 0) {
+        setError(t.idx, 1);
         return;
       }
       // bData contains booking data for each workPlan applicable for the day
       // t represents one of the bookings belonging to the day
       // even if API returns tpUpd as 0 (POST/append case) it becomes an update case after 1 save
       // when the form remains open and user revisits and saves it again
-      if (t.toUpd > 0 ) {
-        updBooking( t.idx, empId, t.theWpId, bookDay.id, t.theBooking, hourlyRate );
+      if (t.toUpd > 0) {
+        updBooking(
+          t.idx,
+          empId,
+          t.theWpId,
+          bookDay.id,
+          t.theBooking,
+          hourlyRate
+        );
       } else {
         if (t.theBooking > 0)
-          addBooking( t.idx, empId, t.theWpId, bookDay.id, t.theBooking, hourlyRate );
+          addBooking(
+            t.idx,
+            empId,
+            t.theWpId,
+            bookDay.id,
+            t.theBooking,
+            hourlyRate
+          );
       }
-
     });
   };
 
   // update or delete when booking = 0
   const updBooking = async (i, e, wp, d, b, h) => {
-    const rec = { empId: e, workPlanId: wp, dateId: d, booking: b ? b : 0, bookingVal: b * h, };
+    const rec = {
+      empId: e,
+      workPlanId: wp,
+      dateId: d,
+      booking: b ? b : 0,
+      bookingVal: b * h,
+    };
     // value of booking = hours worked x hourly rate
-    reportBookingStatus('busy')
+    reportBookingStatus('busy');
     try {
       const res = await axios.put(`http://localhost:3000/api/bookings/`, rec);
       setError(i, 0); // it helps to provide feedback to user in case of error inError=0 => no error in ith row
-      reportBookingStatus('Success')
+      reportBookingStatus('Success');
     } catch (error) {
-      if (errNumber(error) == 500){
+      if (errNumber(error) == 500) {
         reportBookingStatus('Error');
-      }
-      else{
-        setError(i,1);
+      } else {
+        setError(i, 1);
       }
     }
   };
 
   const addBooking = async (i, e, wp, d, b, h) => {
-    const rec = { empId: e, workPlanId: wp, dateId: d,  booking: b, bookingVal: b * h, };
+    const rec = {
+      empId: e,
+      workPlanId: wp,
+      dateId: d,
+      booking: b,
+      bookingVal: b * h,
+    };
     // value of booking = hours worked x hourly rate
-    reportBookingStatus('busy')
+    reportBookingStatus('busy');
     try {
       const res = await axios.post(`http://localhost:3000/api/bookings/`, rec);
       setError(i, 0); // it helps to provide feedback to user in case of error inError=0 => no error in ith row
-      handleSaveCount(i)
-      reportBookingStatus('Success')
+      handleSaveCount(i);
+      reportBookingStatus('Success');
     } catch (error) {
-      if (errNumber(error) == 500){
+      if (errNumber(error) == 500) {
         reportBookingStatus('Error');
-      }
-      else{
-        setError(i,1)
+      } else {
+        setError(i, 1);
       }
     }
   };
@@ -142,9 +167,7 @@ const BookDet = ({ empId, bookDay, hourlyRate, reportBookingStatus }) => {
                 width: '100%',
                 color: `${t.inError ? 'red' : 'black'}`,
                 background: `${t.d1 >= 0 && t.d2 >= 0 && 'lightgrey'}`,
-                fontWeight:`${
-                  t.inError ? 'bold' : 'normal'
-                }`
+                fontWeight: `${t.inError ? 'bold' : 'normal'}`,
               }}
               title={
                 'wpId:' +
@@ -162,12 +185,11 @@ const BookDet = ({ empId, bookDay, hourlyRate, reportBookingStatus }) => {
                 ' d2:' +
                 t.d2
               }
-
             />
           </td>
         );
       })}
-      <td style={{ border: '1px solid', textAlign: 'center' }} >
+      <td style={{ border: '1px solid', textAlign: 'center' }}>
         <button onClick={handleUpdAdd}>💾</button>
       </td>
     </>
