@@ -5,9 +5,13 @@ import { TPContext } from '../context/tp/TPContext';
 import { errText } from '../util/errMsgText';
 
 const Posting = () => {
-  const [fromDt, setFromDt] = useState('');
-  const [desigs, setDesigs] = useState([]);
+  // theDesig and fromDt are for input controls in the form
   const [theDesig, setTheDesig] = useState('');
+  const [fromDt, setFromDt] = useState('');
+
+  // desigs is for select control
+  const [desigs, setDesigs] = useState([]);
+
   const tpContext = useContext(TPContext);
   const { postId, postDesigId, postFromDt, empId } = tpContext.tpState;
   const { setDg, toggleDesigFlag, setStatus, setMsg } = tpContext;
