@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '../home/Spinner';
 import userContext from '../context/appUser/UserContext';
-import { errText, errNumber } from '../util/errMsgText';
+import { errText } from '../util/errMsgText';
 
 const ChangePass = () => {
   const [pass, setPass] = useState({
@@ -26,6 +26,14 @@ const ChangePass = () => {
     return () => clearTimeout(timeoutId);
   }, []);
 
+  useEffect(() => {
+    setPass({
+      ...pass,
+      email: 'Enter eMail and Password',
+      oldPass: 'xxxxxx',
+    });
+  }, []);
+
   const onValChange = (e) => {
     setPass({ ...pass, [e.target.name]: e.target.value });
   };
@@ -34,15 +42,12 @@ const ChangePass = () => {
     setStatus('busy');
     event.preventDefault();
     try {
-      const res = await axios.put(
-        `http://localhost:3000/api/emps/cp`,
-        {
-          id:parseInt(userId),
-          email: pass.email,
-          oldPass: pass.oldPass,
-          passwd: pass.repeatPass,
-        }
-      );
+      const res = await axios.put(`http://localhost:3000/api/emps/cp`, {
+        id: parseInt(userId),
+        email: pass.email,
+        oldPass: pass.oldPass,
+        passwd: pass.repeatPass,
+      });
       logOutUser();
       setMsg(res.data.msg);
       setStatus('Success');
