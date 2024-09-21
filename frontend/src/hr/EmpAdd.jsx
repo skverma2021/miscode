@@ -261,6 +261,7 @@ const EmpAdd = () => {
                       setEmp({ ...emp, cityId: c })
                     }
                     reportStatus={(t) => setCityStatus(t)}
+                    reportErrNo={(r) => setErrNo(r)}
                   />
                 </td>
               </tr>

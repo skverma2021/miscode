@@ -22,7 +22,6 @@ function ClientUpd() {
   // const [cities, setCities] = useState([]);
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
-  const [cityStatus, setCityStatus] = useState('');
   const [errNo, setErrNo] = useState(0);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -89,10 +88,6 @@ function ClientUpd() {
     }
   };
 
-  if (cityStatus === 'Error') {
-    timeoutId = setTimeout(goHome, 10000);
-    return <h1 style={{ color: 'red' }}>Error: Cities could not be loaded</h1>;
-  }
 
   if (status === 'Error' && errNo == 500) {
     timeoutId = setTimeout(goHome, 10000);
@@ -239,7 +234,8 @@ function ClientUpd() {
                   <CityList
                     onSelectCity={handleCitySelection}
                     theCityId={client.cityId}
-                    reportStatus={(t) => setCityStatus(t)}
+                    reportStatus={(t) => setStatus(t)}
+                    reportErrNo={(r) => setErrNo(r)}
                   />
                 </td>
               </tr>

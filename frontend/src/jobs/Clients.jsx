@@ -136,7 +136,7 @@ const Clients = () => {
   const deleteClientData = async (t) => {
     setStatus('busy');
     try {
-      const res = await axios.delete(`http://localhost:3000/api/clients/${t}`);
+      await axios.delete(`http://localhost:3000/api/clients/${t}`);
       setStatus('Deleted');
       setMsg('Successfully Deleted.');
       timeoutId = setTimeout(goHome, 2000);
