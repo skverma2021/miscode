@@ -26,6 +26,16 @@ router.get('/short', async (req, res) => {
   }
 });
 
+router.get('/select', async (req, res) => {
+  try {
+    const pool = await sql.connect(config);
+    const result = await pool.request().execute('clientSelect');
+    res.json(result.recordset);
+  } catch (err) {
+    handleError(err, res);
+  }
+});
+
 // POST route to insert city data
 router.post('/', async (req, res) => {
   try {

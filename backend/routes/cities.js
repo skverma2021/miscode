@@ -14,5 +14,14 @@ router.get('/', async (req, res) => {
     handleError(err, res);
   }
 });
+router.get('/select', async (req, res) => {
+  try {
+    const pool = await sql.connect(config);
+    const result = await pool.request().execute('citySelect');
+    res.json(result.recordset);
+  } catch (err) {
+    handleError(err, res);
+  }
+});
 
 module.exports = router;

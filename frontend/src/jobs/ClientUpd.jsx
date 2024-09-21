@@ -4,7 +4,7 @@ import axios from 'axios';
 import { errText, errNumber } from '../util/errMsgText';
 import { useNavigate, useParams } from 'react-router-dom';
 import Spinner from '../home/Spinner';
-import CityList from '../util/CityList';
+import SelectControl from '../util/SelectControl';
 
 // id	int	Unchecked
 // shortName	nchar(10)	Unchecked
@@ -22,6 +22,8 @@ function ClientUpd() {
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
   const [errNo, setErrNo] = useState(0);
+  const [cities, setCities] = useState([]);
+
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -44,6 +46,20 @@ function ClientUpd() {
   };
 
   useEffect(() => {
+    const fetchData = async () => {
+      setStatus('busy');
+      try {
+        const res = await axios.get(`http://localhost:3000/api/cities/select`);
+        setCities(res.data);
+        setStatus('Success');
+      } catch (error) {
+        setStatus('Error-City');
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
     return () => clearTimeout(timeoutId);
   }, []);
 
@@ -64,11 +80,6 @@ function ClientUpd() {
 
   const onValChange = (e) => {
     setClient({ ...client, [e.target.name]: e.target.value });
-  };
-
-  // added to use the select (CityList) component
-  const handleCitySelection = (selectedCityId) => {
-    setClient({ ...client, cityId: selectedCityId });
   };
 
   const updClientData = async (event) => {
@@ -239,10 +250,10 @@ function ClientUpd() {
                   <label>City:</label>
                 </td>
                 <td>
-                  <CityList
-                    theCityId={client.cityId}
-                    onSelectCity={handleCitySelection}
-                    reportStatus={(t) => setStatus(t)}
+                  <SelectControl
+                    optionsRows={cities}
+                    selectedId={client.cityId}
+                    onSelect={(t) => setClient({ ...client, cityId: t })}
                   />
                 </td>
               </tr>

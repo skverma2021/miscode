@@ -4,13 +4,14 @@ import axios from 'axios';
 import { errText, errNumber } from '../util/errMsgText';
 import { useNavigate, useParams } from 'react-router-dom';
 import Spinner from '../home/Spinner';
-import ClientList from '../util/ClientList';
+import SelectControl from '../util/SelectControl';
 
 function JobUpd() {
   const [job, setJob] = useState({});
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
   const [errNo, setErrNo] = useState(0);
+  const [clients, setClients] = useState([]);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -30,6 +31,20 @@ function JobUpd() {
   const goHome = () => {
     navigate('/');
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setStatus('busy');
+      try {
+        const res = await axios.get(`http://localhost:3000/api/clients/select`);
+        setClients(res.data);
+        setStatus('Success');
+      } catch (error) {
+        setStatus('Error-Client');
+      }
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
     return () => clearTimeout(timeoutId);
@@ -131,10 +146,10 @@ function JobUpd() {
                   <label>Client:</label>
                 </td>
                 <td>
-                  <ClientList
-                    theClientId={job.clientId}
-                    onSelectClient={handleClientSelection}
-                    reportStatus={(t) => setClientStatus(t)}
+                  <SelectControl
+                    optionsRows={clients}
+                    selectedId={job.clientId}
+                    onSelect={(t) => setJob({ ...job, clientId: t })}
                   />
                 </td>
               </tr>
