@@ -88,6 +88,10 @@ function ClientUpd() {
     }
   };
 
+  if (status === 'Error-City') {
+    timeoutId = setTimeout(goHome, 5000);
+    return <h1 style={{ color: 'red' }}>Error Loading Cities</h1>;
+  }
 
   if (status === 'Error' && errNo == 500) {
     timeoutId = setTimeout(goHome, 10000);
@@ -235,7 +239,6 @@ function ClientUpd() {
                     onSelectCity={handleCitySelection}
                     theCityId={client.cityId}
                     reportStatus={(t) => setStatus(t)}
-                    reportErrNo={(r) => setErrNo(r)}
                   />
                 </td>
               </tr>

@@ -69,7 +69,10 @@ const EmpAdd = () => {
       setErrNo(errNumber(error));
     }
   };
-
+  if (status === 'Error-City') {
+    timeoutId = setTimeout(goHome, 5000);
+    return <h1 style={{ color: 'red' }}>Error Loading Cities</h1>;
+  }
   if (cityStatus === 'Error') {
     timeoutId = setTimeout(goHome, 5000);
     return (
@@ -261,7 +264,6 @@ const EmpAdd = () => {
                       setEmp({ ...emp, cityId: c })
                     }
                     reportStatus={(t) => setCityStatus(t)}
-                    reportErrNo={(r) => setErrNo(r)}
                   />
                 </td>
               </tr>

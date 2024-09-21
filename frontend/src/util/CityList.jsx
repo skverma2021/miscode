@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const CityList = ({ theCityId, onSelectCity, reportStatus, reportErrNo }) => {
+const CityList = ({ theCityId, onSelectCity, reportStatus }) => {
   const [cities, setCities] = useState([]);
 
   useEffect(() => {
@@ -13,8 +13,7 @@ const CityList = ({ theCityId, onSelectCity, reportStatus, reportErrNo }) => {
         setCities(res.data);
         reportStatus('Success');
       } catch (error) {
-        reportStatus('Error');
-        reportErrNo(500)
+        reportStatus('Error-City');
       }
     };
     fetchData();

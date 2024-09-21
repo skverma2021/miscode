@@ -10,8 +10,6 @@ import CityList from '../util/CityList';
 const EmpUpd = () => {
   const [emp, setEmp] = useState({});
   const [msg, setMsg] = useState('');
-  const [cityStatus, setCityStatus] = useState('');
-  const [recStatus, setRecStatus] = useState('');
   const [status, setStatus] = useState('');
   const [errNo, setErrNo] = useState(0);
 
@@ -45,13 +43,13 @@ const EmpUpd = () => {
   useEffect(() => {
     const fetchEmpData = async () => {
       try {
-        setRecStatus('busy');
+        setStatus('busy');
         const res = await axios.get(`http://localhost:3000/api/emps/${id}`);
         setEmp(res.data[0]);
-        setRecStatus('Success');
+        setStatus('Success');
         console.log(recStatus);
       } catch (error) {
-        setRecStatus('Error');
+        setStatus('Error');
         setMsg(errText(error));
         setErrNo(errNumber(error));
       }
@@ -79,19 +77,9 @@ const EmpUpd = () => {
     }
   };
 
-  if (cityStatus === 'Error') {
+  if (status === 'Error-City') {
     timeoutId = setTimeout(goHome, 5000);
-    return (
-      <h1 style={{ color: 'red' }}>Error: City Names could not be loaded</h1>
-    );
-  }
-  if (recStatus === 'Error') {
-    timeoutId = setTimeout(goHome, 5000);
-    return (
-      <h1 style={{ color: 'red' }}>
-        Error: Record for updation could not be loaded
-      </h1>
-    );
+    return <h1 style={{ color: 'red' }}>Error Loading Cities</h1>;
   }
 
   if (status === 'Error' && errNo == 500) {
@@ -229,7 +217,6 @@ const EmpUpd = () => {
                     min='1960-01-01'
                     max='2004-12-31'
                     value={emp.dob || ''}
-                    //   value={moment(emp.dob).format('YYYY-MM-DD')}
                     onChange={(e) => {
                       return onValChange(e);
                     }}
@@ -279,8 +266,7 @@ const EmpUpd = () => {
                   <CityList
                     theCityId={emp.cityId}
                     onSelectCity={(c) => setEmp({ ...emp, cityId: c })}
-                    reportStatus={(t) => setCityStatus(t)}
-                    reportErrNo={(r) => setErrNo(r)}
+                    reportStatus={(t) => setStatus(t)}
                   />
                 </td>
               </tr>
