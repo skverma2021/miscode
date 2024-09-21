@@ -13,7 +13,7 @@ const CityList = ({ theCityId, onSelectCity, reportStatus }) => {
         setCities(res.data);
         reportStatus('Success');
       } catch (error) {
-        reportStatus('Error');
+        reportStatus('Error-City');
       }
     };
     fetchData();

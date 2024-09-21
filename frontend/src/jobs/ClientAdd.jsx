@@ -29,12 +29,9 @@ function ClientAdd() {
     street: '',
     cityId: '',
   });
-  // const [cities, setCities] = useState([]);
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
-  const [cityStatus, setCityStatus] = useState('');
   const [errNo, setErrNo] = useState(0);
-
   const navigate = useNavigate();
 
   const okSubmit = () => {
@@ -83,9 +80,9 @@ function ClientAdd() {
     }
   };
 
-  if (cityStatus === 'Error') {
+  if (status === 'Error-City') {
     timeoutId = setTimeout(goHome, 5000);
-    return <h1 style={{ color: 'red' }}>Error: Cities could not be loaded</h1>;
+    return <h1 style={{ color: 'red' }}>Error Loading Cities</h1>;
   }
 
   if (status === 'Error' && errNo == 500) {
@@ -233,7 +230,7 @@ function ClientAdd() {
                   <CityList
                     onSelectCity={handleCitySelection}
                     theCityId={client.cityId}
-                    reportStatus={(t) => setCityStatus(t)}
+                    reportStatus={(t) => setStatus(t)}
                   />
                 </td>
               </tr>
