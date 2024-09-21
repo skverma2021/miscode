@@ -254,6 +254,7 @@ function ClientUpd() {
                     optionsRows={cities}
                     selectedId={client.cityId}
                     onSelect={(t) => setClient({ ...client, cityId: t })}
+                    prompt={'City'}
                   />
                 </td>
               </tr>

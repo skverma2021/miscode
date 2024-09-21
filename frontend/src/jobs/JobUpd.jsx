@@ -150,6 +150,7 @@ function JobUpd() {
                     optionsRows={clients}
                     selectedId={job.clientId}
                     onSelect={(t) => setJob({ ...job, clientId: t })}
+                    prompt={'Client'}
                   />
                 </td>
               </tr>

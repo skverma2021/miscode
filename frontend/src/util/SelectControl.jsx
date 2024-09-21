@@ -1,6 +1,11 @@
 import React from 'react';
 
-const SelectControl = ({ optionsRows, selectedId, onSelect }) => {
+// optionRows : [{theId:'', theDes:''}, {}, {}]
+// selectedId : value of selected option
+// onSelect   : a function that will be executed as onSelect(e.target.value)
+// prompt     : the text to appear after 'Select'
+
+const SelectControl = ({ optionsRows, selectedId, onSelect, prompt }) => {
   return (
     <select
       onChange={(e) => {
@@ -8,7 +13,7 @@ const SelectControl = ({ optionsRows, selectedId, onSelect }) => {
       }}
       value={selectedId}
     >
-      <option value=''>Select </option>
+      <option value=''>Select {prompt}</option>
       {optionsRows.map((t) => (
         <option key={t.theId} value={t.theId}>
           {t.theDes}

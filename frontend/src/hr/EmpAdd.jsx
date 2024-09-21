@@ -270,6 +270,7 @@ const EmpAdd = () => {
                     optionsRows={cities}
                     selectedId={emp.cityId}
                     onSelect={(c) => setEmp({ ...emp, cityId: c })}
+                    prompt={'City'}
                   />
                 </td>
               </tr>
