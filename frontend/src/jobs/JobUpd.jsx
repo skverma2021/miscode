@@ -10,8 +10,8 @@ function JobUpd() {
   const [job, setJob] = useState({});
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
-  const [clientStatus, setClientStatus] = useState('');
   const [errNo, setErrNo] = useState(0);
+
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -76,10 +76,11 @@ function JobUpd() {
     }
   };
 
-  if (clientStatus === 'Error') {
+  if (status === 'Error-Client') {
     timeoutId = setTimeout(goHome, 5000);
-    return <h1 style={{ color: 'red' }}>Error: Clients could not be loaded</h1>;
+    return <h1 style={{ color: 'red' }}>Error Loading Clients</h1>;
   }
+
   if (status === 'Error' && errNo == 500) {
     timeoutId = setTimeout(goHome, 10000);
     return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
@@ -131,8 +132,8 @@ function JobUpd() {
                 </td>
                 <td>
                   <ClientList
-                    onSelectClient={handleClientSelection}
                     theClientId={job.clientId}
+                    onSelectClient={handleClientSelection}
                     reportStatus={(t) => setClientStatus(t)}
                   />
                 </td>

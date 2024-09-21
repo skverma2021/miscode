@@ -23,7 +23,6 @@ const EmpAdd = () => {
     passwd: '',
   });
   const [msg, setMsg] = useState('');
-  const [cityStatus, setCityStatus] = useState('');
   const [status, setStatus] = useState('');
   const [errNo, setErrNo] = useState(0);
   const navigate = useNavigate();
@@ -73,12 +72,7 @@ const EmpAdd = () => {
     timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error Loading Cities</h1>;
   }
-  if (cityStatus === 'Error') {
-    timeoutId = setTimeout(goHome, 5000);
-    return (
-      <h1 style={{ color: 'red' }}>Error: City Names could not be loaded</h1>
-    );
-  }
+
   if (status === 'Error' && errNo == 500) {
     timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
@@ -260,10 +254,8 @@ const EmpAdd = () => {
                 <td>
                   <CityList
                     theCityId={emp.cityId}
-                    onSelectCity={(c) =>
-                      setEmp({ ...emp, cityId: c })
-                    }
-                    reportStatus={(t) => setCityStatus(t)}
+                    onSelectCity={(c) => setEmp({ ...emp, cityId: c })}
+                    reportStatus={(t) => setStatus(t)}
                   />
                 </td>
               </tr>

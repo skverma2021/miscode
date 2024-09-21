@@ -47,7 +47,6 @@ const EmpUpd = () => {
         const res = await axios.get(`http://localhost:3000/api/emps/${id}`);
         setEmp(res.data[0]);
         setStatus('Success');
-        console.log(recStatus);
       } catch (error) {
         setStatus('Error');
         setMsg(errText(error));

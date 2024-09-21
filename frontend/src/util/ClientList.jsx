@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const ClientList = ({ onSelectClient, theClientId, reportStatus }) => {
+const ClientList = ({ theClientId, onSelectClient, reportStatus }) => {
   const [clients, setClients] = useState([]);
 
   useEffect(() => {
@@ -13,7 +13,7 @@ const ClientList = ({ onSelectClient, theClientId, reportStatus }) => {
         setClients(res.data);
         reportStatus('Success');
       } catch (error) {
-        reportStatus('Error');
+        reportStatus('Error-Client');
       }
     };
     fetchData();

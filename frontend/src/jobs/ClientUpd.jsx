@@ -19,7 +19,6 @@ import CityList from '../util/CityList';
 
 function ClientUpd() {
   const [client, setClient] = useState({});
-  // const [cities, setCities] = useState([]);
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
   const [errNo, setErrNo] = useState(0);
