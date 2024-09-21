@@ -89,7 +89,9 @@ const JobAll = () => {
       headerName: 'ExPlan',
       field: 'link3',
       width: 80,
-      renderCell: (params) => <Link to={`./exAdd/${params.id}`}>addExPlan</Link>
+      renderCell: (params) => (
+        <Link to={`./exAdd/${params.id}`}>WorkPlans</Link>
+      ),
     },
     {
       headerName: 'Del',
@@ -161,7 +163,7 @@ const JobAll = () => {
             },
           },
         }}
-        pageSizeOptions={[5,10,15]}
+        pageSizeOptions={[5, 10, 15]}
       />
     </div>
   );
