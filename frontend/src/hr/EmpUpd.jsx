@@ -48,9 +48,8 @@ const EmpUpd = () => {
         setEmp(res.data[0]);
         setStatus('Success');
       } catch (error) {
-        setStatus('Error');
+        setStatus('Error-Fetch');
         setMsg(errText(error));
-        setErrNo(errNumber(error));
       }
     };
     fetchEmpData();
@@ -80,12 +79,14 @@ const EmpUpd = () => {
     timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error Loading Cities</h1>;
   }
-
+  if (status === 'Error-Fetch') {
+    timeoutId = setTimeout(goHome, 5000);
+    return <h1 style={{ color: 'red' }}>Error Fetching record for updation</h1>;
+  }
   if (status === 'Error' && errNo == 500) {
     timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
   }
-
   if (status === 'Error' && errNo !== 2627 && errNo !== 2601) {
     timeoutId = setTimeout(goHome, 5000);
     return (
@@ -94,9 +95,7 @@ const EmpUpd = () => {
       </h1>
     );
   }
-
   if (status === 'busy') return <Spinner />;
-
   if (status === 'Updated') return <h1 style={{ color: 'blue' }}>{msg}</h1>;
 
   return (

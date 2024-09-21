@@ -55,9 +55,8 @@ function ClientUpd() {
         setClient(res.data[0]);
         setStatus('Success');
       } catch (error) {
-        setStatus('Error');
+        setStatus('Error-Fetch');
         setMsg(errText(error));
-        setErrNo(500);
       }
     };
     fetchData();
@@ -90,6 +89,12 @@ function ClientUpd() {
   if (status === 'Error-City') {
     timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error Loading Cities</h1>;
+  }
+  if (status === 'Error-Fetch') {
+    timeoutId = setTimeout(goHome, 5000);
+    return (
+      <h1 style={{ color: 'red' }}>Error Fetching record for updations</h1>
+    );
   }
 
   if (status === 'Error' && errNo == 500) {

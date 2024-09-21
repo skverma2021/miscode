@@ -68,11 +68,11 @@ const EmpAdd = () => {
       setErrNo(errNumber(error));
     }
   };
+
   if (status === 'Error-City') {
     timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error Loading Cities</h1>;
   }
-
   if (status === 'Error' && errNo == 500) {
     timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;

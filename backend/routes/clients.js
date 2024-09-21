@@ -62,7 +62,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// POST route to insert city data
+// PUT route to update client data
 router.put('/:id', async (req, res) => {
   try {
     // const { error } = validate(req.body);
