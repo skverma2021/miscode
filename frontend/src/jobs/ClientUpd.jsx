@@ -240,8 +240,8 @@ function ClientUpd() {
                 </td>
                 <td>
                   <CityList
-                    onSelectCity={handleCitySelection}
                     theCityId={client.cityId}
+                    onSelectCity={handleCitySelection}
                     reportStatus={(t) => setStatus(t)}
                   />
                 </td>
