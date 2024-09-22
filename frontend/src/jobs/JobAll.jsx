@@ -89,17 +89,15 @@ const JobAll = () => {
       headerName: 'ExPlan',
       field: 'link3',
       width: 80,
-      renderCell: (params) => (
-        <Link to={`./exAdd/${params.id}`}>WorkPlans</Link>
-      ),
+      renderCell: (params) => <Link to={`./exAdd/${params.id}`}>WorkPlans</Link>
+      ,
     },
     {
       headerName: 'Del',
       field: 'link4',
       width: 80,
-      renderCell: (params) => (
-        <Link onClick={() => deleteJobData(`${params.id}`)}> 🗑️</Link>
-      ),
+      renderCell: (params) => <Link onClick={() => deleteJobData(`${params.id}`)}> 🗑️</Link>
+      ,
     },
   ];
   const [jobs, setJobs] = useState([]);
@@ -112,10 +110,12 @@ const JobAll = () => {
     navigate('/');
   };
 
+  // Clear the timer
   useEffect(() => {
     return () => clearTimeout(timeoutId);
   }, []);
 
+  // get all jobs when the component mounts
   useEffect(() => {
     getAllJobs();
   }, []);
@@ -136,7 +136,7 @@ const JobAll = () => {
   const deleteJobData = async (t) => {
     setStatus('busy');
     try {
-      const res = await axios.delete(`http://localhost:3000/api/jobs/${t}`);
+      await axios.delete(`http://localhost:3000/api/jobs/${t}`);
       setStatus('Deleted');
       setMsg('Successfully Deleted.');
       timeoutId = setTimeout(goHome, 2000);

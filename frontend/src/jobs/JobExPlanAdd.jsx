@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { errText, errNumber } from '../util/errMsgText';
 import { useNavigate, useParams } from 'react-router-dom';
+import SelectControl from '../util/SelectControl';
 import Spinner from '../home/Spinner';
 
 function JobExPlanAdd() {
@@ -29,6 +30,7 @@ function JobExPlanAdd() {
   const goHome = () => {
     navigate('/');
   };
+
   // t: {stageId, theStage, depttId, startDt, endDt, theVal}
   // arguments passed as values and not a as reference
   const okSubmit = (depttId, startDt, endDt, theVal) => { 
@@ -39,11 +41,12 @@ function JobExPlanAdd() {
     return true;
   };
 
+  // fetch Departments
   useEffect(() => {
     setDepttStatus('busy');
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/departments`);
+        const res = await axios.get(`http://localhost:3000/api/departments/select`);
         setDeptts(res.data);
         setDepttStatus('Success');
       } catch (error) {
@@ -134,7 +137,7 @@ function JobExPlanAdd() {
 
   //  t: {stageId, theStage, depttId, startDt, endDt, theVal}
   const saveRec = async (stageId, depttId, startDt, endDt, theVal, toUpd) => {
-    console.log(stages)
+    // console.log(stages)
     if (theJob.jobValue < sumTheVal() ) {
       // parameter-1: stageId-1 is required because stages is an array and starts with 0
       // parameter-2:  1 indicates Error
@@ -287,22 +290,12 @@ function JobExPlanAdd() {
                         }`
                       }}>{t.theStage}</td>
                   <td>
-                    <select
-                      name='depttId'
-                      id='depttId'
-                      value={t.depttId || ''}
-                      required
-                      onChange={(e) => handleInputChange(t.stageId - 1, e)}
-                    >
-                      <option value=''>Select Deptt</option>
-                      {deptts.map((d) => {
-                        return (
-                          <option key={d.id} value={d.id}>
-                            {d.name}
-                          </option>
-                        );
-                      })}
-                    </select>
+                    <SelectControl
+                    optionsRows={deptts}
+                    selectedId={t.depttId}
+                    onSelect={(d) => handleInputChange(t.stageId - 1, {target:{name:'depttId', value:d}})}
+                    prompt={'Department'}
+                  />
                   </td>
                   <td>
                     <input
