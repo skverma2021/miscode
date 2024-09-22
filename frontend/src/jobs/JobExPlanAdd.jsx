@@ -12,6 +12,9 @@ function JobExPlanAdd() {
   const [deptts, setDeptts] = useState([]); // for dropDown to select department
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
+  const [depttStatus, setDepttStatus] = useState('');
+  const [jobStatus, setJobStatus] = useState('');
+  const [stagesStatus, setStagesStatus] = useState('');
   const [errNo, setErrNo] = useState(0);
 
   const { jobId } = useParams();
@@ -41,17 +44,17 @@ function JobExPlanAdd() {
 
   // fetch Departments
   useEffect(() => {
-    setStatus('busy');
+    setDepttStatus('busy');
     const fetchData = async () => {
       try {
         const res = await axios.get(
           `http://localhost:3000/api/departments/select`
         );
         setDeptts(res.data);
-        setStatus('Success');
+        setDepttStatus('Success');
       } catch (error) {
-        setStatus('Error-Deptt');
-        setMsg(errText(error));
+        setDepttStatus('Error');
+        setMsg('Error loading departments');
       }
     };
     fetchData();
@@ -64,16 +67,16 @@ function JobExPlanAdd() {
   // fetches job attributes alongwith client for the header
   useEffect(() => {
     const fetchData = async () => {
-      setStatus('busy');
+      setJobStatus('busy');
       try {
         const res = await axios.get(
           `http://localhost:3000/api/jobs/client/${jobId}`
         );
         setTheJob(res.data[0]);
-        setStatus('Success');
+        setJobStatus('Success');
       } catch (error) {
-        setStatus('Error-Job');
-        setMsg(errText(error));
+        setJobStatus('Error');
+        setMsg('Error loading Job details');
       }
     };
     fetchData();
@@ -90,16 +93,16 @@ function JobExPlanAdd() {
   // and depttId, startDt, and endDt will be NULL
 
   const getAllStages = async () => {
-    setStatus('busy');
+    setStagesStatus('busy');
     try {
       const res = await axios.get(
         `http://localhost:3000/api/jobs/ExStages/${jobId}`
       );
       setStages(res.data);
-      setStatus('Success');
+      setStagesStatus('Success');
     } catch (error) {
-      setStatus('Error-Stages');
-      setMsg(errText(error));
+      setStagesStatus('Error');
+      setMsg('Error Loading Stages');
     }
   };
 
@@ -119,9 +122,6 @@ function JobExPlanAdd() {
       return updatedStages;
     });
   };
-
-  // even if it is an insert case with toUpd = 0
-  // it qualifies for update after it has been saved once
 
   const saveRec = async (stageId, depttId, startDt, endDt, theVal, toUpd) => {
     //  t: {stageId, theStage, depttId, startDt, endDt, theVal}
@@ -178,11 +178,16 @@ function JobExPlanAdd() {
         );
       }
       setStatus('Success');
+
+      // even if it is an insert case with toUpd = 0
+      // it qualifies for update after it has been saved once
       // now it is time to make toUpd = 1 and inError = 0
+
       handleInputChange(stageId - 1, {
         propName: 'toUpd',
         propValue: 1,
       });
+
       handleInputChange(stageId - 1, {
         propName: 'inError',
         propValue: 0,
@@ -197,29 +202,17 @@ function JobExPlanAdd() {
     }
   };
 
-  if (status === 'Error') {
+  if (
+    status === 'Error' ||
+    depttStatus === 'Error' ||
+    jobStatus === 'Error' ||
+    stagesStatus === 'Error'
+  ) {
     timeoutId = setTimeout(goHome, 5000);
     return (
       <h1 style={{ color: 'red' }}>
-        System Error ({errNo}): {msg}
-      </h1>
-    );
-  }
-  if (status === 'Error-Deptt') {
-    timeoutId = setTimeout(goHome, 5000);
-    return (
-      <h1 style={{ color: 'red' }}>Error: Departments could not be loaded</h1>
-    );
-  }
-  if (status === 'Error-Stages') {
-    timeoutId = setTimeout(goHome, 5000);
-    return <h1 style={{ color: 'red' }}>Error: Stages could not be loaded</h1>;
-  }
-  if (status === 'Error-Job') {
-    timeoutId = setTimeout(goHome, 5000);
-    return (
-      <h1 style={{ color: 'red' }}>
-        Error: the Job Details could not be loaded
+        {msg}
+        {errNo > 0 && ` ... [Error Number: ${errNo}]`}
       </h1>
     );
   }
