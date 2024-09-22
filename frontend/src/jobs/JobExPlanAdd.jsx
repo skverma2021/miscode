@@ -197,14 +197,6 @@ function JobExPlanAdd() {
     }
   };
 
-  const bgColor = (theStage) => {
-    if (theStage % 2 === 0) {
-      return 'lightBlue';
-    } else {
-      return 'lightGray';
-    }
-  };
-
   if (status === 'Error') {
     timeoutId = setTimeout(goHome, 5000);
     return (
