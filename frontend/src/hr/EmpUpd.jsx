@@ -13,7 +13,6 @@ const EmpUpd = () => {
   const [status, setStatus] = useState('');
   const [errNo, setErrNo] = useState(0);
   const [cities, setCities] = useState([]);
-
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -36,6 +35,7 @@ const EmpUpd = () => {
     navigate('/');
   };
 
+  // options for select control
   useEffect(() => {
     const fetchData = async () => {
       setStatus('busy');
@@ -49,6 +49,8 @@ const EmpUpd = () => {
     };
     fetchData();
   }, []);
+
+  // Clear the timer
   useEffect(() => {
     return () => clearTimeout(timeoutId);
   }, []);

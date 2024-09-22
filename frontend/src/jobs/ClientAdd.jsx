@@ -53,6 +53,7 @@ function ClientAdd() {
     navigate('/');
   };
 
+  // options for select control
   useEffect(() => {
     const fetchData = async () => {
       setStatus('busy');

@@ -32,6 +32,7 @@ function JobUpd() {
     navigate('/');
   };
 
+  // options for select control
   useEffect(() => {
     const fetchData = async () => {
       setStatus('busy');

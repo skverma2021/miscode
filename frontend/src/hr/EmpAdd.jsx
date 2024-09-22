@@ -47,6 +47,7 @@ const EmpAdd = () => {
     navigate('/');
   };
 
+  // options for select control
   useEffect(() => {
     const fetchData = async () => {
       setStatus('busy');
@@ -60,10 +61,10 @@ const EmpAdd = () => {
     };
     fetchData();
   }, []);
+  // Clear the timer
   useEffect(() => {
     return () => clearTimeout(timeoutId);
   }, []);
-
   const onValChange = (e) => {
     setEmp({ ...emp, [e.target.name]: e.target.value });
   };
@@ -82,7 +83,6 @@ const EmpAdd = () => {
       setErrNo(errNumber(error));
     }
   };
-
   if (status === 'Error-City') {
     timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error Loading Cities</h1>;
@@ -101,7 +101,6 @@ const EmpAdd = () => {
   }
   if (status === 'Added') return <h1 style={{ color: 'blue' }}>{msg}</h1>;
   if (status === 'busy') return <Spinner />;
-
   return (
     <>
       <h4 style={{ color: 'red' }}>
