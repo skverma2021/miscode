@@ -3,6 +3,7 @@ import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { TPContext } from '../context/tp/TPContext';
 import { errText } from '../util/errMsgText';
+import SelectControl from '../util/SelectControl';
 
 const Posting = () => {
   // theDesig and fromDt are for input controls in the form
@@ -29,7 +30,7 @@ const Posting = () => {
       setStatus('busy');
       try {
         const res = await axios.get(
-          `http://localhost:3000/api/designations/short`
+          `http://localhost:3000/api/designations/select`
         );
         setDesigs(res.data);
         setStatus('Success');
@@ -74,21 +75,12 @@ const Posting = () => {
       </h5>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex' }}>
-          <select
-            name='theDesig'
-            id='theDesig'
-            value={theDesig || ''}
-            onChange={(e) => setTheDesig(e.target.value)}
-          >
-            <option value='0'>Select Designation</option>
-            {desigs.map((dg) => {
-              return (
-                <option key={dg.theDesigId} value={dg.theDesigId}>
-                  {dg.theDescription}
-                </option>
-              );
-            })}
-          </select>
+          <SelectControl
+            optionsRows={desigs}
+            selectedId={theDesig}
+            onSelect={(d) => setTheDesig(d)}
+            prompt={'Designation'}
+          />
           <input
             name='fromDt'
             value={fromDt}

@@ -3,6 +3,7 @@ import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { TPContext } from '../context/tp/TPContext';
 import { errText } from '../util/errMsgText';
+import SelectControl from '../util/SelectControl';
 
 const Transfer = () => {
   const [fromDt, setFromDt] = useState('');
@@ -24,7 +25,7 @@ const Transfer = () => {
       setStatus('busy');
       try {
         const res = await axios.get(
-          `http://localhost:3000/api/departments/short`
+          `http://localhost:3000/api/departments/select`
         );
         setDeptts(res.data);
         setStatus('Success');
@@ -71,21 +72,12 @@ const Transfer = () => {
       </h5>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex' }}>
-          <select
-            name='theDeptt'
-            id='theDeptt'
-            value={theDeptt || ''}
-            onChange={(e) => setTheDeptt(e.target.value)}
-          >
-            <option value='0'>Select Deptt</option>
-            {deptts.map((dp) => {
-              return (
-                <option key={dp.depttId} value={dp.depttId}>
-                  {dp.depttName}
-                </option>
-              );
-            })}
-          </select>
+          <SelectControl
+            optionsRows={deptts}
+            selectedId={theDeptt}
+            onSelect={(d) => setTheDeptt(d)}
+            prompt={'Department'}
+          />
           <input
             name='fromDt'
             value={fromDt}

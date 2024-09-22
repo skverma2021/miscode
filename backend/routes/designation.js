@@ -30,6 +30,15 @@ router.get('/short', async (req, res) => {
     handleError(err, res);
   }
 });
+router.get('/select', async (req, res) => {
+  try {
+    const pool = await sql.connect(config);
+    const result = await pool.request().execute(`desigSelect`);
+    res.json(result.recordset);
+  } catch (err) {
+    handleError(err, res);
+  }
+});
 
 // ContextDesigEdit.jsx, DesigEdit.jsx, Disciplines.jsx
 // [id] ,[discpId] ,[description] ,[gradeId]
