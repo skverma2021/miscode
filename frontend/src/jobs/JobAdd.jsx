@@ -64,7 +64,6 @@ const JobAdd = () => {
 
   const onValChange = (e) => {
     setJob({ ...job, [e.target.name]: e.target.value });
-    setFormTouched(true);
   };
 
   const postJobData = async (event) => {

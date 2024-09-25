@@ -67,14 +67,8 @@ function JobUpd() {
     fetchData();
   }, []);
 
-  const onValChange = (e) => {
-    setJob({ ...job, [e.target.name]: e.target.value });
-    // setFormTouched(true);
-  };
-
-  // added to use the select (ClientList) component
-  const handleClientSelection = (selectedClientId) => {
-    setJob({ ...job, clientId: selectedClientId });
+  const onValChange = (rec) => {
+    setJob({ ...job, [rec.propName]: rec.propValue });
   };
 
   const updJobData = async (event) => {
@@ -136,9 +130,11 @@ function JobUpd() {
                     size='50'
                     value={job.description || ''}
                     onChange={(e) => {
-                      return onValChange(e);
+                      return onValChange({
+                        propName: 'description',
+                        propValue: e.target.value,
+                      });
                     }}
-                    // labelProps={{ shrink: !!job.description }}
                   />
                 </td>
               </tr>
@@ -150,7 +146,9 @@ function JobUpd() {
                   <SelectControl
                     optionsRows={clients}
                     selectedId={job.clientId}
-                    onSelect={(t) => setJob({ ...job, clientId: t })}
+                    onSelect={(t) =>
+                      onValChange({ propName: 'clientId', propValue: t })
+                    }
                     prompt={'Client'}
                   />
                 </td>
@@ -165,7 +163,10 @@ function JobUpd() {
                     type='date'
                     value={job.ordDateStart || ''}
                     onChange={(e) => {
-                      return onValChange(e);
+                      return onValChange({
+                        propName: 'ordDateStart',
+                        propValue: e.target.value,
+                      });
                     }}
                   />
                 </td>
@@ -180,7 +181,10 @@ function JobUpd() {
                     type='date'
                     value={job.ordDateEnd || ''}
                     onChange={(e) => {
-                      return onValChange(e);
+                      return onValChange({
+                        propName: 'ordDateEnd',
+                        propValue: e.target.value,
+                      });
                     }}
                   />
                 </td>
@@ -194,7 +198,10 @@ function JobUpd() {
                     name='ordValue'
                     value={job.ordValue || ''}
                     onChange={(e) => {
-                      return onValChange(e);
+                      return onValChange({
+                        propName: 'ordValue',
+                        propValue: e.target.value,
+                      });
                     }}
                   />
                 </td>
