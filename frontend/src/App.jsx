@@ -25,7 +25,7 @@ import JobAll from './jobs/JobAll';
 import JobUpd from './jobs/JobUpd';
 import JobAdd from './jobs/JobAdd';
 import JobExPlan from './jobs/JobExPlan';
-import JobExPlanAdd from './jobs/JobExPlanAdd';
+import WorkPlan from './jobs/WorkPlan';
 
 // Booking
 import BookMonthYear from './book/BookMonthYear';
@@ -75,7 +75,7 @@ function App() {
         <Route path='/bd/jobs/all/upd/:id' element={<JobUpd />} />
         <Route path='/bd/jobs/add' element={<JobAdd />} />
         <Route path='/bd/jobs/all/exPlan/:jobId' element={<JobExPlan />} />
-        <Route path='/bd/jobs/all/exAdd/:jobId' element={<JobExPlanAdd />} />
+        <Route path='/bd/jobs/all/exAdd/:jobId' element={<WorkPlan />} />
 
         {/* Booking */}
         <Route path='/booking' element={<BookMonthYear />} />

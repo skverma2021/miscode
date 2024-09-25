@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import SelectControl from '../util/SelectControl';
 import Spinner from '../home/Spinner';
 
-function JobExPlanAdd() {
+function WorkPlan() {
   const [stages, setStages] = useState([]);
   const [theJob, setTheJob] = useState({});
   const [deptts, setDeptts] = useState([]); // for dropDown to select department
@@ -404,4 +404,4 @@ function JobExPlanAdd() {
   );
 }
 
-export default JobExPlanAdd;
+export default WorkPlan;
