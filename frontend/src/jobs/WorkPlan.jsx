@@ -54,7 +54,7 @@ function WorkPlan() {
         setDepttStatus('Success');
       } catch (error) {
         setDepttStatus('Error');
-        setMsg('Error loading departments');
+        setMsg(prevMsg => prevMsg + '[Error loading departments] ');
       }
     };
     fetchData();
@@ -76,7 +76,7 @@ function WorkPlan() {
         setJobStatus('Success');
       } catch (error) {
         setJobStatus('Error');
-        setMsg('Error loading Job details');
+        setMsg(prevMsg => prevMsg + '[Error loading Job details] ');
       }
     };
     fetchData();
@@ -102,7 +102,8 @@ function WorkPlan() {
       setStagesStatus('Success');
     } catch (error) {
       setStagesStatus('Error');
-      setMsg('Error Loading Stages');
+      setMsg(prevMsg => prevMsg + '[Error Loading Stages] ');
+      
     }
   };
 
@@ -197,7 +198,7 @@ function WorkPlan() {
       // Now it is time to close and navigate back to home page
 
       setStatus('Error');
-      setMsg(errText(error));
+      setMsg(prevMsg => prevMsg + `[${errText(error)}] `);
       setErrNo(errNumber(error));
     }
   };
