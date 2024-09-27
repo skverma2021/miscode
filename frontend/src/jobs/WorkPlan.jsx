@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { errText, errNumber } from '../util/errMsgText';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -86,7 +86,6 @@ function WorkPlan() {
     getAllStages();
   }, []);
 
-  // Note:
   // if there are no workPlans belonging to the jobId,
   // stageId and theStage will still have values pulled from jobExStages,
   // toUpd, inError, and theVal will be 0,
@@ -103,7 +102,6 @@ function WorkPlan() {
     } catch (error) {
       setStagesStatus('Error');
       setMsg(prevMsg => prevMsg + '[Error Loading Stages] ');
-      
     }
   };
 
@@ -116,13 +114,13 @@ function WorkPlan() {
   // use third bracket [] to access property of object rec
   // returning updatedStages replaces stages with its updated version
 
-  const handleInputChange = (index, rec) => {
+  const handleInputChange = useCallback((index, rec) => {
     setStages((prevStages) => {
       const updatedStages = [...prevStages];
       updatedStages[index][rec.propName] = rec.propValue;
       return updatedStages;
     });
-  };
+  },[]);
 
   const saveRec = async (stageId, depttId, startDt, endDt, theVal, toUpd) => {
     //  t: {stageId, theStage, depttId, startDt, endDt, theVal}
