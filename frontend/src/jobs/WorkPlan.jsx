@@ -15,7 +15,6 @@ function WorkPlan() {
   const [depttStatus, setDepttStatus] = useState('');
   const [jobStatus, setJobStatus] = useState('');
   const [stagesStatus, setStagesStatus] = useState('');
-  const [errNo, setErrNo] = useState(0);
 
   const { jobId } = useParams();
   const navigate = useNavigate();
@@ -54,7 +53,13 @@ function WorkPlan() {
         setDepttStatus('Success');
       } catch (error) {
         setDepttStatus('Error');
-        setMsg(prevMsg => prevMsg + '[Error loading departments] ');
+        setMsg(
+          (prevMsg) =>
+            prevMsg +
+            `[Error loading departments: ${errNumber(error)} - ${errText(
+              error
+            )}] `
+        );
       }
     };
     fetchData();
@@ -76,7 +81,13 @@ function WorkPlan() {
         setJobStatus('Success');
       } catch (error) {
         setJobStatus('Error');
-        setMsg(prevMsg => prevMsg + '[Error loading Job details] ');
+        setMsg(
+          (prevMsg) =>
+            prevMsg +
+            `[Error loading Job Details: ${errNumber(error)} - ${errText(
+              error
+            )}] `
+        );
       }
     };
     fetchData();
@@ -101,7 +112,11 @@ function WorkPlan() {
       setStagesStatus('Success');
     } catch (error) {
       setStagesStatus('Error');
-      setMsg(prevMsg => prevMsg + '[Error Loading Stages] ');
+      setMsg(
+        (prevMsg) =>
+          prevMsg +
+          `[Error loading Stages: ${errNumber(error)} - ${errText(error)}] `
+      );
     }
   };
 
@@ -120,7 +135,7 @@ function WorkPlan() {
       updatedStages[index][rec.propName] = rec.propValue;
       return updatedStages;
     });
-  },[]);
+  }, []);
 
   const saveRec = async (stageId, depttId, startDt, endDt, theVal, toUpd) => {
     //  t: {stageId, theStage, depttId, startDt, endDt, theVal}
@@ -196,8 +211,12 @@ function WorkPlan() {
       // Now it is time to close and navigate back to home page
 
       setStatus('Error');
-      setMsg(prevMsg => prevMsg + `[${errText(error)}] `);
-      setErrNo(errNumber(error));
+      // setErrNo(errNumber(error));
+      setMsg(
+        (prevMsg) =>
+          prevMsg +
+          `[Error saving WorkPlan: ${errNumber(error)} - ${errText(error)}] `
+      );
     }
   };
 
@@ -208,12 +227,7 @@ function WorkPlan() {
     stagesStatus === 'Error'
   ) {
     timeoutId = setTimeout(goHome, 5000);
-    return (
-      <h1 style={{ color: 'red' }}>
-        {msg}
-        {errNo > 0 && ` ... [Error Number: ${errNo}]`}
-      </h1>
-    );
+    return <h1 style={{ color: 'red' }}>{msg}</h1>;
   }
 
   if (status === 'busy') return <Spinner />;
