@@ -1,9 +1,10 @@
 import React from 'react';
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { BookingContext } from '../context/book/BookingContext';
 import BookDet from './BookDet';
 import userContext from '../context/appUser/UserContext';
-import { errText } from '../util/errMsgText';
+import { errText, errNumber } from '../util/errMsgText';
 import { useNavigate, useParams } from 'react-router-dom';
 import Spinner from '../home/Spinner';
 
@@ -15,8 +16,9 @@ const BookHead = () => {
   const [dtStatus, setDtStatus] = useState('');
   const [empStatus, setEmpStatus] = useState('');
   const [wpStatus, setWpStatus] = useState('');
-  const [bookingStatus, setBookingStatus] = useState('');
-  const [err, setErr] = useState(false);
+
+  const bContext = useContext(BookingContext);
+  const { getBStatus, getBMsg } = bContext;
 
   const { userId } = useContext(userContext);
 
@@ -49,8 +51,13 @@ const BookHead = () => {
       setEmpStatus('Success');
     } catch (error) {
       setEmpStatus('Error');
-      setMsg(errText(error));
-      timeoutId = setTimeout(goHome, 10000);
+      setMsg(
+        (prevMsg) =>
+          prevMsg +
+          `[Error loading employee details: ${errNumber(error)} - ${errText(
+            error
+          )}] `
+      );
     }
   };
 
@@ -66,8 +73,11 @@ const BookHead = () => {
       setWpStatus('Success');
     } catch (error) {
       setWpStatus('Error');
-      setMsg(errText(error));
-      timeoutId = setTimeout(goHome, 10000);
+      setMsg(
+        (prevMsg) =>
+          prevMsg +
+          `[Error loading workplans: ${errNumber(error)} - ${errText(error)}] `
+      );
     }
   };
 
@@ -82,29 +92,23 @@ const BookHead = () => {
       setDtStatus('Success');
     } catch (error) {
       setDtStatus('Error');
-      setMsg(errText(error));
-      timeoutId = setTimeout(goHome, 10000);
+      setMsg(
+        (prevMsg) =>
+          prevMsg +
+          `[Error loading dates: ${errNumber(error)} - ${errText(error)}] `
+      );
     }
   };
 
-  if (empStatus === 'Error')
-    return (
-      <h1 style={{ color: 'red' }}>
-        Employee Details could not be loaded[Error: {msg}]
-      </h1>
-    );
-  if (wpStatus === 'Error')
-    return (
-      <h1 style={{ color: 'red' }}>
-        WorkPlan Details could not be loaded[Error: {msg}]
-      </h1>
-    );
-  if (dtStatus === 'Error')
-    return (
-      <h1 style={{ color: 'red' }}>Dates could not be loaded[Error: {msg}]</h1>
-    );
-  if (bookingStatus === 'Error')
-    return <h1 style={{ color: 'red' }}>Error encountered in booking</h1>;
+  if (empStatus === 'Error' || wpStatus === 'Error' || dtStatus === 'Error') {
+    timeoutId = setTimeout(goHome, 5000);
+    return <h1 style={{ color: 'red' }}>{msg}</h1>;
+  }
+
+  if (getBStatus() === 'Error') {
+    timeoutId = setTimeout(goHome, 5000);
+    return <h1 style={{ color: 'red' }}>{getBMsg()}</h1>;
+  }
 
   if (!userId) return <h1>Login again</h1>;
 
@@ -170,10 +174,7 @@ const BookHead = () => {
           {bookDays.map((d) => {
             return (
               <tr key={d.id}>
-                <BookDet
-                  bookDay={d}
-                  reportBookingStatus={(t) => setBookingStatus(t)}
-                />
+                <BookDet bookDay={d} />
               </tr>
             );
           })}

@@ -29,6 +29,7 @@ import WorkPlan from './jobs/WorkPlan';
 
 // Booking
 import BookMonthYear from './book/BookMonthYear';
+import { BookingState } from './context/book/BookingContext';
 import BookHead from './book/BookHead';
 
 // Reports
@@ -79,7 +80,14 @@ function App() {
 
         {/* Booking */}
         <Route path='/booking' element={<BookMonthYear />} />
-        <Route path='/booking/:m/:y' element={<BookHead />} />
+        <Route
+          path='/booking/:m/:y'
+          element={
+            <BookingState>
+              <BookHead />
+            </BookingState>
+          }
+        />
 
         {/* Reports */}
         <Route path='/hr/reports' element={<ReportsHR />} />

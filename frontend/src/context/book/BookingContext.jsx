@@ -7,52 +7,37 @@ const BookingReducer = (state, action) => {
 
 export const BookingState = (props) => {
   const initialState = {
-    postId: '', // empDesigId
-    postDesigId: '', // desigId
-    postFromDt: '', // fromDt
-
-    trId: '', // empDepttId
-    trDepttId: '', // depttId
-    trFromDt: '', // fromDt
-
-    desigFlag: false,
-    depttFlag: false,
+    bStatus: '',
+    bMsg: '',
   };
 
   const [state, dispatch] = useReducer(BookingReducer, initialState);
 
-  const setDg = (edgid, dgid, edgfd) => {
+  const setBStatus = (theTxt) => {
     dispatch({
-      payLoad: { postId: edgid, postDesigId: dgid, postFromDt: edgfd },
+      payLoad: { bStatus: theTxt },
     });
   };
-  const setDp = (edpid, dpid, edpfd) => {
+  const setBMsg = (theTxt) => {
     dispatch({
-      payLoad: { trId: edpid, trDepttId: dpid, trFromDt: edpfd },
+      payLoad: { bMsg: theTxt },
     });
   };
-
-  const toggleDesigFlag = () => {
-    dispatch({
-      payLoad: { desigFlag: (t) => !t },
-    });
+  const getBStatus = () => {
+    return state.bStatus;
   };
-
-  const toggleDepttFlag = () => {
-    dispatch({
-      payLoad: { depttFlag: (t) => !t },
-    });
+  const getBMsg = () => {
+    return state.bMsg;
   };
 
   return (
     <BookingContext.Provider
       value={{
-        tpState: state,
-        setDg,
-        setDp,
-
-        toggleDesigFlag,
-        toggleDepttFlag,
+        bState: state,
+        setBStatus,
+        getBStatus,
+        setBMsg,
+        getBMsg,
       }}
     >
       {props.children}

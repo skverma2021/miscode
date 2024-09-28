@@ -1,12 +1,17 @@
 import React from 'react';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import axios from 'axios';
-import { errNumber } from '../util/errMsgText';
+import { errText, errNumber } from '../util/errMsgText';
 import userContext from '../context/appUser/UserContext';
+import { BookingContext } from '../context/book/BookingContext';
 
-const BookDet = ({ bookDay, reportBookingStatus }) => {
+const BookDet = ({ bookDay }) => {
   const [bData, setBData] = useState([]);
+  // userId of Context will be accessed as empId and
+  // hrRate of Context will be accessed as hourlyRate
   const { userId: empId, hrRate: hourlyRate } = useContext(userContext);
+  const bContext = useContext(BookingContext);
+  const { setBStatus, setBMsg } = bContext;
 
   useEffect(() => {
     getBookingDet();
@@ -14,48 +19,35 @@ const BookDet = ({ bookDay, reportBookingStatus }) => {
 
   const getBookingDet = async () => {
     try {
-      reportBookingStatus('busy');
+      setBStatus('busy');
       const res = await axios.get(
         `http://localhost:3000/api/bookings/${empId}/${bookDay.id}`
       );
       setBData(res.data);
-      reportBookingStatus('Success');
+      setBStatus('Success');
     } catch (error) {
-      reportBookingStatus('Error');
+      setBStatus('Error');
+      setBMsg(
+        `[Error-Booking details: ${errNumber(error)} - ${errText(error)}]`
+      );
     }
   };
 
-  const handleInputChange = (index, e) => {
-    setBData((prevBData) => {
-      const updatedBData = [...prevBData];
-      updatedBData[index].theBooking = e.target.value;
-      return updatedBData;
+  const handleInputChange = useCallback((index, rec) => {
+    setBData((prevBookData) => {
+      const newBookData = [...prevBookData];
+      newBookData[index][rec.propName] = rec.propValue;
+      return newBookData;
     });
-  };
-
-  // [inError]
-  // this will make the <input />  stand out in RED to indicate error condition
-  const setError = (index, errVal) => {
-    setBData((prevBData) => {
-      const updatedBData = [...prevBData];
-      updatedBData[index].inError = errVal;
-      return updatedBData;
-    });
-  };
-
-  // toUpd
-  const handleSaveCount = (index) => {
-    setBData((prevBooking) => {
-      const updatedBooking = [...prevBooking];
-      updatedBooking[index].toUpd = updatedBooking[index].toUpd + 1;
-      return updatedBooking;
-    });
-  };
+  }, []);
 
   const handleUpdAdd = () => {
     bData.map((t) => {
       if (isNaN(t.theBooking) || t.theBooking < 0) {
-        setError(t.idx, 1);
+        handleInputChange(t.idx, {
+          propName: 'inError',
+          propValue: 1,
+        });
         return;
       }
       // bData contains booking data for each workPlan applicable for the day
@@ -95,16 +87,25 @@ const BookDet = ({ bookDay, reportBookingStatus }) => {
       bookingVal: b * h,
     };
     // value of booking = hours worked x hourly rate
-    reportBookingStatus('busy');
+    setBStatus('busy');
     try {
-      const res = await axios.put(`http://localhost:3000/api/bookings/`, rec);
-      setError(i, 0); // it helps to provide feedback to user in case of error inError=0 => no error in ith row
-      reportBookingStatus('Success');
+      await axios.put(`http://localhost:3000/api/bookings/`, rec);
+      // it helps to provide feedback to user in case of error inError=0 => no error in ith row
+      handleInputChange(i, {
+        propName: 'inError',
+        propValue: 0,
+      });
+      setBStatus('Success');
     } catch (error) {
+      console.log('theError', errNumber(error));
       if (errNumber(error) == 500) {
-        reportBookingStatus('Error');
+        setBStatus('Error');
+        setBMsg(`[Error-Booking: ${errNumber(error)} - ${errText(error)}] `);
       } else {
-        setError(i, 1);
+        handleInputChange(i, {
+          propName: 'inError',
+          propValue: 1,
+        });
       }
     }
   };
@@ -118,17 +119,28 @@ const BookDet = ({ bookDay, reportBookingStatus }) => {
       bookingVal: b * h,
     };
     // value of booking = hours worked x hourly rate
-    reportBookingStatus('busy');
+    setBStatus('busy');
     try {
-      const res = await axios.post(`http://localhost:3000/api/bookings/`, rec);
-      setError(i, 0); // it helps to provide feedback to user in case of error inError=0 => no error in ith row
-      handleSaveCount(i);
-      reportBookingStatus('Success');
+      await axios.post(`http://localhost:3000/api/bookings/`, rec);
+      // it helps to provide feedback to user in case of error inError=0 => no error in ith row
+      handleInputChange(i, {
+        propName: 'inError',
+        propValue: 0,
+      });
+      handleInputChange(i, {
+        propName: 'toUpd',
+        propValue: 1,
+      });
+      setBStatus('Success');
     } catch (error) {
       if (errNumber(error) == 500) {
-        reportBookingStatus('Error');
+        setBStatus('Error');
+        setBMsg(`[Error-Booking: ${errNumber(error)} - ${errText(error)}] `);
       } else {
-        setError(i, 1);
+        handleInputChange(i, {
+          propName: 'inError',
+          propValue: 1,
+        });
       }
     }
   };
@@ -155,7 +167,13 @@ const BookDet = ({ bookDay, reportBookingStatus }) => {
           >
             <input
               value={t.theBooking || ''}
-              onChange={(e) => handleInputChange(t.idx, e)}
+              // onChange={(e) => handleInputChange(t.idx, e)}
+              onChange={(e) =>
+                handleInputChange(t.idx, {
+                  propName: 'theBooking',
+                  propValue: e.target.value,
+                })
+              }
               // in case you want to see values of these
               // theWpId, idx, inError, toSave, theBooking, toUpd, d1, d2
               // d1 is +ve when schedule start is before booking date
