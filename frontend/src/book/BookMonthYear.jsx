@@ -13,8 +13,8 @@ const BookMonthYear = () => {
           display: 'flex',
           flexDirection: 'column',
           marginTop: '200px',
-          marginLeft: '300px',
-          marginRight: '300px',
+          marginLeft: '600px',
+          marginRight: '600px',
         }}
       >
         <h2 style={{ marginBottom: '50px' }}>Booking for the Month</h2>
@@ -30,7 +30,7 @@ const BookMonthYear = () => {
         />
         <div>
           <Link
-            to={`/booking/${mtext.substring(5, 7)}/${mtext.substring(0, 4 )}`}
+            to={`/booking/${mtext.substring(5, 7)}/${mtext.substring(0, 4)}`}
           >
             {' '}
             Log Hours Booked
