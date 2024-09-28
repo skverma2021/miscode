@@ -35,10 +35,10 @@ function WorkPlan() {
   // t: {stageId, theStage, depttId, startDt, endDt, theVal}
   // arguments passed as values and not a as reference
   const okSubmit = (depttId, startDt, endDt, theVal) => {
-    if (!depttId) return false;
-    if (!startDt) return false;
-    if (!endDt) return false;
-    if (!theVal) return false;
+    if (depttId === '') return false;
+    if (startDt === '') return false;
+    if (endDt === '') return false;
+    if (theVal === '') return false;
     return true;
   };
 
