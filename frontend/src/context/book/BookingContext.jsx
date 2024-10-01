@@ -33,7 +33,6 @@ export const BookingState = (props) => {
   return (
     <BookingContext.Provider
       value={{
-        bState: state,
         setBStatus,
         getBStatus,
         setBMsg,
