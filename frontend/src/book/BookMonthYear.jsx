@@ -1,41 +1,43 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 const BookMonthYear = () => {
   const [mtext, setMtext] = useState('');
-  // const { id } = useParams();
 
   return (
     <>
       <div
         style={{
+          marginTop: '250px',
+          height: '100%',
           display: 'flex',
-          flexDirection: 'column',
-          marginTop: '200px',
-          marginLeft: '600px',
-          marginRight: '600px',
+          justifyContent: 'center',
+          alignContent: 'center',
         }}
       >
-        <h2 style={{ marginBottom: '50px' }}>Booking for the Month</h2>
-
-        <input
-          type='month'
-          min='2022-01'
-          max='2025-12'
-          value={mtext}
-          onChange={(e) => {
-            return setMtext(e.target.value);
-          }}
-        />
-        <div>
-          <Link
-            to={`/booking/${mtext.substring(5, 7)}/${mtext.substring(0, 4)}`}
-          >
-            {' '}
-            Log Hours Booked
-          </Link>
-        </div>
+        <table>
+          <tr><td>
+            <h2 >Booking for the Month</h2>
+          </td></tr>
+          <tr><td>
+            <input
+              type='month'
+              min='2022-01'
+              max='2025-12'
+              value={mtext}
+              onChange={(e) => {
+                return setMtext(e.target.value);
+              }}
+            />
+          </td></tr>
+          <tr><td>
+            <Link
+              to={`/booking/${mtext.substring(5, 7)}/${mtext.substring(0, 4)}`}
+            >
+              <br /><small><i>Log Hours Worked [for Year - Month: {mtext}]</i></small>
+            </Link>
+          </td></tr>
+        </table>
       </div>
     </>
   );

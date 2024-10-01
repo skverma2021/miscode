@@ -115,9 +115,7 @@ const BookHead = () => {
   if (wpDet.length == 0)
     return <h1>Getting Work Plans ... [{wpDet.length}]</h1>;
 
-  if (empStatus === 'busy') return <Spinner />;
-  if (wpStatus === 'busy') return <Spinner />;
-  if (dtStatus === 'busy') return <Spinner />;
+  if (empStatus === 'busy' ||wpStatus === 'busy' ||dtStatus === 'busy') return <Spinner />;
 
   return (
     <>

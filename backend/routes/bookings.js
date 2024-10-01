@@ -34,7 +34,7 @@ router.get('/bookheader/:id/:m/:y', auth, async (req, res) => {
       .input('id', sql.Int, id)
       .input('m', sql.Int, m)
       .input('y', sql.Int, y)
-      .execute('getBookHeads1');
+      .execute('getBookHeads');
     res.json(result.recordset);
   } catch (err) {
     handleError(err, res);
