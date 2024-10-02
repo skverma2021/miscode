@@ -9,10 +9,12 @@ export default (props) => {
   const initialState = {
     theUserId: '',
     theUser: '',
+    theDepttId: '',
     theDeptt: '0',
+    theDesig: '',
     theGrade: '',
     theHrRate: '0',
-    expMsg: '',
+    tokenExpMsg: '',
   };
   const [state, dispatch] = useReducer(UserReducer, initialState);
 
@@ -40,7 +42,9 @@ export default (props) => {
         payLoad: {
           usrId: decoded.eID,
           usrName: decoded.eName,
-          usrDeptt: decoded.eDepttID,
+          usrDepttId: decoded.eDepttID,
+          usrDeptt: decoded.eDeptt,
+          usrDesig: decoded.eDesig,
           usrGrade: decoded.eGrade,
           usrHrRate: decoded.eHrRate,
           usrExpMsg: `Token Expires at ${expDate.getHours()}:${expDate.getMinutes()}:${expDate.getSeconds()}`,
@@ -54,9 +58,12 @@ export default (props) => {
         payLoad: {
           usrId: '',
           usrName: '',
-          usrDeptt: -1,
+          usrDepttId: -1,
+          usrDeptt: '',
+          usrDesig: '',
           usrGrade: '',
           usrHrRate: 0,
+          usrExpMsg: `Token Expired`,
         },
       });
     }
@@ -69,12 +76,14 @@ export default (props) => {
   return (
     <UserContext.Provider
       value={{
-        user: state.theUser,
-        deptt: state.theDeptt,
         userId: state.theUserId,
+        user: state.theUser,
+        depttId: state.theDepttId,
+        deptt: state.theDeptt,
+        desig: state.theDesig,
         grade: state.theGrade,
         hrRate: state.theHrRate,
-        expMsg: state.expMsg,
+        tokenExpMsg: state.tokenExpMsg,
         authUser,
         logOutUser,
       }}

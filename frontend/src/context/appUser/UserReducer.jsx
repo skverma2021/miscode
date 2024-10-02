@@ -5,22 +5,26 @@ export default (state, action) => {
     case AUTH_USER:
       return {
         ...state,
-        theUser: action.payLoad.usrName,
-        theDeptt: action.payLoad.usrDeptt,
         theUserId: action.payLoad.usrId,
+        theUser: action.payLoad.usrName,
+        theDepttId: action.payLoad.usrDepttId,
+        theDeptt: action.payLoad.usrDeptt,
+        theDesig: action.payLoad.usrDesig,
         theGrade: action.payLoad.usrGrade,
         theHrRate: action.payLoad.usrHrRate,
-        expMsg: action.payLoad.usrExpMsg,
+        tokenExpMsg: action.payLoad.usrExpMsg,
       };
     case LOG_OUT:
       return {
         ...state,
-        theUser: '',
-        theDeptt: '',
         theUserId: '',
+        theUser: '',
+        theDepttId: -1,
+        theDeptt: '',
+        theDesig: '',
         theGrade: '',
         theHrRate: '0',
-        expMsg: '',
+        tokenExpMsg: 'Token Expired',
       };
     default:
       return state;

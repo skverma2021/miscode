@@ -4,13 +4,21 @@ import { Link } from 'react-router-dom';
 import userContext from '../context/appUser/UserContext';
 
 function ToolBar() {
-  const [theDeptt, setTheDeptt] = useState('');
-  const { user, deptt, logOutUser, expMsg, grade, hrRate } =
-    useContext(userContext);
+  const [theDepttId, setTheDepttId] = useState('');
+  const {
+    user,
+    depttId,
+    deptt,
+    desig,
+    logOutUser,
+    tokenExpMsg,
+    grade,
+    hrRate,
+  } = useContext(userContext);
 
   useEffect(() => {
-    setTheDeptt(deptt);
-  }, [deptt]);
+    setTheDepttId(depttId);
+  }, [depttId]);
 
   const renderHRToolbar = () => (
     <div>
@@ -120,7 +128,7 @@ function ToolBar() {
     </div>
   );
   const renderToolbar = () => {
-    switch (parseInt(theDeptt)) {
+    switch (parseInt(theDepttId)) {
       case 1:
       case 2:
       case 3:
@@ -167,7 +175,7 @@ function ToolBar() {
           </div>
         </div>
         <div style={{ marginTop: '6px' }}>
-          <small>[{expMsg}]</small>
+          <small>[{tokenExpMsg}]</small>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div style={{ textAlign: 'right' }}>{renderToolbar()}</div>
@@ -177,7 +185,9 @@ function ToolBar() {
               <strong>
                 <i>
                   {' '}
-                  {user ? `${user} [${grade}, ${hrRate}]` : 'Not Logged in'}
+                  {user
+                    ? `${user} [${deptt}, ${desig}, ${grade}, ${hrRate}]`
+                    : 'Not Logged in'}
                 </i>
               </strong>
             </small>
