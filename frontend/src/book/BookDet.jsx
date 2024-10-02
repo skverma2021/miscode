@@ -156,6 +156,7 @@ const BookDet = ({ bookDay }) => {
           // for the purpose of onChange each is to be accessed based on 'idx' property
           // the route returns each row with idx = 0 or 'no of records '
           // idx and event e is passed to handleInputChange to be used for updating the booking value
+          
           <td
             key={t.idx}
             style={{
@@ -178,31 +179,17 @@ const BookDet = ({ bookDay }) => {
               // theWpId, idx, inError, toSave, theBooking, toUpd, d1, d2
               // d1 is +ve when schedule start is before booking date
               // d2 is +ve when booking date is before schedule end date
-              disabled={t.d1 < 0 || t.d2 < 0}
+              // disabled={t.d1 < 0 || t.d2 < 0}
+              disabled={t.toEdit == 0}
               style={{
                 border: 'none',
                 padding: '0',
                 width: '100%',
                 color: `${t.inError ? 'red' : 'black'}`,
-                background: `${t.d1 >= 0 && t.d2 >= 0 && 'lightgrey'}`,
+                background: `${t.toEdit == 1 && 'lightgrey'}`,
                 fontWeight: `${t.inError ? 'bold' : 'normal'}`,
               }}
-              title={
-                'wpId:' +
-                t.theWpId +
-                ' idx:' +
-                t.idx +
-                ' inError:' +
-                t.inError +
-                ' booking:' +
-                t.theBooking +
-                ' toUpd:' +
-                t.toUpd +
-                ' d1:' +
-                t.d1 +
-                ' d2:' +
-                t.d2
-              }
+              title={'wpId:'+t.theWpId+' idx:'+t.idx+' inError:'+t.inError+' booking:'+t.theBooking+' toUpd:'+t.toUpd+' toEdit:'+t.toEdit}
             />
           </td>
         );

@@ -64,13 +64,13 @@ router.get('/bookdates/:m/:y', auth, async (req, res) => {
 // d2: days between  booking date to scheduled end date
 router.get('/:empId/:dtId', auth, async (req, res) => {
   try {
-    const { empId, dtId, m, y } = req.params;
+    const { empId, dtId} = req.params;
     const pool = await sql.connect(config);
     const result = await pool
       .request()
       .input('empId', sql.Int, empId)
       .input('dtId', sql.BigInt, dtId)
-      .execute('getBookings1');
+      .execute('getBookings');
 
     res.json(result.recordset);
   } catch (err) {
