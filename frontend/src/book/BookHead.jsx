@@ -103,24 +103,28 @@ const BookHead = () => {
         <thead>
           <tr>
             <td style={{ background: 'lightgray', border: '1px solid' }}>
-              <table>
-                <tr>
-                  <td>Job</td>
-                  <td>:</td>
-                </tr>
-                <tr>
-                  <td>Workplan</td>
-                  <td>:</td>
-                </tr>
-                <tr>
-                  <td>Schedule</td>
-                  <td>:</td>
-                </tr>
-                <tr>
-                  <td>Status</td>
-                  <td>:</td>
-                </tr>
-              </table>
+              <small>
+                <table>
+                  <tr>
+                    <td>Job</td>
+                    <td>:</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <b>Workplan</b>
+                    </td>
+                    <td>:</td>
+                  </tr>
+                  <tr>
+                    <td>Schedule</td>
+                    <td>:</td>
+                  </tr>
+                  <tr>
+                    <td>Status</td>
+                    <td>:</td>
+                  </tr>
+                </table>
+              </small>
             </td>
             {wpDet.map((t) => {
               return (
@@ -135,7 +139,7 @@ const BookHead = () => {
                       </tr>
                       <tr>
                         <td>
-                          <i>{t.nameStage}</i>
+                          <b>{t.nameStage}</b>
                         </td>
                       </tr>
                       <tr>
