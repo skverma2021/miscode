@@ -9,36 +9,38 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Spinner from '../home/Spinner';
 
 const BookHead = () => {
+  // fetch workplans and booking dates
   const [wpDet, setWpDet] = useState([]);
   const [bookDays, setBookDays] = useState([]);
+
+  // status and error handling
   const [msg, setMsg] = useState('');
   const [dtStatus, setDtStatus] = useState('');
   const [wpStatus, setWpStatus] = useState('');
-
   const bContext = useContext(BookingContext);
   const { getBStatus, getBMsg } = bContext;
 
+  // get employee whose timesheet is to be created and
+  // month and year of timesheet
   const { userId } = useContext(userContext);
-
-  const navigate = useNavigate();
   const { m, y } = useParams();
 
+  // navigation to home and timer
+  const navigate = useNavigate();
   let timeoutId;
   const goHome = () => {
     navigate('/');
   };
-
   useEffect(() => {
     return () => clearTimeout(timeoutId);
   }, []);
 
+  // get workplans and booking dates when the component loads
   useEffect(() => {
     getWpDet();
     getBookingDates();
   }, []);
 
-  // to fill wpDet (workPlan Details)
-  // for the column heads (workPlan details) of the booking sheet of the month
   const getWpDet = async () => {
     setWpStatus('busy');
     try {
@@ -57,7 +59,6 @@ const BookHead = () => {
     }
   };
 
-  // gets all days of the month for the left most column
   const getBookingDates = async () => {
     setDtStatus('busy');
     try {
@@ -76,30 +77,26 @@ const BookHead = () => {
     }
   };
 
+  // error, login, and busy conditions
   if (wpStatus === 'Error' || dtStatus === 'Error') {
     timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>{msg}</h1>;
   }
-
   if (getBStatus() === 'Error') {
     timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>{getBMsg()}</h1>;
   }
-
   if (!userId) return <h1>Login again</h1>;
-
   if (wpDet.length == 0)
     return <h1>Getting Work Plans ... [{wpDet.length}]</h1>;
-
   if (wpStatus === 'busy' || dtStatus === 'busy') return <Spinner />;
 
   return (
     <>
-      {/* the entire sheet */}
       <table
         style={{ marginTop: '7px', borderCollapse: 'collapse', width: '100%' }}
       >
-        {/* workPlan details - job, stage, department's share, start, finish etc. for each column */}
+        {/* Columns: workPlan details -job, stage, department's share, start, finish etc. */}
         <thead>
           <tr>
             <td style={{ background: 'lightgray', border: '1px solid' }}>
@@ -162,8 +159,8 @@ const BookHead = () => {
             </td>
           </tr>
         </thead>
-        {/* each <tr> is populated by BookDet component which displays booking made (or yet to be made) by the employee */}
-        {/* for the day against each workPlan assigned to his/her deptt - ie forms cells for the row (day) */}
+
+        {/* each <tr> is populated by BookDet component which displays date, and booking made (or yet to be made) by the employee */}
         <tbody>
           {bookDays.map((d) => {
             return (
