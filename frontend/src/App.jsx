@@ -34,6 +34,7 @@ import BookHead from './book/BookHead';
 
 // Reports
 import ReportsHR from './hr/ReportsHR';
+import ReportsBD from './jobs/ReportsBD';
 
 function App() {
   return (
@@ -91,6 +92,8 @@ function App() {
 
         {/* Reports */}
         <Route path='/hr/reports' element={<ReportsHR />} />
+        <Route path='/bd/reports' element={<ReportsBD />} />
+
       </Routes>
     </>
   );
