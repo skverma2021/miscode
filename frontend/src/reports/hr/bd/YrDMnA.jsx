@@ -1,11 +1,11 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import { errText } from '../util/errMsgText';
+import { errText } from '../../../util/errMsgText';
 import { useNavigate } from 'react-router-dom';
-import Spinner from '../home/Spinner';
+import Spinner from '../../../home/Spinner';
 
-const YrMn = () => {
+const YrDMnA = () => {
   const [jSumm, setJSumm] = useState([]);
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
@@ -25,10 +25,9 @@ const YrMn = () => {
   }, []);
 
   const getJSumm = async () => {
-    // console.log('xxx')
     setStatus('busy');
     try {
-      const res = await axios.get(`http://localhost:3000/api/reports/summYM`);
+      const res = await axios.get(`http://localhost:3000/api/reports/summYDMA`);
       setJSumm(res.data);
       setStatus('Success');
     } catch (error) {
@@ -60,12 +59,14 @@ const YrMn = () => {
   return (
     <>
       <h3 style={{ height: '40px' }}>
-        Booking Summary - Year-wise Bookings across Months
+        Allotment Summary - Year-wise Department's Allottment of Money across
+        Months
       </h3>
       <table style={{ border: '1px solid black', width: '100%' }}>
         <thead>
           <tr style={{ backgroundColor: 'lightcyan' }}>
             <th style={{ border: '1px solid black' }}>Year</th>
+            <th style={{ border: '1px solid black' }}>Department</th>
             <th style={{ border: '1px solid black' }}>January</th>
             <th style={{ border: '1px solid black' }}>February</th>
             <th style={{ border: '1px solid black' }}>March</th>
@@ -84,8 +85,12 @@ const YrMn = () => {
         <tbody>
           {jSumm.map((t) => {
             return (
-              <tr key={t.Yr} style={{ backgroundColor: `${bgColor(t.Yr)}` }}>
-                <td style={{ border: '1px solid gray' }}>{t.Yr}</td>
+              <tr
+                key={t.yr + t.theDeptt}
+                style={{ backgroundColor: `${bgColor(t.yr)}` }}
+              >
+                <td style={{ border: '1px solid gray' }}>{t.yr}</td>
+                <td style={{ border: '1px solid gray' }}>{t.theDeptt}</td>
                 <td style={{ border: '1px solid gray', textAlign: 'right' }}>
                   {t.January}
                 </td>
@@ -146,6 +151,7 @@ const YrMn = () => {
         <tfoot>
           <tr style={{ backgroundColor: 'lightcyan' }}>
             <td>Total</td>
+            <td style={{ border: '1px solid gray', textAlign: 'center' }}>-</td>
             <td style={{ border: '1px solid gray', textAlign: 'right' }}>
               <b>{monthSumm('January')}</b>
             </td>
@@ -189,4 +195,4 @@ const YrMn = () => {
   );
 };
 
-export default YrMn;
+export default YrDMnA;

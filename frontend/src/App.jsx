@@ -34,7 +34,7 @@ import BookHead from './book/BookHead';
 
 // Reports
 import ReportsHR from './hr/ReportsHR';
-import ReportsBD from './jobs/ReportsBD';
+import ReportsBD from './reports/hr/bd/ReportsBD';
 
 function App() {
   return (

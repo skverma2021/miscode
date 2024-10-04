@@ -1,9 +1,9 @@
 import React from 'react';
 import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import { errText } from '../util/errMsgText';
+import { errText } from '../../../util/errMsgText';
 import { useNavigate } from 'react-router-dom';
-import Spinner from '../home/Spinner';
+import Spinner from '../../../home/Spinner';
 
 const YrDMn = () => {
   const [jSumm, setJSumm] = useState([]);
