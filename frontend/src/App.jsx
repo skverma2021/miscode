@@ -33,8 +33,8 @@ import { BookingState } from './context/book/BookingContext';
 import BookHead from './book/BookHead';
 
 // Reports
-import ReportsHR from './hr/ReportsHR';
-import ReportsBD from './reports/hr/bd/ReportsBD';
+import ReportsHR from './newDir/hr/ReportsHR';
+import ReportsBD from './reports/bd/ReportsBD';
 
 function App() {
   return (
@@ -91,8 +91,8 @@ function App() {
         />
 
         {/* Reports */}
-        <Route path='/hr/reports' element={<ReportsHR />} />
-        <Route path='/bd/reports' element={<ReportsBD />} />
+        <Route path='/reports/hr' element={<ReportsHR />} />
+        <Route path='/reports/bd' element={<ReportsBD />} />
 
       </Routes>
     </>
