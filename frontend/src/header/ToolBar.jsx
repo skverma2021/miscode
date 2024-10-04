@@ -36,7 +36,7 @@ function ToolBar() {
         NewEmp
       </Link>
       {` `}
-      <Link to='/hr' style={{ marginRight: '15px' }}>
+      <Link to='/newDir/hr' style={{ marginRight: '15px' }}>
         {' '}
         Reports
       </Link>
@@ -72,7 +72,7 @@ function ToolBar() {
         addJobs
       </Link>
       {` `}
-      <Link to='/bd/reports' style={{ marginRight: '15px' }}>
+      <Link to='/newDir/bd' style={{ marginRight: '15px' }}>
         {' '}
         Reports
       </Link>
