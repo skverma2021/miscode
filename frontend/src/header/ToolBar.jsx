@@ -36,7 +36,7 @@ function ToolBar() {
         NewEmp
       </Link>
       {` `}
-      <Link to='/newDir/hr' style={{ marginRight: '15px' }}>
+      <Link to='/reps/hr' style={{ marginRight: '15px' }}>
         {' '}
         Reports
       </Link>
@@ -72,7 +72,7 @@ function ToolBar() {
         addJobs
       </Link>
       {` `}
-      <Link to='/newDir/bd' style={{ marginRight: '15px' }}>
+      <Link to='/reps/bd' style={{ marginRight: '15px' }}>
         {' '}
         Reports
       </Link>
@@ -104,10 +104,10 @@ function ToolBar() {
         {' '}
         Reports
       </Link> */}
-      <Link to='/hr/emp/cp' style={{ marginRight: '15px' }}>
+      {/* <Link to='/hr/emp/cp' style={{ marginRight: '15px' }}>
         {' '}
         ChangePassword
-      </Link>
+      </Link> */}
       {` `}
       <Link to='/' onClick={() => logOutUser()}>
         {' '}

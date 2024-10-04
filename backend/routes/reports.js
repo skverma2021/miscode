@@ -30,7 +30,6 @@ router.get('/summDA', async (req, res) => {
 
 // Booking Summary - Year X Months
 router.get('/summYM', async (req, res) => {
-  console.log('Hi')
   try {
     const pool = await sql.connect(config);
     const result = await pool.request().execute('xYearMonthBooked');
