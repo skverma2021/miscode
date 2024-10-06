@@ -46,9 +46,9 @@ const BookDet = ({ bookDay }) => {
 
   // handle - insert, delete and update on booking table
   const handleUpdAdd = () => {
-    bData.map((t) => {
+    bData.map((t, idx) => {
       if (isNaN(t.theBooking) || t.theBooking < 0) {
-        handleInputChange(t.idx, {
+        handleInputChange(idx, {
           propName: 'inError',
           propValue: 1,
         });
@@ -59,18 +59,11 @@ const BookDet = ({ bookDay }) => {
       // even if API returns tpUpd as 0 (POST/append case) it becomes an update case after 1 save
       // when the form remains open and user revisits and saves it again
       if (t.toUpd > 0) {
-        updBooking(
-          t.idx,
-          empId,
-          t.theWpId,
-          bookDay.id,
-          t.theBooking,
-          hourlyRate
-        );
+        updBooking(idx, empId, t.theWpId, bookDay.id, t.theBooking, hourlyRate);
       } else {
         if (t.theBooking > 0)
           addBooking(
-            t.idx,
+            idx,
             empId,
             t.theWpId,
             bookDay.id,
@@ -114,6 +107,7 @@ const BookDet = ({ bookDay }) => {
     }
   };
 
+  // add new booking
   const addBooking = async (i, e, wp, d, b, h) => {
     const rec = {
       empId: e,
@@ -157,7 +151,7 @@ const BookDet = ({ bookDay }) => {
       </td>
 
       {/* pring booking template for each workplan */}
-      {bData.map((t) => {
+      {bData.map((t, idx) => {
         return (
           // number of <td> each containing one <input> depends on no of rows in bData
           // for the purpose of onChange each is to be accessed based on 'idx' property
@@ -165,7 +159,7 @@ const BookDet = ({ bookDay }) => {
           // idx and event e is passed to handleInputChange to be used for updating the booking value
 
           <td
-            key={t.idx}
+            key={idx}
             style={{
               margin: '0',
               padding: '0',
@@ -175,9 +169,9 @@ const BookDet = ({ bookDay }) => {
           >
             <input
               value={t.theBooking || ''}
-              // onChange={(e) => handleInputChange(t.idx, e)}
+              // onChange={(e) => handleInputChange(idx, e)}
               onChange={(e) =>
-                handleInputChange(t.idx, {
+                handleInputChange(idx, {
                   propName: 'theBooking',
                   propValue: e.target.value,
                 })
@@ -200,7 +194,7 @@ const BookDet = ({ bookDay }) => {
                 'wpId:' +
                 t.theWpId +
                 ' idx:' +
-                t.idx +
+                idx +
                 ' inError:' +
                 t.inError +
                 ' booking:' +
