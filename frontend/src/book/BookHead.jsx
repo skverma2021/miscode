@@ -102,24 +102,26 @@ const BookHead = () => {
             <td style={{ background: 'lightgray', border: '1px solid' }}>
               <small>
                 <table>
-                  <tr>
-                    <td>Job</td>
-                    <td>:</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <b>Workplan</b>
-                    </td>
-                    <td>:</td>
-                  </tr>
-                  <tr>
-                    <td>Schedule</td>
-                    <td>:</td>
-                  </tr>
-                  <tr>
-                    <td>Status</td>
-                    <td>:</td>
-                  </tr>
+                  <tbody>
+                    <tr>
+                      <td>Job</td>
+                      <td>:</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <b>Workplan</b>
+                      </td>
+                      <td>:</td>
+                    </tr>
+                    <tr>
+                      <td>Schedule</td>
+                      <td>:</td>
+                    </tr>
+                    <tr>
+                      <td>Status</td>
+                      <td>:</td>
+                    </tr>
+                  </tbody>
                 </table>
               </small>
             </td>
@@ -131,24 +133,26 @@ const BookHead = () => {
                 >
                   <small>
                     <table>
-                      <tr>
-                        <td>{t.nameJob}</td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <b>{t.nameStage}</b>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          {t.dtStart} to {t.dtEnd}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          Rs.{t.workPlanDepttShare}/{t.consumed}
-                        </td>
-                      </tr>
+                      <tbody>
+                        <tr>
+                          <td>{t.nameJob}</td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <b>{t.nameStage}</b>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            {t.dtStart} to {t.dtEnd}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Rs.{t.workPlanDepttShare}/{t.consumed}
+                          </td>
+                        </tr>
+                      </tbody>
                     </table>
                   </small>
                 </td>
