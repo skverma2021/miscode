@@ -9,60 +9,38 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Spinner from '../home/Spinner';
 
 const BookHead = () => {
-  const [empDet, setEmpDet] = useState({});
+  // fetch workplans and booking dates
   const [wpDet, setWpDet] = useState([]);
   const [bookDays, setBookDays] = useState([]);
+
+  // status and error handling
   const [msg, setMsg] = useState('');
   const [dtStatus, setDtStatus] = useState('');
-  const [empStatus, setEmpStatus] = useState('');
   const [wpStatus, setWpStatus] = useState('');
-
   const bContext = useContext(BookingContext);
   const { getBStatus, getBMsg } = bContext;
 
+  // get employee whose timesheet is to be created and
+  // month and year of timesheet
   const { userId } = useContext(userContext);
-
-  const navigate = useNavigate();
   const { m, y } = useParams();
 
+  // navigation to home and timer
+  const navigate = useNavigate();
   let timeoutId;
   const goHome = () => {
     navigate('/');
   };
-
   useEffect(() => {
     return () => clearTimeout(timeoutId);
   }, []);
 
+  // get workplans and booking dates when the component loads
   useEffect(() => {
-    getEmpDet();
     getWpDet();
     getBookingDates();
   }, []);
 
-  // for employee summary on the top left of the booking form
-  const getEmpDet = async () => {
-    setEmpStatus('busy');
-    try {
-      const res = await axios.get(
-        `http://localhost:3000/api/bookings/empheader/${userId}`
-      );
-      setEmpDet(res.data[0]);
-      setEmpStatus('Success');
-    } catch (error) {
-      setEmpStatus('Error');
-      setMsg(
-        (prevMsg) =>
-          prevMsg +
-          `[Error loading employee details: ${errNumber(error)} - ${errText(
-            error
-          )}] `
-      );
-    }
-  };
-
-  // to fill wpDet (workPlan Details)
-  // for the column heads (workPlan details) of the booking sheet of the month
   const getWpDet = async () => {
     setWpStatus('busy');
     try {
@@ -81,7 +59,6 @@ const BookHead = () => {
     }
   };
 
-  // gets all days of the month for the left most column
   const getBookingDates = async () => {
     setDtStatus('busy');
     try {
@@ -100,76 +77,94 @@ const BookHead = () => {
     }
   };
 
-  if (empStatus === 'Error' || wpStatus === 'Error' || dtStatus === 'Error') {
+  // error, login, and busy conditions
+  if (wpStatus === 'Error' || dtStatus === 'Error') {
     timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>{msg}</h1>;
   }
-
   if (getBStatus() === 'Error') {
     timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>{getBMsg()}</h1>;
   }
-
   if (!userId) return <h1>Login again</h1>;
-
   if (wpDet.length == 0)
     return <h1>Getting Work Plans ... [{wpDet.length}]</h1>;
-
-  if (empStatus === 'busy') return <Spinner />;
-  if (wpStatus === 'busy') return <Spinner />;
-  if (dtStatus === 'busy') return <Spinner />;
+  if (wpStatus === 'busy' || dtStatus === 'busy') return <Spinner />;
 
   return (
     <>
-      {/* employee details in two lines */}
-      <div style={{ backgroundColor: 'lightcyan', marginTop: '10px' }}>
-        <u>
-          <strong>{empDet.theName}</strong>, {empDet.theDesig}, [
-          {empDet.theGrade}]
-        </u>
-      </div>
-      <div>
-        <i>
-          {empDet.theDeptt}, {empDet.theDiscp}, [{empDet.theHrRate}Rs/hr,
-          workPlans:{empDet.curWorkPlans}]
-        </i>
-      </div>
-      {/* the entire sheet */}
       <table
-        style={{ marginTop: '10px', borderCollapse: 'collapse', width: '100%' }}
+        style={{ marginTop: '7px', borderCollapse: 'collapse', width: '100%' }}
       >
-        {/* workPlan details - job, stage, department's share, start, finish etc. for each column */}
+        {/* Columns: workPlan details -job, stage, department's share, start, finish etc. */}
         <thead>
           <tr>
-            <th style={{ background: 'lightgray', border: '1px solid' }}>
-              day✖️job
-            </th>
+            <td style={{ background: 'lightgray', border: '1px solid' }}>
+              <small>
+                <table>
+                  <tbody>
+                    <tr>
+                      <td>Job</td>
+                      <td>:</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <b>Workplan</b>
+                      </td>
+                      <td>:</td>
+                    </tr>
+                    <tr>
+                      <td>Schedule</td>
+                      <td>:</td>
+                    </tr>
+                    <tr>
+                      <td>Status</td>
+                      <td>:</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </small>
+            </td>
             {wpDet.map((t) => {
               return (
-                <th
+                <td
                   key={t.wpId}
                   style={{ border: '1px solid', background: 'lightblue' }}
                 >
                   <small>
-                    {t.nameJob}
-                    <br />
-                    <i>{t.nameStage}</i>[{t.wpId}]
-                    <br />
-                    {t.dtStart} to {t.dtEnd}
-                    <br />
-                    Allocated/Consumed:Rs.{t.workPlanDepttShare}/{t.consumed}
-                    <br />
+                    <table>
+                      <tbody>
+                        <tr>
+                          <td>{t.nameJob}</td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <b>{t.nameStage}</b>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            {t.dtStart} to {t.dtEnd}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Rs.{t.workPlanDepttShare}/{t.consumed}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </small>
-                </th>
+                </td>
               );
             })}
-            <th style={{ border: '1px solid', background: 'lightgray' }}>
+            <td style={{ border: '1px solid', background: 'lightgray' }}>
               <strong>save</strong>
-            </th>
+            </td>
           </tr>
         </thead>
-        {/* each <tr> is populated by BookDet component which displays booking made (or yet to be made) by the employee */}
-        {/* for the day against each workPlan assigned to his/her deptt - ie forms cells for the row (day) */}
+
+        {/* each <tr> is populated by BookDet component which displays date, and booking made (or yet to be made) by the employee */}
         <tbody>
           {bookDays.map((d) => {
             return (

@@ -10,13 +10,15 @@ const BookDet = ({ bookDay }) => {
   // userId of Context will be accessed as empId and
   // hrRate of Context will be accessed as hourlyRate
   const { userId: empId, hrRate: hourlyRate } = useContext(userContext);
+
+  // error reporting to parent via context
   const bContext = useContext(BookingContext);
   const { setBStatus, setBMsg } = bContext;
 
+  // get booking template - workPlanId, index, inError ?, booking - actual/null, toUpd ?, toEdit ?
   useEffect(() => {
     getBookingDet();
   }, []);
-
   const getBookingDet = async () => {
     try {
       setBStatus('busy');
@@ -33,6 +35,7 @@ const BookDet = ({ bookDay }) => {
     }
   };
 
+  // for updating bData located at index
   const handleInputChange = useCallback((index, rec) => {
     setBData((prevBookData) => {
       const newBookData = [...prevBookData];
@@ -41,10 +44,11 @@ const BookDet = ({ bookDay }) => {
     });
   }, []);
 
+  // handle - insert, delete and update on booking table
   const handleUpdAdd = () => {
-    bData.map((t) => {
+    bData.map((t, idx) => {
       if (isNaN(t.theBooking) || t.theBooking < 0) {
-        handleInputChange(t.idx, {
+        handleInputChange(idx, {
           propName: 'inError',
           propValue: 1,
         });
@@ -55,18 +59,11 @@ const BookDet = ({ bookDay }) => {
       // even if API returns tpUpd as 0 (POST/append case) it becomes an update case after 1 save
       // when the form remains open and user revisits and saves it again
       if (t.toUpd > 0) {
-        updBooking(
-          t.idx,
-          empId,
-          t.theWpId,
-          bookDay.id,
-          t.theBooking,
-          hourlyRate
-        );
+        updBooking(idx, empId, t.theWpId, bookDay.id, t.theBooking, hourlyRate);
       } else {
         if (t.theBooking > 0)
           addBooking(
-            t.idx,
+            idx,
             empId,
             t.theWpId,
             bookDay.id,
@@ -110,6 +107,7 @@ const BookDet = ({ bookDay }) => {
     }
   };
 
+  // add new booking
   const addBooking = async (i, e, wp, d, b, h) => {
     const rec = {
       empId: e,
@@ -147,17 +145,21 @@ const BookDet = ({ bookDay }) => {
 
   return (
     <>
+      {/* print date to start with */}
       <td style={{ border: '1px solid', background: 'lightblue' }}>
         <small>{bookDay.theDay}</small>
       </td>
-      {bData.map((t) => {
+
+      {/* pring booking template for each workplan */}
+      {bData.map((t, idx) => {
         return (
           // number of <td> each containing one <input> depends on no of rows in bData
           // for the purpose of onChange each is to be accessed based on 'idx' property
           // the route returns each row with idx = 0 or 'no of records '
           // idx and event e is passed to handleInputChange to be used for updating the booking value
+
           <td
-            key={t.idx}
+            key={idx}
             style={{
               margin: '0',
               padding: '0',
@@ -167,9 +169,9 @@ const BookDet = ({ bookDay }) => {
           >
             <input
               value={t.theBooking || ''}
-              // onChange={(e) => handleInputChange(t.idx, e)}
+              // onChange={(e) => handleInputChange(idx, e)}
               onChange={(e) =>
-                handleInputChange(t.idx, {
+                handleInputChange(idx, {
                   propName: 'theBooking',
                   propValue: e.target.value,
                 })
@@ -178,35 +180,36 @@ const BookDet = ({ bookDay }) => {
               // theWpId, idx, inError, toSave, theBooking, toUpd, d1, d2
               // d1 is +ve when schedule start is before booking date
               // d2 is +ve when booking date is before schedule end date
-              disabled={t.d1 < 0 || t.d2 < 0}
+              // disabled={t.d1 < 0 || t.d2 < 0}
+              disabled={t.toEdit == 0}
               style={{
                 border: 'none',
                 padding: '0',
                 width: '100%',
                 color: `${t.inError ? 'red' : 'black'}`,
-                background: `${t.d1 >= 0 && t.d2 >= 0 && 'lightgrey'}`,
+                background: `${t.toEdit == 1 && 'lightgrey'}`,
                 fontWeight: `${t.inError ? 'bold' : 'normal'}`,
               }}
               title={
                 'wpId:' +
                 t.theWpId +
                 ' idx:' +
-                t.idx +
+                idx +
                 ' inError:' +
                 t.inError +
                 ' booking:' +
                 t.theBooking +
                 ' toUpd:' +
                 t.toUpd +
-                ' d1:' +
-                t.d1 +
-                ' d2:' +
-                t.d2
+                ' toEdit:' +
+                t.toEdit
               }
             />
           </td>
         );
       })}
+
+      {/* finally end the row with save button */}
       <td style={{ border: '1px solid', textAlign: 'center' }}>
         <button onClick={handleUpdAdd}>💾</button>
       </td>
