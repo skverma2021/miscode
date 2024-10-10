@@ -10,10 +10,10 @@ const DesigReducer = (state, action) => {
 
 export const DesigState = (props) => {
   const initialState = {
-    discpId: '',
+    discpId: 0,
     discp: '',
 
-    desigId: '',
+    desigId: 0,
     desigDes: '',
     desigGrade: '',
 

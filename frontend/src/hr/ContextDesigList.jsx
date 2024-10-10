@@ -18,7 +18,8 @@ const ContextDesigList = () => {
   } = useContext(DesigContext);
 
   useEffect(() => {
-    if (discpId) getAllDesignations();
+    // if (discpId !== '') getAllDesignations();
+    getAllDesignations();
   }, [discpId, addEditFlag, delFlag]);
 
   const getAllDesignations = useCallback(async () => {
