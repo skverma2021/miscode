@@ -103,6 +103,7 @@ const BookDet = ({ bookDay }) => {
           propName: 'inError',
           propValue: 1,
         });
+        console.log(errText(error))
       }
     }
   };
