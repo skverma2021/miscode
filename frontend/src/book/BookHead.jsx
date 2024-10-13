@@ -118,7 +118,7 @@ const BookHead = () => {
                       <td>:</td>
                     </tr>
                     <tr>
-                      <td>Status</td>
+                      <td>total/used</td>
                       <td>:</td>
                     </tr>
                   </tbody>
