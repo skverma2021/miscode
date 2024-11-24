@@ -170,12 +170,14 @@ function ToolBar() {
             {/* window + . search for abacus */}
             <font size='5'>🧮</font>
           </div>
-          <div style={{ marginLeft: '10px', marginTop: '6px' }}>
+          <div style={{ marginLeft: '7px', marginTop: '6px' }}>
             <font size='4'>Consultancy Jobs - MIS</font>
           </div>
-        </div>
-        <div style={{ marginTop: '6px' }}>
-          <small>[{tokenExpMsg}]</small>
+          <div style={{ marginLeft: '10px', marginTop: '6px' }}>
+            <small>
+              <i>[{tokenExpMsg}]</i>
+            </small>
+          </div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div style={{ textAlign: 'right' }}>{renderToolbar()}</div>
