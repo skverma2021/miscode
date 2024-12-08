@@ -9,8 +9,8 @@ export default (props) => {
   const initialState = {
     theUserId: '',
     theUser: '',
-    theDepttId: '',
-    theDeptt: '0',
+    theDepttId: '0',
+    theDeptt: '',
     theDesig: '',
     theGrade: '',
     theHrRate: '0',
@@ -53,24 +53,12 @@ export default (props) => {
     } catch (error) {
       console.log(error);
       delete axios.defaults.headers.common['Authorization'];
-      dispatch({
-        type: AUTH_USER,
-        payLoad: {
-          usrId: '',
-          usrName: '',
-          usrDepttId: -1,
-          usrDeptt: '',
-          usrDesig: '',
-          usrGrade: '',
-          usrHrRate: 0,
-          usrExpMsg: `Token Expired`,
-        },
-      });
+      dispatch({type: LOG_OUT });
     }
   };
   const logOutUser = () => {
     delete axios.defaults.headers.common['Authorization'];
-    dispatch({ type: LOG_OUT, payLoad: {} });
+    dispatch({ type: LOG_OUT });
   };
 
   return (
