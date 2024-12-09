@@ -23,6 +23,10 @@ const ContextDesigList = () => {
   }, [discpId, addEditFlag, delFlag]);
 
   const getAllDesignations = useCallback(async () => {
+    if (discpId === 0) { 
+      setDesignations([]); 
+      return;
+      }
     setStatus('busy');
     try {
       const res = await axios.get(
