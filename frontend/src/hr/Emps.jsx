@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
@@ -119,7 +119,7 @@ const Emps = () => {
     }
   };
 
-  const getAllEmps = useCallback(async () => {
+  const getAllEmps = async () => {
     setStatus('busy');
     try {
       const res = await axios.get(`http://localhost:3000/api/emps`);
@@ -130,7 +130,7 @@ const Emps = () => {
       setMsg(errText(error));
       timeoutId = setTimeout(goHome, 10000);
     }
-  }, []); // Empty dependency array means the function will only be recreated when the component mounts
+  }; 
 
   useEffect(() => {
     getAllEmps();
