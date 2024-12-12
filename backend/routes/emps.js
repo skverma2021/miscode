@@ -107,6 +107,35 @@ router.post('/login', async (req, res) => {
 });
 
 // ChangePass.jsx
+// router.put('/cp', auth, async (req, res) => {
+//   try {
+//     // const { id } = req.params;
+//     const { id, email, oldPass, passwd } = req.body;
+//     let pool = await sql.connect(config);
+//     let result = await pool
+//       .request()
+//       .input('theEMailId', sql.VarChar(150), email)
+//       .execute(`getEmpEmail`);
+//     if (result.recordset.length == 0) {
+//       return res.status(400).json({ msg: 'Invalid User' });
+//     }
+//     const found = await bcrypt.compare(oldPass, result.recordset[0].ePass);
+//     if (!found) {
+//       return res.status(400).json({ msg: 'Password did not match' });
+//     }
+
+//     const hashPass = await bcrypt.hash(passwd, 10);
+//     await pool
+//       .request()
+//       .input('id', sql.Int, id)
+//       .input('passwd', sql.VarChar(150), hashPass)
+//       .query('UPDATE emp SET passwd = @passwd WHERE id = @id');
+//     return res.status(200).json({ msg: 'Password Changed' });
+//   } catch (err) {
+//     handleError(err, res);
+//   }
+// });
+// ChangePass.jsx
 router.put('/cp', auth, async (req, res) => {
   try {
     // const { id } = req.params;
@@ -116,21 +145,20 @@ router.put('/cp', auth, async (req, res) => {
       .request()
       .input('theEMailId', sql.VarChar(150), email)
       .execute(`getEmpEmail`);
-    if (result.recordset.length == 0) {
-      return res.status(400).json({ msg: 'Invalid User' });
-    }
-    const found = await bcrypt.compare(oldPass, result.recordset[0].ePass);
-    if (!found) {
-      return res.status(400).json({ msg: 'Password did not match' });
-    }
 
-    const hashPass = await bcrypt.hash(passwd, 10);
-    await pool
-      .request()
-      .input('id', sql.Int, id)
-      .input('passwd', sql.VarChar(150), hashPass)
-      .query('UPDATE emp SET passwd = @passwd WHERE id = @id');
-    return res.status(200).json({ msg: 'Password Changed' });
+    if (result.recordset.length > 0) {
+      const found = await bcrypt.compare(oldPass, result.recordset[0].ePass);
+      if (found){
+        const hashPass = await bcrypt.hash(passwd, 10);
+        await pool
+          .request()
+          .input('id', sql.Int, id)
+          .input('passwd', sql.VarChar(150), hashPass)
+          .query('UPDATE emp SET passwd = @passwd WHERE id = @id');
+        return res.status(200).json({ msg: 'Password Changed' });
+      }
+    }
+    return res.status(400).json({ msg: 'Password did not match' });
   } catch (err) {
     handleError(err, res);
   }
