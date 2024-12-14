@@ -6,11 +6,14 @@ import { TPContext } from '../context/tp/TPContext';
 import { errText } from '../util/errMsgText';
 
 const TransferTrail = () => {
+
+// State Variables
   const [transfers, setTransfers] = useState([]);
   const tpContext = useContext(TPContext);
   const { depttFlag, empId } = tpContext.tpState;
   const { toggleDepttFlag, setDt, setStatus, setMsg } = tpContext;
 
+// Updating State
   useEffect(() => {
     const fetchData = async () => {
       setStatus('busy');
@@ -28,6 +31,7 @@ const TransferTrail = () => {
     if (empId) fetchData();
   }, [depttFlag]);
 
+// Handling events on the form
   const deleteEmpDeptt = async (theEmpDepttId) => {
     setStatus('busy');
     try {
@@ -42,6 +46,7 @@ const TransferTrail = () => {
     }
   };
 
+// User Interface
   return (
     <>
       <h4>Past Transfers</h4>

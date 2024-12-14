@@ -8,24 +8,16 @@ import { DesigContext } from '../context/desig/DesigContext';
 import ContextDesigList from './ContextDesigList';
 
 const Desig3 = () => {
+
+// State Variables
   const [disciplines, setDisciplines] = useState([]);
   const { setDiscp, setDesig, setStatus, setMsg, getStatus, getMsg } =
     useContext(DesigContext);
-  const navigate = useNavigate();
 
-  let timeoutId;
-  const goHome = () => {
-    navigate('/');
-  };
-
-  useEffect(() => {
-    return () => clearTimeout(timeoutId);
-  }, []);
-
+// fetching data for state variables
   useEffect(() => {
     getAllDisciplines();
   }, []);
-
   const getAllDisciplines = useCallback(async () => {
     setStatus('busy');
     try {
@@ -39,13 +31,22 @@ const Desig3 = () => {
     }
   },[]);
 
+// Navigation and TimeOut
+  const navigate = useNavigate();
+  let timeoutId;
+  const goHome = () => {
+    navigate('/');
+  };
+  useEffect(() => {
+    return () => clearTimeout(timeoutId);
+  }, []);
+
+// User Interface
   if (getStatus() === 'Error') {
     timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error: [ {getMsg()} ]</h1>;
   }
-
   if (getStatus() === 'busy') return <Spinner />;
-
   return (
     <>
       <table
@@ -102,6 +103,5 @@ const Desig3 = () => {
     </>
   );
 };
-// [id] ,[discpId] ,[description] ,[gradeId]
 
 export default Desig3;

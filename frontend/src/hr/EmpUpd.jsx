@@ -8,34 +8,15 @@ import RadioButton from '../util/RadioButton';
 import SelectControl from '../util/SelectControl';
 
 const EmpUpd = () => {
+// State Variables
   const [emp, setEmp] = useState({});
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
   const [errNo, setErrNo] = useState(0);
   const [cities, setCities] = useState([]);
   const { id } = useParams();
-  const navigate = useNavigate();
 
-  const okSubmit = () => {
-    if (!emp.uId) return false;
-    if (!emp.fName) return false;
-    if (!emp.title) return false;
-    if (!emp.dob) return false;
-    if (!emp.gender) return false;
-    if (!emp.addLine1) return false;
-    if (!emp.cityId) return false;
-    if (!emp.mobile) return false;
-    if (!emp.eMailId) return false;
-    if (!emp.passwd) return false;
-    return true;
-  };
-
-  let timeoutId;
-  const goHome = () => {
-    navigate('/');
-  };
-
-  // options for select control
+// fetching data for state variables
   useEffect(() => {
     const fetchData = async () => {
       setStatus('busy');
@@ -49,13 +30,6 @@ const EmpUpd = () => {
     };
     fetchData();
   }, []);
-
-  // Clear the timer
-  useEffect(() => {
-    return () => clearTimeout(timeoutId);
-  }, []);
-
-  // fetch emp row
   useEffect(() => {
     const fetchEmpData = async () => {
       try {
@@ -69,13 +43,35 @@ const EmpUpd = () => {
       }
     };
     fetchEmpData();
+  }, []);  
+  
+// Navigation and TimeOut
+  const navigate = useNavigate();
+  let timeoutId;
+  const goHome = () => {
+    navigate('/');
+  };
+  useEffect(() => {
+    return () => clearTimeout(timeoutId);
   }, []);
 
+// Handling events on the form
+  const okSubmit = () => {
+  if (!emp.uId) return false;
+  if (!emp.fName) return false;
+  if (!emp.title) return false;
+  if (!emp.dob) return false;
+  if (!emp.gender) return false;
+  if (!emp.addLine1) return false;
+  if (!emp.cityId) return false;
+  if (!emp.mobile) return false;
+  if (!emp.eMailId) return false;
+  if (!emp.passwd) return false;
+  return true;
+  };
   const onValChange = (e) => {
     setEmp({ ...emp, [e.target.name]: e.target.value });
   };
-
-  // update the row with user input
   const updEmpData = async (event) => {
     event.preventDefault();
     try {
@@ -91,6 +87,7 @@ const EmpUpd = () => {
     }
   };
 
+// User Interface
   if (status === 'Error-City') {
     timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error Loading Cities</h1>;

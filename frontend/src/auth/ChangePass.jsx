@@ -6,6 +6,8 @@ import userContext from '../context/appUser/UserContext';
 import { errText } from '../util/errMsgText';
 
 const ChangePass = () => {
+
+  // State Variables
   const [pass, setPass] = useState({
     email: '',
     oldPass: '',
@@ -15,17 +17,6 @@ const ChangePass = () => {
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
   const { userId, logOutUser } = useContext(userContext);
-  const navigate = useNavigate();
-
-  let timeoutId;
-  const goHome = () => {
-    navigate('/');
-  };
-
-  useEffect(() => {
-    return () => clearTimeout(timeoutId);
-  }, []);
-
   useEffect(() => {
     setPass({
       ...pass,
@@ -33,11 +24,21 @@ const ChangePass = () => {
       oldPass: 'xxxxxx',
     });
   }, []);
+  
+  // Navigation and TimeOut
+  const navigate = useNavigate();
+  let timeoutId;
+  const goHome = () => {
+    navigate('/');
+  };
+  useEffect(() => {
+    return () => clearTimeout(timeoutId);
+  }, []);
 
+// Handling Events on the Form
   const onValChange = (e) => {
     setPass({ ...pass, [e.target.name]: e.target.value });
   };
-
   const handlePassChange = async (event) => {
     setStatus('busy');
     event.preventDefault();
@@ -60,12 +61,10 @@ const ChangePass = () => {
     }
   };
 
+  // User Interface
   if (status === 'Error') return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
-
   if (status === 'Success') return <h1 style={{ color: 'blue' }}>{msg}</h1>;
-
   if (status === 'busy') return <Spinner />;
-
   return (
     <>
       <div

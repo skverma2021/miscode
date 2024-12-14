@@ -8,6 +8,8 @@ import RadioButton from '../util/RadioButton';
 import SelectControl from '../util/SelectControl';
 
 const EmpAdd = () => {
+
+// State Variables
   const [emp, setEmp] = useState({
     uId: '',
     fName: '',
@@ -26,28 +28,8 @@ const EmpAdd = () => {
   const [status, setStatus] = useState('');
   const [errNo, setErrNo] = useState(0);
   const [cities, setCities] = useState([]);
-  const navigate = useNavigate();
-
-  const okSubmit = () => {
-    if (!emp.uId) return false;
-    if (!emp.fName) return false;
-    if (!emp.title) return false;
-    if (!emp.dob) return false;
-    if (!emp.gender) return false;
-    if (!emp.addLine1) return false;
-    if (!emp.cityId) return false;
-    if (!emp.mobile) return false;
-    if (!emp.eMailId) return false;
-    if (!emp.passwd) return false;
-    return true;
-  };
-
-  let timeoutId;
-  const goHome = () => {
-    navigate('/');
-  };
-
-  // options for select control
+  
+// fetching data for state variables
   useEffect(() => {
     const fetchData = async () => {
       setStatus('busy');
@@ -61,14 +43,34 @@ const EmpAdd = () => {
     };
     fetchData();
   }, []);
-  // Clear the timer
+  
+// Navigation and TimeOut
+  const navigate = useNavigate();
+  const goHome = () => {
+    navigate('/');
+  };
+  let timeoutId;
   useEffect(() => {
     return () => clearTimeout(timeoutId);
   }, []);
+  
+// Handling events on the form
+  const okSubmit = () => {
+    if (!emp.uId) return false;
+    if (!emp.fName) return false;
+    if (!emp.title) return false;
+    if (!emp.dob) return false;
+    if (!emp.gender) return false;
+    if (!emp.addLine1) return false;
+    if (!emp.cityId) return false;
+    if (!emp.mobile) return false;
+    if (!emp.eMailId) return false;
+    if (!emp.passwd) return false;
+    return true;
+  };
   const onValChange = (e) => {
     setEmp({ ...emp, [e.target.name]: e.target.value });
   };
-
   const postEmpData = async (event) => {
     event.preventDefault();
     try {
@@ -83,6 +85,8 @@ const EmpAdd = () => {
       setErrNo(errNumber(error));
     }
   };
+
+// User Interface
   if (status === 'Error-City') {
     timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error Loading Cities</h1>;

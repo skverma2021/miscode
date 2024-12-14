@@ -1,0 +1,140 @@
+C:\uProj-MIS\miscode-main\miscode\backend\routes\bookings.js
+  17,8:       .execute('getEmpBookHeads');
+  37,8:       .execute('getBookHeads');
+  54,8:       .execute('getBookingDates');
+  73,8:       .execute('getBookings');
+  93,8:       .execute('postBookings');
+  126,10:         .execute('putBookings');
+
+C:\uProj-MIS\miscode-main\miscode\backend\routes\cities.js
+  20,41:     const result = await pool.request().execute('citySelect');
+
+C:\uProj-MIS\miscode-main\miscode\backend\routes\clients.js
+  11,41:     const result = await pool.request().execute('getClients');
+  22,41:     const result = await pool.request().execute('getClientsShort');
+  32,41:     const result = await pool.request().execute('clientSelect');
+  66,8:       .execute('postClient');
+  108,8:       .execute('putClient');
+
+C:\uProj-MIS\miscode-main\miscode\backend\routes\departments.js
+  11,41:     const result = await pool.request().execute('getDepartments');
+  22,41:     const result = await pool.request().execute(`getDepartmentsShort`);
+  31,41:     const result = await pool.request().execute(`[depttSelect]`);
+
+C:\uProj-MIS\miscode-main\miscode\backend\routes\designation.js
+  16,8:       .execute('getDesignations');
+  27,41:     const result = await pool.request().execute(`getDesignationsShort`);
+  36,41:     const result = await pool.request().execute(`desigSelect`);
+  56,8:       .execute('postDesignation');
+  78,8:       .execute('putDesignation');
+
+C:\uProj-MIS\miscode-main\miscode\backend\routes\emps.js
+  16,41:     const result = await pool.request().execute('getEmpsTest');
+  27,41:     const result = await pool.request().execute('getEmps');
+  42,8:       .execute(`getOneEmp`);
+  58,11: //       .execute(`getEmpEmail`);
+  92,8:       .execute(`getEmpEmail`);
+  118,11: //       .execute(`getEmpEmail`);
+  147,8:       .execute(`getEmpEmail`);
+  215,8:       .execute('postEmp');
+  261,8:       .execute('putEmp');
+
+C:\uProj-MIS\miscode-main\miscode\backend\routes\grades.js
+  12,41:     const result = await pool.request().execute('getGrades');
+
+C:\uProj-MIS\miscode-main\miscode\backend\routes\jobs.js
+  11,41:     const result = await pool.request().execute('getAllJobs');
+  35,8:       .execute('postJob');
+  61,8:       .execute('putJob');
+  76,51:     await pool.request().input('id', sql.Int, id).execute('delJobById');
+  91,8:       .execute('getJobById');
+  108,8:       .execute(`getJobWithClient`);
+  122,8:       .execute('getJobExStages');
+
+C:\uProj-MIS\miscode-main\miscode\backend\routes\reports.js
+  13,41:     const result = await pool.request().execute('xTabDepttGradeEmpCount');
+  24,41:     const result = await pool.request().execute('xTabDepttEmpAgeGroup');
+  35,41:     const result = await pool.request().execute('xYearMonthBooked');
+  46,41:     const result = await pool.request().execute('xYearDepttMonthBooked');
+  57,41:     const result = await pool.request().execute('xYearDepttMonthClientBooked');
+  68,41:     const result = await pool.request().execute('xTabShareVal1');
+
+C:\uProj-MIS\miscode-main\miscode\backend\routes\tp.js
+  16,8:       .execute('getEmpHeader');
+  31,8:       .execute(`getEmpDesigTrail`);
+  46,8:       .execute(`getEmpDepttTrail`);
+  63,8:       .execute('postEmpDesig');
+  80,8:       .execute('postEmpDeptt');
+  99,8:       .execute('putEmpDesig');
+  118,8:       .execute('putEmpDeptt');
+
+C:\uProj-MIS\miscode-main\miscode\backend\routes\WorkPlans.js
+  21,8:       .execute('postWorkPlan');
+  44,8:       .execute('putWorkPlan');
+
+All stored procedures in the database 65 rows
+getEmpsTest
+appEdit*
+delJobById
+getAllJobs
+getBookHeads
+getBookingDates
+getGrades
+getBookings
+getClients-
+getClientsShort
+getDepartments-
+getDepartmentsShort
+getDesignations-
+getDesignationsShort
+getEmpBookHeads
+getEmpDepttTrail
+getEmpDesigTrail
+getEmpEmail-
+getEmpHeader
+getEmps-
+getEmpsApprove*
+getJobById
+getJobExStages
+getJobWithClient
+getJobWorkPlan
+getOneEmp
+clientSelect
+getUser*
+citySelect
+postBookings
+desigSelect
+postClient
+depttSelect
+postDesignation
+postEmp-
+postEmpDeptt
+postEmpDesig
+postJob
+postWorkPlan
+putBookings
+putClient
+putDesignation
+putEmp-
+putEmpDeptt
+putEmpDesig
+putEmpTransit*
+putJob
+putWorkPlan
+xTabDepttEmpAgeGroup
+xTabDepttGradeEmpCount
+xTabShareVal-
+xTabShareVal1
+xTabShareVal2*
+xYearDepttMonthBooked
+xYearDepttMonthClientBooked
+xYearMonthBooked
+sp_upgraddiagrams*
+sp_helpdiagrams*
+sp_helpdiagramdefinition*
+sp_creatediagram*
+sp_renamediagram*
+sp_alterdiagram*
+sp_dropdiagram*
+allErrors*
+getJobWorkPlan1*

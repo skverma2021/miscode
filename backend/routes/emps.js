@@ -173,7 +173,7 @@ router.delete('/:id', auth, async (req, res) => {
       .request()
       .input('id', sql.Int, id)
       .query(`delete emp where id = @id`);
-    res.status(200).json({ msg: 'deleted successfully!!!' });
+    res.status(200).json({ msg: 'Deleted Successfully!!!' });
   } catch (err) {
     handleError(err, res);
   }

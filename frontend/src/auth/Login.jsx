@@ -5,34 +5,33 @@ import Spinner from '../home/Spinner';
 import userContext from '../context/appUser/UserContext';
 
 const Login = () => {
+  // State Variables
   const { authUser } = useContext(userContext);
   const [emp, setEmp] = useState({
     eMail: '',
     pass: '',
   });
-
   const [status, setStatus] = useState('');
-  const navigate = useNavigate();
 
+  // Navigation and TimeOut
+  const navigate = useNavigate();
+  let timeoutId;
+  const goHome = () => {
+    navigate('/');
+  };
+  useEffect(() => {
+    return () => clearTimeout(timeoutId);
+  }, []);
+  
+  // Handling Events on the Form
   const okSubmit = () => {
     if (emp.eMail.length == 0) return false;
     if (emp.pass.length == 0) return false;
     return true;
   };
-
-  let timeoutId;
-  const goHome = () => {
-    navigate('/');
-  };
-
-  useEffect(() => {
-    return () => clearTimeout(timeoutId);
-  }, []);
-
   const onValChange = (e) => {
     setEmp({ ...emp, [e.target.name]: e.target.value });
   };
-
   const logInUser = async (event) => {
     setStatus('busy');
     event.preventDefault();
@@ -46,12 +45,11 @@ const Login = () => {
     }
   };
 
+// User Interface
   if (status === 'error') {
     return <h1 style={{ color: 'blue' }}>Error Occured !</h1>;
   }
-
   if (status === 'busy') return <Spinner />;
-
   return (
     <div
       style={{

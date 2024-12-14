@@ -6,6 +6,8 @@ import { DesigContext } from '../context/desig/DesigContext';
 import ContextDesigEdit from './ContextDesigEdit';
 
 const ContextDesigList = () => {
+
+// State Variables
   const [designations, setDesignations] = useState([]);
   const {
     setDesig,
@@ -17,11 +19,10 @@ const ContextDesigList = () => {
     setMsg,
   } = useContext(DesigContext);
 
+// fetching data for state variables
   useEffect(() => {
-    // if (discpId !== '') getAllDesignations();
     getAllDesignations();
   }, [discpId, addEditFlag, delFlag]);
-
   const getAllDesignations = useCallback(async () => {
     if (discpId === 0) { 
       setDesignations([]); 
@@ -40,12 +41,13 @@ const ContextDesigList = () => {
     }
   },[discpId]);
 
+// Handling events on the form
   const deleteDesigData = async (t) => {
     setStatus('busy');
     try {
-      await axios.delete(`http://localhost:3000/api/designations/${t}`);
+      const res = await axios.delete(`http://localhost:3000/api/designations/${t}`);
       setStatus('Deleted');
-      setMsg('Successfully Deleted.');
+      setMsg(res.data.msg);
       setDelFlag();
     } catch (error) {
       setStatus('Error');
@@ -53,6 +55,7 @@ const ContextDesigList = () => {
     }
   };
 
+// User Interface
   return (
     <>
       <table style={{ width: '100%', border: '1px solid blue' }}>

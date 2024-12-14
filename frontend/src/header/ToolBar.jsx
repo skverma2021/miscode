@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import userContext from '../context/appUser/UserContext';
 
 function ToolBar() {
+
+  // State Variables
   const [theDepttId, setTheDepttId] = useState('');
   const {
     user,
@@ -15,11 +17,40 @@ function ToolBar() {
     grade,
     hrRate,
   } = useContext(userContext);
-
+  
   useEffect(() => {
     setTheDepttId(depttId);
   }, [depttId]);
+  
+  // User Interface Functions
+  const renderToolbar = () => {
+    switch (parseInt(theDepttId)) {
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+      case 5:
+      case 7:
+      case 8:
+      case 9:
+      case 10:
+      case 11:
+      case 12:
+        return renderBookingToolbar();
 
+      case 6:
+        return renderBDToolbar();
+
+      case 13:
+        return renderHRToolbar();
+
+      case -1:
+        return renderFailedAuthToolbar();
+
+      default:
+        return renderDefaultToolbar(); // Unknown department
+    }
+  };
   const renderHRToolbar = () => (
     <div>
       <Link to='/hr/desig' style={{ marginRight: '15px' }}>
@@ -127,34 +158,8 @@ function ToolBar() {
       </Link>
     </div>
   );
-  const renderToolbar = () => {
-    switch (parseInt(theDepttId)) {
-      case 1:
-      case 2:
-      case 3:
-      case 4:
-      case 5:
-      case 7:
-      case 8:
-      case 9:
-      case 10:
-      case 11:
-      case 12:
-        return renderBookingToolbar();
 
-      case 6:
-        return renderBDToolbar();
-
-      case 13:
-        return renderHRToolbar();
-
-      case -1:
-        return renderFailedAuthToolbar();
-
-      default:
-        return renderDefaultToolbar(); // Unknown department
-    }
-  };
+  // User Interface
   return (
     <>
       <div

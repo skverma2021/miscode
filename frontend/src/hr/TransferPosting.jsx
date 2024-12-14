@@ -11,29 +11,16 @@ import { errText } from '../util/errMsgText';
 import Spinner from '../home/Spinner';
 
 const TransferPosting = () => {
+
+// State Variables
   const [empDet, setEmpDet] = useState({});
   const tpContext = useContext(TPContext);
   const { desigFlag, depttFlag } = tpContext.tpState;
   const { setStatus, getStatus, setMsg, getMsg, setEmp } = tpContext;
-
+  
+  // Updating State
   const { id } = useParams();
-
   useEffect(()=>{setEmp(id)},[id]);
-
-  const navigate = useNavigate();
-  let timeoutId;
-  const goHome = () => {
-    navigate('/');
-  };
-
-  useEffect(() => {
-    return () => clearTimeout(timeoutId);
-  }, []);
-
-  useEffect(() => {
-    getEmpDet();
-  }, [desigFlag, depttFlag]);
-
   const getEmpDet = async () => {
     setStatus('busy');
     try {
@@ -46,10 +33,23 @@ const TransferPosting = () => {
       setStatus('Error');
       setMsg(errText(error));
     }
+  };  
+   useEffect(() => {
+    getEmpDet();
+  }, [desigFlag, depttFlag]); 
+
+// Navigation and TimeOut
+  const navigate = useNavigate();
+  let timeoutId;
+  const goHome = () => {
+    navigate('/');
   };
+  useEffect(() => {
+    return () => clearTimeout(timeoutId);
+  }, []);
 
+// User Interface
   if (getStatus() === 'busy') return <Spinner />;
-
   if (getStatus() === 'Error') {
     timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error: {getMsg()}</h1>;

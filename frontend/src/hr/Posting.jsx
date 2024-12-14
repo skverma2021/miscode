@@ -6,17 +6,18 @@ import { errText } from '../util/errMsgText';
 import SelectControl from '../util/SelectControl';
 
 const Posting = () => {
+
+// State Variables
   // theDesig and fromDt are for input controls in the form
   const [theDesig, setTheDesig] = useState('');
   const [fromDt, setFromDt] = useState('');
-
   // desigs is for select control
   const [desigs, setDesigs] = useState([]);
-
   const tpContext = useContext(TPContext);
   const { postId, postDesigId, postFromDt, empId } = tpContext.tpState;
   const { setDg, toggleDesigFlag, setStatus, setMsg } = tpContext;
 
+// Updating State
   // to initialise lower window with context
   // the context gets filled by edit button in
   // trail window using setter by context
@@ -24,7 +25,6 @@ const Posting = () => {
     setTheDesig(postDesigId);
     setFromDt(postFromDt);
   }, [postDesigId, postFromDt]);
-
   useEffect(() => {
     const fetchData = async () => {
       setStatus('busy');
@@ -42,6 +42,7 @@ const Posting = () => {
     fetchData();
   }, []);
 
+// Handling events on the form
   const saveRec = async () => {
     if (theDesig == '') return;
     setStatus('busy');
@@ -68,6 +69,7 @@ const Posting = () => {
     }
   };
 
+// User Interface
   return (
     <>
       <h5>

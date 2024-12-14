@@ -6,6 +6,8 @@ import { errText } from '../util/errMsgText';
 import SelectControl from '../util/SelectControl';
 
 const Transfer = () => {
+
+// State Variables
   const [fromDt, setFromDt] = useState('');
   const [deptts, setDeptts] = useState([]);
   const [theDeptt, setTheDeptt] = useState('');
@@ -13,13 +15,13 @@ const Transfer = () => {
   const { trId, trDepttId, trFromDt, empId } = tpContext.tpState;
   const { setDt, toggleDepttFlag, setStatus, setMsg } = tpContext;
 
+// Updating State
   // to initialise lower window with context
   // the context gets filled by edit button in trail window using setter by context
   useEffect(() => {
     setTheDeptt(trDepttId);
     setFromDt(trFromDt);
   }, [trDepttId, trFromDt]);
-
   useEffect(() => {
     const fetchData = async () => {
       setStatus('busy');
@@ -37,6 +39,7 @@ const Transfer = () => {
     fetchData();
   }, []);
 
+// Handling events on the form
   const saveRec = async () => {
     if (theDeptt == '') return;
     setStatus('busy');
@@ -65,6 +68,7 @@ const Transfer = () => {
     }
   };
 
+// User Interface
   return (
     <>
       <h5>

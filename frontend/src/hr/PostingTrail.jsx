@@ -6,11 +6,14 @@ import { TPContext } from '../context/tp/TPContext';
 import { errText } from '../util/errMsgText';
 
 const PostingTrail = () => {
+
+// State Variables
   const [postings, setPostings] = useState([]);
   const tpContext = useContext(TPContext);
   const { desigFlag, empId } = tpContext.tpState;
   const { toggleDesigFlag, setDg, setStatus, setMsg } = tpContext;
 
+// Updating State
   useEffect(() => {
     const fetchData = async () => {
       setStatus('busy');
@@ -28,6 +31,7 @@ const PostingTrail = () => {
     if (empId) fetchData();
   }, [desigFlag]);
 
+// Handling events on the form
   const deleteEmpDesig = async (theEmpDesigId) => {
     setStatus('busy');
     try {
@@ -43,6 +47,7 @@ const PostingTrail = () => {
     }
   };
 
+// User Interface
   return (
     <>
       <h4>Past Promotions</h4>

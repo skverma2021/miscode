@@ -5,13 +5,14 @@ import { errText } from '../util/errMsgText';
 import { DesigContext } from '../context/desig/DesigContext';
 
 const ContextDesigEdit = () => {
+
+// State Variables
   const [grades, setGrades] = useState([]);
   const [theDesig, setTheDesig] = useState({
     id: 0,
     description: '',
     gradeId: '',
   });
-
   const {
     setAddEditFlag,
     setDesig,
@@ -24,14 +25,13 @@ const ContextDesigEdit = () => {
     setMsg,
   } = useContext(DesigContext);
 
+// fetching data for state variables
   useEffect(() => {
     setTheDesig({ id: desigId, description: desigDes, gradeId: desigGrade });
   }, [desigId, desigDes, desigGrade]);
-
   useEffect(() => {
     getAllGrades();
   }, []);
-
   const getAllGrades = useCallback(async () => {
     setStatus('busy');
     try {
@@ -43,10 +43,11 @@ const ContextDesigEdit = () => {
       setMsg(errText(error));
     }
   }, []);
+
+// Handling events on the form
   const onValChange = (e) => {
     setTheDesig({ ...theDesig, [e.target.name]: e.target.value });
   };
-
   const handleSubmit = async () => {
     setStatus('busy');
     try {
@@ -76,6 +77,7 @@ const ContextDesigEdit = () => {
     }
   };
 
+// User Interface
   return (
     <>
       <form>
