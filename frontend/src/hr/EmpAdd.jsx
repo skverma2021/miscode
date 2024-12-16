@@ -26,19 +26,20 @@ const EmpAdd = () => {
   });
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
+  const [cityStatus, setCityStatus] = useState('');
   const [errNo, setErrNo] = useState(0);
   const [cities, setCities] = useState([]);
   
 // fetching data for state variables
   useEffect(() => {
     const fetchData = async () => {
-      setStatus('busy');
+      setCityStatus('busy');
       try {
         const res = await axios.get(`http://localhost:3000/api/cities/select`);
         setCities(res.data);
-        setStatus('Success');
+        setCityStatus('Success');
       } catch (error) {
-        setStatus('Error-City');
+        setCityStatus('Error');
       }
     };
     fetchData();
@@ -87,7 +88,7 @@ const EmpAdd = () => {
   };
 
 // User Interface
-  if (status === 'Error-City') {
+  if (cityStatus === 'Error') {
     timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error Loading Cities</h1>;
   }
