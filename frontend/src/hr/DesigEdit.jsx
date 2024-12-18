@@ -2,14 +2,14 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { errText } from '../util/errMsgText';
+import Spinner from '../home/Spinner';
+import { useNavigate } from 'react-router-dom';
 
 const DesigEdit = ({
   theDiscpId,
   theDiscp,
   theRow,
   setFlag,
-  reportStatus1,
-  reportMsg1,
 }) => {
   const [grades, setGrades] = useState([]);
   const [theDesig, setTheDesig] = useState({
@@ -17,7 +17,19 @@ const DesigEdit = ({
     description: '',
     gradeId: '',
   });
+  const [status, setStatus] = useState('');
+  const [msg, setMsg] = useState('');
+  const navigate = useNavigate();
 
+  let timeoutId;
+  const goHome = () => {
+    navigate('/');
+  };
+
+  useEffect(() => {
+    return () => clearTimeout(timeoutId);
+  }, []);
+  
   useEffect(() => {
     setTheDesig({
       id: theRow.id,
@@ -31,14 +43,14 @@ const DesigEdit = ({
   }, []);
 
   const getAllGrades = async () => {
-    reportStatus1('busy');
+    setStatus('busy');
     try {
       const res = await axios.get(`http://localhost:3000/api/grades`);
       setGrades(res.data);
-      reportStatus1('Success');
+      setStatus('Success');
     } catch (error) {
-      reportStatus1('Error');
-      reportMsg1(errText(error));
+      setStatus('Error');
+      setMsg(errText(error));
     }
   };
   const onValChange = (e) => {
@@ -46,7 +58,7 @@ const DesigEdit = ({
   };
 
   const handleSubmit = async () => {
-    reportStatus1('busy');
+    setStatus('busy');
     try {
       if (theDesig.id == 0) {
         await axios.post('http://localhost:3000/api/designations', {
@@ -55,7 +67,7 @@ const DesigEdit = ({
           description: theDesig.description,
           gradeId: theDesig.gradeId,
         });
-        reportStatus1('Added');
+        setStatus('Added');
       } else {
         await axios.put(
           `http://localhost:3000/api/designations/${theDesig.id}`,
@@ -65,15 +77,25 @@ const DesigEdit = ({
             gradeId: theDesig.gradeId,
           }
         );
-        reportStatus1('Updated');
+        setStatus('Updated');
       }
       setFlag();
     } catch (error) {
-      reportStatus1('Error');
-      reportMsg1(errText(error));
+      setStatus('Error');
+      setMsg(errText(error));
     }
   };
 
+  if (status === 'Error') {
+    timeoutId = setTimeout(goHome, 5000);
+    return (
+      <h1 style={{ color: 'red' }}>
+        Error: Disciplines could not be loaded [ {msg} ]
+      </h1>
+    );
+  }
+
+  if (status === 'busy') return <Spinner />;
   return (
     <>
       <form>

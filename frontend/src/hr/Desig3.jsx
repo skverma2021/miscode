@@ -11,7 +11,9 @@ const Desig3 = () => {
 
 // State Variables
   const [disciplines, setDisciplines] = useState([]);
-  const { setDiscp, setDesig, setStatus, setMsg, getStatus, getMsg } =
+  const [status, setStatus] = useState('');
+  const [msg, setMsg] = useState('');
+  const { setDiscp, setDesig } =
     useContext(DesigContext);
 
 // fetching data for state variables
@@ -42,11 +44,11 @@ const Desig3 = () => {
   }, []);
 
 // User Interface
-  if (getStatus() === 'Error') {
+  if (status === 'Error') {
     timeoutId = setTimeout(goHome, 5000);
-    return <h1 style={{ color: 'red' }}>Error: [ {getMsg()} ]</h1>;
+    return <h1 style={{ color: 'red' }}>Error: [ {msg} ]</h1>;
   }
-  if (getStatus() === 'busy') return <Spinner />;
+  if (status === 'busy') return <Spinner />;
   return (
     <>
       <table

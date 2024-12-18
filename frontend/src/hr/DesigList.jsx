@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { errText } from '../util/errMsgText';
+import Spinner from '../home/Spinner';
+import { useNavigate } from 'react-router-dom';
 import DesigEdit from './DesigEdit';
 
-const DesigList = ({ discpId, discp, reportStatus, reportMsg }) => {
+const DesigList = ({ discpId, discp }) => {
   const [designations, setDesignations] = useState([]);
   const [editRow, setEditRow] = useState({
     id: 0,
@@ -13,7 +15,19 @@ const DesigList = ({ discpId, discp, reportStatus, reportMsg }) => {
   });
   const [delFlag, setDelFlag] = useState(0);
   const [addEditFlag, setAddEditFlag] = useState(0);
+  const [status, setStatus] = useState('');
+  const [msg, setMsg] = useState('');
+  const navigate = useNavigate();
 
+  let timeoutId;
+  const goHome = () => {
+    navigate('/');
+  };
+
+  useEffect(() => {
+    return () => clearTimeout(timeoutId);
+  }, []);
+  
   useEffect(() => {
     getAllDesignations();
     setEditRow({
@@ -24,32 +38,42 @@ const DesigList = ({ discpId, discp, reportStatus, reportMsg }) => {
   }, [discpId, addEditFlag, delFlag]);
 
   const getAllDesignations = async () => {
-    reportStatus('busy');
+    setStatus('busy');
     try {
       const res = await axios.get(
         `http://localhost:3000/api/designations/long/${discpId}`
       );
       setDesignations(res.data);
-      reportStatus('Success');
+      setStatus('Success');
     } catch (error) {
-      reportStatus('Error');
-      reportMsg(errText(error));
+      setStatus('Error');
+      setMsg(errText(error));
     }
   };
 
   const deleteDesigData = async (t) => {
-    reportStatus('busy');
+    setStatus('busy');
     try {
       await axios.delete(`http://localhost:3000/api/designations/${t}`);
-      reportStatus('Deleted');
-      reportMsg('Successfully Deleted.');
+      setStatus('Deleted');
+      setMsg('Successfully Deleted.');
       setDelFlag((t) => !t);
     } catch (error) {
-      reportStatus('Error');
-      reportMsg(errText(error));
+      setStatus('Error');
+      setMsg(errText(error));
     }
   };
 
+  if (status === 'Error') {
+    timeoutId = setTimeout(goHome, 5000);
+    return (
+      <h1 style={{ color: 'red' }}>
+        Error: Disciplines could not be loaded [ {msg} ]
+      </h1>
+    );
+  }
+
+  if (status === 'busy') return <Spinner />;
   return (
     <>
       <table style={{ width: '100%', border: '1px solid blue' }}>
@@ -102,8 +126,6 @@ const DesigList = ({ discpId, discp, reportStatus, reportMsg }) => {
           theDiscp={discp}
           theRow={editRow}
           setFlag={() => setAddEditFlag(t => !t)}
-          reportStatus1={(s) => reportStatus(s)}
-          reportMsg1={(m) => reportMsg(m)}
         />
       </div>
     </>

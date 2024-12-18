@@ -104,8 +104,6 @@ const Desig2 = () => {
                 <DesigList
                   discpId={theDiscpId}
                   discp={theDiscp}
-                  reportStatus={(s) => setStatus(s)}
-                  reportMsg={(m) => setMsg(m)}
                 />
               )}
             </td>

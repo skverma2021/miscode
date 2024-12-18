@@ -2,6 +2,8 @@ import { useState, useEffect, useContext, useCallback } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { errText } from '../util/errMsgText';
+import Spinner from '../home/Spinner';
+import { useNavigate } from 'react-router-dom';
 import { DesigContext } from '../context/desig/DesigContext';
 
 const ContextDesigEdit = () => {
@@ -21,9 +23,9 @@ const ContextDesigEdit = () => {
     desigId,
     desigDes,
     desigGrade,
-    setStatus,
-    setMsg,
   } = useContext(DesigContext);
+  const [status, setStatus] = useState('');
+  const [msg, setMsg] = useState('');
 
 // fetching data for state variables
   useEffect(() => {
@@ -71,13 +73,28 @@ const ContextDesigEdit = () => {
         setStatus('Updated');
       }
       setAddEditFlag((t) => !t);
+      setDesig('', '','');
     } catch (error) {
       setStatus('Error');
       setMsg(errText(error));
     }
   };
 
+// Navigation and TimeOut
+  const navigate = useNavigate();
+  let timeoutId;
+  const goHome = () => {
+    navigate('/');
+  };
+  useEffect(() => {
+    return () => clearTimeout(timeoutId);
+  }, []);  
 // User Interface
+if (status === 'Error') {
+  timeoutId = setTimeout(goHome, 5000);
+  return <h1 style={{ color: 'red' }}>Error: [ {msg} ]</h1>;
+}
+if (status === 'busy') return <Spinner />;
   return (
     <>
       <form>

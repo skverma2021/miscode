@@ -1,94 +1,58 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, createContext } from 'react';
 
-import { createContext } from 'react';
 export const DesigContext = createContext();
 
 // The reducer function
 const DesigReducer = (state, action) => {
-  return { ...state, ...action.payLoad };
+  switch (action.type) {
+    case 'SET_DISCP':
+      return { ...state, discpId: action.payload.discpId, discp: action.payload.discp };
+    case 'SET_DESIG':
+      return { ...state, desigId: action.payload.desigId, desigDes: action.payload.desigDes, desigGrade: action.payload.desigGrade };
+    case 'SET_DEL_FLAG':
+      return { ...state, delFlag: !state.delFlag };
+    case 'SET_ADD_EDIT_FLAG':
+      return { ...state, addEditFlag: !state.addEditFlag };
+    default:
+      return state;
+  }
 };
 
 export const DesigState = (props) => {
   const initialState = {
     discpId: 0,
     discp: '',
-
     desigId: 0,
     desigDes: '',
     desigGrade: '',
-
     delFlag: false,
     addEditFlag: false,
-    status: '',
-    msg: '',
   };
 
   const [state, dispatch] = useReducer(DesigReducer, initialState);
 
   const setDiscp = (id, des) => {
-    dispatch({
-      payLoad: { discpId: id, discp: des },
-    });
+    dispatch({ type: 'SET_DISCP', payload: { discpId: id, discp: des } });
   };
   const setDesig = (id, des, grade) => {
-    dispatch({
-      payLoad: { desigId: id, desigDes: des, desigGrade: grade },
-    });
+    dispatch({ type: 'SET_DESIG', payload: { desigId: id, desigDes: des, desigGrade: grade } });
   };
 
   const setDelFlag = () => {
-    dispatch({
-      payLoad: { delFlag: (t) => !t },
-    });
+    dispatch({ type: 'SET_DEL_FLAG' });
   };
   const setAddEditFlag = () => {
-    dispatch({
-      payLoad: { addEditFlag: (t) => !t },
-    });
-  };
-
-  const setStatus = (theText) => {
-    dispatch({
-      payLoad: { status: theText },
-    });
-  };
-
-  const setMsg = (theText) => {
-    dispatch({
-      payLoad: { msg: theText },
-    });
-  };
-
-  const getStatus = () => {
-    return state.status;
-  };
-
-  const getMsg = () => {
-    return state.msg;
+    dispatch({ type: 'SET_ADD_EDIT_FLAG' });
   };
 
   return (
     <DesigContext.Provider
       value={{
-        discpId: state.discpId,
-        discp: state.discp,
-
-        desigId: state.desigId,
-        desigDes: state.desigDes,
-        desigGrade: state.desigGrade,
-
-        addEditFlag: state.addEditFlag,
-        setAddEditFlag,
-        delFlag: state.delFlag,
-        setDelFlag,
-
+        ...state,
         setDiscp,
         setDesig,
-
-        setStatus,
-        setMsg,
-        getStatus,
-        getMsg,
+        setDelFlag,
+        setAddEditFlag,
       }}
     >
       {props.children}
