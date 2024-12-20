@@ -1,8 +1,27 @@
 import { createContext, useReducer } from 'react';
 export const TPContext = createContext();
 
+// const TPReducer = (state, action) => {
+//   return { ...state, ...action.payLoad };
+// };
+
 const TPReducer = (state, action) => {
-  return { ...state, ...action.payLoad };
+  switch (action.type) {
+    case 'SET_DESIGNATION':
+      return { ...state, postId: action.payLoad.postId, postDesigId: action.payLoad.postDesigId, postFromDt: action.payLoad.postFromDt };
+    case 'SET_DEPARTMENT':
+      return { ...state, trId: action.payLoad.trId, trDepttId: action.payLoad.trDepttId, trFromDt: action.payLoad.trFromDt };
+    case 'SET_EMP':
+      return { ...state, empId: action.payLoad.empId };
+
+    case 'SET_DESIG_FLAG':
+      return { ...state, desigFlag: !state.desigFlag };
+    case 'SET_DEPTT_FLAG':
+      return { ...state, depttFlag: !state.depttFlag };
+
+    default:
+      return state;
+  }
 };
 
 export const TPState = (props) => {
@@ -19,77 +38,49 @@ export const TPState = (props) => {
 
     desigFlag: false,
     depttFlag: false,
-
-    status: '',
-    msg: '',
   };
 
   const [state, dispatch] = useReducer(TPReducer, initialState);
 
-  // detDg for set empDesig details
-  const setDg = (edgid, dgid, edgfd) => {
-    dispatch({
-      payLoad: { postId: edgid, postDesigId: dgid, postFromDt: edgfd },
+
+  const setDesig = (edgid, dgid, edgfd) => {
+    dispatch({ type: 'SET_DESIGNATION',payLoad: { postId: edgid, postDesigId: dgid, postFromDt: edgfd },
     });
   };
 
-  // detDt for set empDeptt details
-  const setDt = (edtid, dtid, edtfd) => {
-    dispatch({
-      payLoad: { trId: edtid, trDepttId: dtid, trFromDt: edtfd },
+
+  const setDeptt = (edtid, dtid, edtfd) => {
+    dispatch({ type: 'SET_DEPARTMENT', payLoad: { trId: edtid, trDepttId: dtid, trFromDt: edtfd },
     });
   };
+
+  const setEmp = (theTxt) => {
+      dispatch({ type: 'SET_EMP', payLoad: {empId: theTxt },
+      });
+    };
 
   const toggleDesigFlag = () => {
-    dispatch({
-      payLoad: { desigFlag: (t) => !t },
+    dispatch({ type: 'SET_DESIG_FLAG'
     });
   };
 
   const toggleDepttFlag = () => {
-    dispatch({
-      payLoad: { depttFlag: (t) => !t },
+    dispatch({ type: 'SET_DEPTT_FLAG'
     });
   };
 
-  const setStatus = (theTxt) => {
-    dispatch({
-      payLoad: { status: theTxt },
-    });
-  };
-  const setMsg = (theTxt) => {
-    dispatch({
-      payLoad: { msg: theTxt },
-    });
-  };
-  const getStatus = () => {
-    return state.status;
-  };
-  const getMsg = () => {
-    return state.msg;
-  };
-
-  const setEmp = (theTxt) => {
-    dispatch({
-      payLoad: { empId: theTxt },
-    });
-  };
 
   return (
     <TPContext.Provider
       value={{
         tpState: state,
-        setDg,
-        setDt,
+        setDesig,
+        setDeptt,
 
         toggleDesigFlag,
         toggleDepttFlag,
 
         setEmp,
-        setStatus,
-        getStatus,
-        setMsg,
-        getMsg,
       }}
     >
       {props.children}

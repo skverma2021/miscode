@@ -14,9 +14,12 @@ const TransferPosting = () => {
 
 // State Variables
   const [empDet, setEmpDet] = useState({});
+  const [status, setStatus] = useState('');
+  const [msg, setMsg] = useState('');
+  
   const tpContext = useContext(TPContext);
   const { desigFlag, depttFlag } = tpContext.tpState;
-  const { setStatus, getStatus, setMsg, getMsg, setEmp } = tpContext;
+  const { setEmp } = tpContext;
   
   // Updating State
   const { id } = useParams();
@@ -49,10 +52,10 @@ const TransferPosting = () => {
   }, []);
 
 // User Interface
-  if (getStatus() === 'busy') return <Spinner />;
-  if (getStatus() === 'Error') {
+  if (status === 'busy') return <Spinner />;
+  if (status === 'Error') {
     timeoutId = setTimeout(goHome, 5000);
-    return <h1 style={{ color: 'red' }}>Error: {getMsg()}</h1>;
+    return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
   }
   return (
     <>

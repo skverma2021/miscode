@@ -53,7 +53,8 @@ const ContextDesigEdit = () => {
   const handleSubmit = async () => {
     setStatus('busy');
     try {
-      if (theDesig.id == 0) {
+      // if (theDesig.id == 0) {
+      if (!theDesig.id) {
         await axios.post('http://localhost:3000/api/designations', {
           // id to be computed by postDesignation stored procedure
           discpId: discpId,

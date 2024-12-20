@@ -1,9 +1,11 @@
 import React from 'react';
 import { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { TPContext } from '../context/tp/TPContext';
 import { errText } from '../util/errMsgText';
 import SelectControl from '../util/SelectControl';
+import Spinner from '../home/Spinner';
 
 const Posting = () => {
 
@@ -13,9 +15,12 @@ const Posting = () => {
   const [fromDt, setFromDt] = useState('');
   // desigs is for select control
   const [desigs, setDesigs] = useState([]);
+  const [status, setStatus] = useState('');
+  const [msg, setMsg] = useState('');
+
   const tpContext = useContext(TPContext);
   const { postId, postDesigId, postFromDt, empId } = tpContext.tpState;
-  const { setDg, toggleDesigFlag, setStatus, setMsg } = tpContext;
+  const { setDesig, toggleDesigFlag } = tpContext;
 
 // Updating State
   // to initialise lower window with context
@@ -61,7 +66,7 @@ const Posting = () => {
         });
       }
       toggleDesigFlag();
-      setDg('', '', '');
+      setDesig('', '', '');
       setStatus('Success');
     } catch (error) {
       setStatus('Error');
@@ -69,7 +74,22 @@ const Posting = () => {
     }
   };
 
-// User Interface
+// Navigation and TimeOut
+  const navigate = useNavigate();
+  let timeoutId;
+  const goHome = () => {
+    navigate('/');
+  };
+  useEffect(() => {
+    return () => clearTimeout(timeoutId);
+  }, []);
+
+  // User Interface
+if (status === 'busy') return <Spinner />;
+if (status === 'Error') {
+  timeoutId = setTimeout(goHome, 5000);
+  return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
+}
   return (
     <>
       <h5>

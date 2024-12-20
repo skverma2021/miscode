@@ -1,17 +1,21 @@
 import React from 'react';
 import { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { TPContext } from '../context/tp/TPContext';
 import { errText } from '../util/errMsgText';
+import Spinner from '../home/Spinner';
 
 const PostingTrail = () => {
 
 // State Variables
   const [postings, setPostings] = useState([]);
+  const [status, setStatus] = useState('');
+  const [msg, setMsg] = useState('');
   const tpContext = useContext(TPContext);
   const { desigFlag, empId } = tpContext.tpState;
-  const { toggleDesigFlag, setDg, setStatus, setMsg } = tpContext;
+  const { toggleDesigFlag, setDesig } = tpContext;
 
 // Updating State
   useEffect(() => {
@@ -47,7 +51,22 @@ const PostingTrail = () => {
     }
   };
 
+// Navigation and TimeOut
+  const navigate = useNavigate();
+  let timeoutId;
+  const goHome = () => {
+    navigate('/');
+  };
+  useEffect(() => {
+    return () => clearTimeout(timeoutId);
+  }, []);
+
 // User Interface
+if (status === 'busy') return <Spinner />;
+if (status === 'Error') {
+  timeoutId = setTimeout(goHome, 5000);
+  return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
+}
   return (
     <>
       <h4>Past Promotions</h4>
@@ -95,7 +114,7 @@ const PostingTrail = () => {
             {/*  to initialize the context with record to be updated */}
             {/*  The record will be made available in the lower edit window */}
             <div style={{ width: '5%', border: '1px solid black' }}>
-              <Link onClick={() => setDg(t.theId, t.theDesigId, t.theFromDt)}>
+              <Link onClick={() => setDesig(t.theId, t.theDesigId, t.theFromDt)}>
                 🖍️
               </Link>
             </div>

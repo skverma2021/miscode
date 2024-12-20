@@ -1,17 +1,22 @@
 import React from 'react';
 import { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { TPContext } from '../context/tp/TPContext';
 import { errText } from '../util/errMsgText';
+import Spinner from '../home/Spinner';
 
 const TransferTrail = () => {
 
 // State Variables
   const [transfers, setTransfers] = useState([]);
+  const [status, setStatus] = useState('');
+  const [msg, setMsg] = useState('');
+
   const tpContext = useContext(TPContext);
   const { depttFlag, empId } = tpContext.tpState;
-  const { toggleDepttFlag, setDt, setStatus, setMsg } = tpContext;
+  const { toggleDepttFlag, setDeptt } = tpContext;
 
 // Updating State
   useEffect(() => {
@@ -46,7 +51,22 @@ const TransferTrail = () => {
     }
   };
 
+// Navigation and TimeOut
+  const navigate = useNavigate();
+  let timeoutId;
+  const goHome = () => {
+    navigate('/');
+  };
+  useEffect(() => {
+    return () => clearTimeout(timeoutId);
+  }, []);
+
 // User Interface
+if (status === 'busy') return <Spinner />;
+if (status === 'Error') {
+  timeoutId = setTimeout(goHome, 5000);
+  return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
+}
   return (
     <>
       <h4>Past Transfers</h4>
@@ -79,7 +99,7 @@ const TransferTrail = () => {
             {/*  to initialize the context with record to be updated */}
             {/*  The record will be made available in the lower edit window */}
             <div style={{ width: '5%', border: '1px solid black' }}>
-              <Link onClick={() => setDt(t.theId, t.theDepttId, t.theFromDt)}>
+              <Link onClick={() => setDeptt(t.theId, t.theDepttId, t.theFromDt)}>
                 🖍️
               </Link>
             </div>
