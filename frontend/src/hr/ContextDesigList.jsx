@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useCallback } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { errText } from '../util/errMsgText';
@@ -25,7 +25,7 @@ const ContextDesigList = () => {
   useEffect(() => {
     getAllDesignations();
   }, [discpId, addEditFlag, delFlag]);
-  const getAllDesignations = useCallback(async () => {
+  const getAllDesignations = async () => {
     if (discpId === 0) { 
       setDesignations([]); 
       return;
@@ -41,7 +41,7 @@ const ContextDesigList = () => {
       setStatus('Error');
       setMsg(errText(error));
     }
-  },[discpId]);
+  };
 
 // Handling events on the form
   const deleteDesigData = async (t) => {

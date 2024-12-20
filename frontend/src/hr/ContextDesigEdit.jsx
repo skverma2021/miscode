@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useCallback } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { errText } from '../util/errMsgText';
@@ -34,7 +34,7 @@ const ContextDesigEdit = () => {
   useEffect(() => {
     getAllGrades();
   }, []);
-  const getAllGrades = useCallback(async () => {
+  const getAllGrades = async () => {
     setStatus('busy');
     try {
       const res = await axios.get(`http://localhost:3000/api/grades`);
@@ -44,7 +44,7 @@ const ContextDesigEdit = () => {
       setStatus('Error');
       setMsg(errText(error));
     }
-  }, []);
+  };
 
 // Handling events on the form
   const onValChange = (e) => {

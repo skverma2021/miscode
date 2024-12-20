@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useCallback } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { errText } from '../util/errMsgText';
@@ -20,7 +20,7 @@ const Desig3 = () => {
   useEffect(() => {
     getAllDisciplines();
   }, []);
-  const getAllDisciplines = useCallback(async () => {
+  const getAllDisciplines = async () => {
     setStatus('busy');
     try {
       const res = await axios.get(`http://localhost:3000/api/disciplines`);
@@ -31,7 +31,7 @@ const Desig3 = () => {
       setMsg(errText(error));
       timeoutId = setTimeout(goHome, 10000);
     }
-  },[]);
+  };
 
 // Navigation and TimeOut
   const navigate = useNavigate();
