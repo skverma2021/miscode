@@ -10,16 +10,18 @@ import Spinner from '../home/Spinner';
 const Posting = () => {
 
 // State Variables
-  // theDesig and fromDt are for input controls in the form
+  // for input controls in the form
   const [theDesig, setTheDesig] = useState('');
   const [fromDt, setFromDt] = useState('');
-  // desigs is for select control
+
+  // options for select control
   const [desigs, setDesigs] = useState([]);
+
   const [status, setStatus] = useState('');
   const [msg, setMsg] = useState('');
 
   const tpContext = useContext(TPContext);
-  const { postId, postDesigId, postFromDt, empId } = tpContext.tpState;
+  const { promotionId, promotionDesigId, promotionDt, empId } = tpContext.tpState;
   const { setDesig, toggleDesigFlag } = tpContext;
 
 // Updating State
@@ -27,9 +29,10 @@ const Posting = () => {
   // the context gets filled by edit button in
   // trail window using setter by context
   useEffect(() => {
-    setTheDesig(postDesigId);
-    setFromDt(postFromDt);
-  }, [postDesigId, postFromDt]);
+    setTheDesig(promotionDesigId);
+    setFromDt(promotionDt);
+  }, [promotionDesigId, promotionDt]);
+
   useEffect(() => {
     const fetchData = async () => {
       setStatus('busy');
@@ -52,8 +55,8 @@ const Posting = () => {
     if (theDesig == '') return;
     setStatus('busy');
     try {
-      if (postId) {
-        await axios.put(`http://localhost:3000/api/tp/empDesig/${postId}`, {
+      if (promotionId) {
+        await axios.put(`http://localhost:3000/api/tp/empDesig/${promotionId}`, {
           empId: empId, // parameter received
           desigId: theDesig, // state variable
           fromDt: fromDt, // state variable
@@ -95,8 +98,7 @@ if (status === 'Error') {
       <h5>
         <button onClick={() => setDg('', '', '')}>Add</button>
       </h5>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <div style={{ display: 'flex' }}>
+        <div style={{ display: 'flex',  justifyContent: 'space-between' }}>
           <SelectControl
             optionsRows={desigs}
             selectedId={theDesig}
@@ -109,9 +111,8 @@ if (status === 'Error') {
             type='date'
             onChange={(e) => setFromDt(e.target.value)}
           />
-          <button onClick={saveRec}>Save</button>
+          <button onClick={saveRec}>💾</button>
         </div>
-      </div>
     </>
   );
 };

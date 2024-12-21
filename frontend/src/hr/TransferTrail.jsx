@@ -11,6 +11,7 @@ const TransferTrail = () => {
 
 // State Variables
   const [transfers, setTransfers] = useState([]);
+  
   const [status, setStatus] = useState('');
   const [msg, setMsg] = useState('');
 

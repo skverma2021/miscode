@@ -1,18 +1,14 @@
 import { createContext, useReducer } from 'react';
 export const TPContext = createContext();
 
-// const TPReducer = (state, action) => {
-//   return { ...state, ...action.payLoad };
-// };
-
 const TPReducer = (state, action) => {
   switch (action.type) {
     case 'SET_DESIGNATION':
-      return { ...state, postId: action.payLoad.postId, postDesigId: action.payLoad.postDesigId, postFromDt: action.payLoad.postFromDt };
+      return { ...state, promotionId: action.payload.promotionId, promotionDesigId: action.payload.promotionDesigId, promotionDt: action.payload.promotionDt };
     case 'SET_DEPARTMENT':
-      return { ...state, trId: action.payLoad.trId, trDepttId: action.payLoad.trDepttId, trFromDt: action.payLoad.trFromDt };
+      return { ...state, transferId: action.payload.transferId, transferDepttId: action.payload.transferDepttId, transferDt: action.payload.transferDt };
     case 'SET_EMP':
-      return { ...state, empId: action.payLoad.empId };
+      return { ...state, empId: action.payload.empId };
 
     case 'SET_DESIG_FLAG':
       return { ...state, desigFlag: !state.desigFlag };
@@ -28,13 +24,13 @@ export const TPState = (props) => {
   const initialState = {
     empId: '',
 
-    postId: '', // empDesigId
-    postDesigId: '', // desigId
-    postFromDt: '', // fromDt
+    promotionId: '', // empDesigId
+    promotionDesigId: '', // desigId
+    promotionDt: '', // fromDt
 
-    trId: '', // empDepttId
-    trDepttId: '', // depttId
-    trFromDt: '', // fromDt
+    transferId: '', // empDepttId
+    transferDepttId: '', // depttId
+    transferDt: '', // fromDt
 
     desigFlag: false,
     depttFlag: false,
@@ -42,20 +38,18 @@ export const TPState = (props) => {
 
   const [state, dispatch] = useReducer(TPReducer, initialState);
 
-
   const setDesig = (edgid, dgid, edgfd) => {
-    dispatch({ type: 'SET_DESIGNATION',payLoad: { postId: edgid, postDesigId: dgid, postFromDt: edgfd },
+    dispatch({ type: 'SET_DESIGNATION',payload: { promotionId: edgid, promotionDesigId: dgid, promotionDt: edgfd },
     });
   };
 
-
   const setDeptt = (edtid, dtid, edtfd) => {
-    dispatch({ type: 'SET_DEPARTMENT', payLoad: { trId: edtid, trDepttId: dtid, trFromDt: edtfd },
+    dispatch({ type: 'SET_DEPARTMENT', payload: { transferId: edtid, transferDepttId: dtid, transferDt: edtfd },
     });
   };
 
   const setEmp = (theTxt) => {
-      dispatch({ type: 'SET_EMP', payLoad: {empId: theTxt },
+      dispatch({ type: 'SET_EMP', payload: {empId: theTxt },
       });
     };
 
@@ -69,11 +63,11 @@ export const TPState = (props) => {
     });
   };
 
-
   return (
     <TPContext.Provider
       value={{
         tpState: state,
+        
         setDesig,
         setDeptt,
 

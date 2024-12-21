@@ -11,8 +11,10 @@ const PostingTrail = () => {
 
 // State Variables
   const [postings, setPostings] = useState([]);
+  
   const [status, setStatus] = useState('');
   const [msg, setMsg] = useState('');
+
   const tpContext = useContext(TPContext);
   const { desigFlag, empId } = tpContext.tpState;
   const { toggleDesigFlag, setDesig } = tpContext;

@@ -13,20 +13,22 @@ const Transfer = () => {
   const [fromDt, setFromDt] = useState('');
   const [deptts, setDeptts] = useState([]);
   const [theDeptt, setTheDeptt] = useState('');
+
   const [status, setStatus] = useState('');
   const [msg, setMsg] = useState('');
 
   const tpContext = useContext(TPContext);
-  const { trId, trDepttId, trFromDt, empId } = tpContext.tpState;
+  const { transferId, transferDepttId, transferDt, empId } = tpContext.tpState;
   const { setDeptt, toggleDepttFlag } = tpContext;
 
 // Updating State
   // to initialise lower window with context
   // the context gets filled by edit button in trail window using setter by context
   useEffect(() => {
-    setTheDeptt(trDepttId);
-    setFromDt(trFromDt);
-  }, [trDepttId, trFromDt]);
+    setTheDeptt(transferDepttId);
+    setFromDt(transferDt);
+  }, [transferDepttId, transferDt]);
+
   useEffect(() => {
     const fetchData = async () => {
       setStatus('busy');
@@ -49,8 +51,8 @@ const Transfer = () => {
     if (theDeptt == '') return;
     setStatus('busy');
     try {
-      if (trId) {
-        await axios.put(`http://localhost:3000/api/tp/empdeptt/${trId}`, {
+      if (transferId) {
+        await axios.put(`http://localhost:3000/api/tp/empdeptt/${transferId}`, {
           empId: empId, // parameter received
           depttId: theDeptt, // state variable
           fromDt: fromDt, // state variable
@@ -94,8 +96,7 @@ if (status === 'Error') {
       <h5>
         <button onClick={() => setDt('', '', '')}>Add</button>
       </h5>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <div style={{ display: 'flex' }}>
+        <div style={{ display: 'flex',  justifyContent: 'space-between' }}>
           <SelectControl
             optionsRows={deptts}
             selectedId={theDeptt}
@@ -108,9 +109,8 @@ if (status === 'Error') {
             type='date'
             onChange={(e) => setFromDt(e.target.value)}
           />
-          <button onClick={saveRec}>Save</button>
+          <button onClick={saveRec}>💾</button>
         </div>
-      </div>
     </>
   );
 };

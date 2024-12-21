@@ -23,7 +23,10 @@ const TransferPosting = () => {
   
   // Updating State
   const { id } = useParams();
-  useEffect(()=>{setEmp(id)},[id]);
+  useEffect(()=>{
+    setEmp(id)
+  },[id]);
+
   const getEmpDet = async () => {
     setStatus('busy');
     try {
@@ -100,7 +103,6 @@ const TransferPosting = () => {
               <Posting />
             </div>
           </div>
-
           {/* Transfers */}
           <div
             style={{
