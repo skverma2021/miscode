@@ -96,7 +96,7 @@ if (status === 'Error') {
   return (
     <>
       <h5>
-        <button onClick={() => setDg('', '', '')}>Add</button>
+        <button onClick={() => setDesig('', '', '')}>Add</button>
       </h5>
         <div style={{ display: 'flex',  justifyContent: 'space-between' }}>
           <SelectControl
