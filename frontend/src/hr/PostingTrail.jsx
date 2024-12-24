@@ -16,8 +16,8 @@ const PostingTrail = () => {
   const [msg, setMsg] = useState('');
 
   const tpContext = useContext(TPContext);
-  const { desigFlag, empId } = tpContext.tpState;
-  const { toggleDesigFlag, setDesig } = tpContext;
+  const { postingFlag, empId } = tpContext.tpState;
+  const { togglePostingFlag, setPosting } = tpContext;
 
 // Updating State
   useEffect(() => {
@@ -35,16 +35,16 @@ const PostingTrail = () => {
       }
     };
     if (empId) fetchData();
-  }, [desigFlag]);
+  }, [postingFlag]);
 
 // Handling events on the form
-  const deleteEmpDesig = async (theEmpDesigId) => {
+  const deletePosting = async (theEmpDesigId) => {
     setStatus('busy');
     try {
       await axios.delete(
         `http://localhost:3000/api/tp/empDesig/${theEmpDesigId}`
       );
-      toggleDesigFlag();
+      togglePostingFlag();
       setStatus('Success');
       alert('Row Deleted!');
     } catch (error) {
@@ -116,13 +116,13 @@ if (status === 'Error') {
             {/*  to initialize the context with record to be updated */}
             {/*  The record will be made available in the lower edit window */}
             <div style={{ width: '5%', border: '1px solid black' }}>
-              <Link onClick={() => setDesig(t.theId, t.theDesigId, t.theFromDt)}>
+              <Link onClick={() => setPosting(t.theId, t.theDesigId, t.theFromDt)}>
                 🖍️
               </Link>
             </div>
             {/* will execute delete and also reset trail window */}
             <div style={{ width: '5%', border: '1px solid black' }}>
-              <Link onClick={() => deleteEmpDesig(`${t.theId}`)}> ✖️</Link>
+              <Link onClick={() => deletePosting(`${t.theId}`)}> ✖️</Link>
             </div>
           </div>
         );

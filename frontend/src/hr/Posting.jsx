@@ -15,23 +15,23 @@ const Posting = () => {
   const [fromDt, setFromDt] = useState('');
 
   // options for select control
-  const [desigs, setDesigs] = useState([]);
+  const [desigs, setPostings] = useState([]);
 
   const [status, setStatus] = useState('');
   const [msg, setMsg] = useState('');
 
   const tpContext = useContext(TPContext);
-  const { promotionId, promotionDesigId, promotionDt, empId } = tpContext.tpState;
-  const { setDesig, toggleDesigFlag } = tpContext;
+  const { postingId, postingDesigId, postingDt, empId } = tpContext.tpState;
+  const { setPosting, togglePostingFlag } = tpContext;
 
 // Updating State
   // to initialise lower window with context
   // the context gets filled by edit button in
   // trail window using setter by context
   useEffect(() => {
-    setTheDesig(promotionDesigId);
-    setFromDt(promotionDt);
-  }, [promotionDesigId, promotionDt]);
+    setTheDesig(postingDesigId);
+    setFromDt(postingDt);
+  }, [postingDesigId, postingDt]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,7 +40,7 @@ const Posting = () => {
         const res = await axios.get(
           `http://localhost:3000/api/designations/select`
         );
-        setDesigs(res.data);
+        setPostings(res.data);
         setStatus('Success');
       } catch (error) {
         setStatus('Error');
@@ -55,8 +55,8 @@ const Posting = () => {
     if (theDesig == '') return;
     setStatus('busy');
     try {
-      if (promotionId) {
-        await axios.put(`http://localhost:3000/api/tp/empDesig/${promotionId}`, {
+      if (postingId) {
+        await axios.put(`http://localhost:3000/api/tp/empDesig/${postingId}`, {
           empId: empId, // parameter received
           desigId: theDesig, // state variable
           fromDt: fromDt, // state variable
@@ -68,8 +68,8 @@ const Posting = () => {
           fromDt: fromDt, // state variable
         });
       }
-      toggleDesigFlag();
-      setDesig('', '', '');
+      togglePostingFlag();
+      setPosting('', '', '');
       setStatus('Success');
     } catch (error) {
       setStatus('Error');
@@ -96,7 +96,7 @@ if (status === 'Error') {
   return (
     <>
       <h5>
-        <button onClick={() => setDesig('', '', '')}>Add</button>
+        <button onClick={() => setPosting('', '', '')}>Add</button>
       </h5>
         <div style={{ display: 'flex',  justifyContent: 'space-between' }}>
           <SelectControl

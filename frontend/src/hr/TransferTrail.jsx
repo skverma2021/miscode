@@ -16,8 +16,8 @@ const TransferTrail = () => {
   const [msg, setMsg] = useState('');
 
   const tpContext = useContext(TPContext);
-  const { depttFlag, empId } = tpContext.tpState;
-  const { toggleDepttFlag, setDeptt } = tpContext;
+  const { transferFlag, empId } = tpContext.tpState;
+  const { toggleTransferFlag, setTransfer } = tpContext;
 
 // Updating State
   useEffect(() => {
@@ -35,16 +35,16 @@ const TransferTrail = () => {
       }
     };
     if (empId) fetchData();
-  }, [depttFlag]);
+  }, [transferFlag]);
 
 // Handling events on the form
-  const deleteEmpDeptt = async (theEmpDepttId) => {
+  const deleteTransfer = async (theEmpDepttId) => {
     setStatus('busy');
     try {
       await axios.delete(
         `http://localhost:3000/api/tp/empdeptt/${theEmpDepttId}`
       );
-      toggleDepttFlag();
+      toggleTransferFlag();
       setStatus('Success');
     } catch (error) {
       setStatus('Error');
@@ -100,13 +100,13 @@ if (status === 'Error') {
             {/*  to initialize the context with record to be updated */}
             {/*  The record will be made available in the lower edit window */}
             <div style={{ width: '5%', border: '1px solid black' }}>
-              <Link onClick={() => setDeptt(t.theId, t.theDepttId, t.theFromDt)}>
+              <Link onClick={() => setTransfer(t.theId, t.theDepttId, t.theFromDt)}>
                 🖍️
               </Link>
             </div>
             {/* will execute delete and also reset trail window */}
             <div style={{ width: '5%', border: '1px solid black' }}>
-              <Link onClick={() => deleteEmpDeptt(`${t.theId}`)}> ✖️</Link>
+              <Link onClick={() => deleteTransfer(`${t.theId}`)}> ✖️</Link>
             </div>
           </div>
         );

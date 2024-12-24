@@ -11,7 +11,7 @@ const Transfer = () => {
 
 // State Variables
   const [fromDt, setFromDt] = useState('');
-  const [deptts, setDeptts] = useState([]);
+  const [deptts, setTransfers] = useState([]);
   const [theDeptt, setTheDeptt] = useState('');
 
   const [status, setStatus] = useState('');
@@ -19,7 +19,7 @@ const Transfer = () => {
 
   const tpContext = useContext(TPContext);
   const { transferId, transferDepttId, transferDt, empId } = tpContext.tpState;
-  const { setDeptt, toggleDepttFlag } = tpContext;
+  const { setTransfer, toggleTransferFlag } = tpContext;
 
 // Updating State
   // to initialise lower window with context
@@ -36,7 +36,7 @@ const Transfer = () => {
         const res = await axios.get(
           `http://localhost:3000/api/departments/select`
         );
-        setDeptts(res.data);
+        setTransfers(res.data);
         setStatus('Success');
       } catch (error) {
         setStatus('Error');
@@ -66,8 +66,8 @@ const Transfer = () => {
         // will cause the trail window to refresh because of useEffect
         // newDepttRec();
       }
-      toggleDepttFlag();
-      setDeptt('', '', '');
+      toggleTransferFlag();
+      setTransfer('', '', '');
       setStatus('Success');
     } catch (error) {
       setStatus('Error');
@@ -94,7 +94,7 @@ if (status === 'Error') {
   return (
     <>
       <h5>
-        <button onClick={() => setDeptt('', '', '')}>Add</button>
+        <button onClick={() => setTransfer('', '', '')}>Add</button>
       </h5>
         <div style={{ display: 'flex',  justifyContent: 'space-between' }}>
           <SelectControl

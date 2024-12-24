@@ -18,7 +18,7 @@ const TransferPosting = () => {
   const [msg, setMsg] = useState('');
   
   const tpContext = useContext(TPContext);
-  const { desigFlag, depttFlag } = tpContext.tpState;
+  const { postingFlag, transferFlag } = tpContext.tpState;
   const { setEmp } = tpContext;
   
   // Updating State
@@ -42,7 +42,7 @@ const TransferPosting = () => {
   };  
    useEffect(() => {
     getEmpDet();
-  }, [desigFlag, depttFlag]); 
+  }, [postingFlag, transferFlag]); 
 
 // Navigation and TimeOut
   const navigate = useNavigate();
