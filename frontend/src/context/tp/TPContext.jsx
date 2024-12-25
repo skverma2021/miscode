@@ -3,16 +3,16 @@ export const TPContext = createContext();
 
 const TPReducer = (state, action) => {
   switch (action.type) {
-    case 'SET_DESIGNATION':
+    case 'SET_POSTING':
       return { ...state, postingId: action.payload.postingId, postingDesigId: action.payload.postingDesigId, postingDt: action.payload.postingDt };
-    case 'SET_DEPARTMENT':
+    case 'SET_TRANSFER':
       return { ...state, transferId: action.payload.transferId, transferDepttId: action.payload.transferDepttId, transferDt: action.payload.transferDt };
     case 'SET_EMP':
       return { ...state, empId: action.payload.empId };
 
-    case 'SET_DESIG_FLAG':
+    case 'SET_POSTING_FLAG':
       return { ...state, postingFlag: !state.postingFlag };
-    case 'SET_DEPTT_FLAG':
+    case 'SET_TRANSFER_FLAG':
       return { ...state, transferFlag: !state.transferFlag };
 
     default:
@@ -39,12 +39,12 @@ export const TPState = (props) => {
   const [state, dispatch] = useReducer(TPReducer, initialState);
 
   const setPosting = (thePostingId, thePostingDesigId, thePostingDt) => {
-    dispatch({ type: 'SET_DESIGNATION',payload: { postingId: thePostingId, postingDesigId: thePostingDesigId, postingDt: thePostingDt },
+    dispatch({ type: 'SET_POSTING',payload: { postingId: thePostingId, postingDesigId: thePostingDesigId, postingDt: thePostingDt },
     });
   };
 
   const setTransfer = (theTransferId, theTransferDepttId, theTransferDt) => {
-    dispatch({ type: 'SET_DEPARTMENT', payload: { transferId: theTransferId, transferDepttId: theTransferDepttId, transferDt: theTransferDt },
+    dispatch({ type: 'SET_TRANSFER', payload: { transferId: theTransferId, transferDepttId: theTransferDepttId, transferDt: theTransferDt },
     });
   };
 
@@ -54,12 +54,12 @@ export const TPState = (props) => {
     };
 
   const togglePostingFlag = () => {
-    dispatch({ type: 'SET_DESIG_FLAG'
+    dispatch({ type: 'SET_POSTING_FLAG'
     });
   };
 
   const toggleTransferFlag = () => {
-    dispatch({ type: 'SET_DEPTT_FLAG'
+    dispatch({ type: 'SET_TRANSFER_FLAG'
     });
   };
 
