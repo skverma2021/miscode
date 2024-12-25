@@ -7,6 +7,8 @@ import Spinner from '../home/Spinner';
 import { useNavigate } from 'react-router-dom';
 
 const JobAll = () => {
+
+  // Column definitions for the Data Grid
   const columns = [
     {
       headerName: 'JobID',
@@ -100,26 +102,16 @@ const JobAll = () => {
       ,
     },
   ];
+
+  // State Variables
   const [jobs, setJobs] = useState([]);
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
-  const navigate = useNavigate();
 
-  let timeoutId;
-  const goHome = () => {
-    navigate('/');
-  };
-
-  // Clear the timer
-  useEffect(() => {
-    return () => clearTimeout(timeoutId);
-  }, []);
-
-  // get all jobs when the component mounts
+  // fetching rows
   useEffect(() => {
     getAllJobs();
   }, []);
-
   const getAllJobs = async () => {
     setStatus('busy');
     try {
@@ -133,6 +125,17 @@ const JobAll = () => {
     }
   };
 
+  // Navigation and TimeOut
+  const navigate = useNavigate();
+  let timeoutId;
+  const goHome = () => {
+    navigate('/');
+  };
+  useEffect(() => {
+    return () => clearTimeout(timeoutId);
+  }, []);
+
+  // Handling Events on the Form
   const deleteJobData = async (t) => {
     setStatus('busy');
     try {
@@ -147,6 +150,7 @@ const JobAll = () => {
     }
   };
 
+  // User Interface
   if (status === 'Error') return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
   if (status === 'Deleted') return <h1 style={{ color: 'blue' }}>{msg}</h1>;
   if (status === 'busy') return <Spinner />;

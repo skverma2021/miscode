@@ -7,6 +7,8 @@ import Spinner from '../home/Spinner';
 import { useNavigate } from 'react-router-dom';
 
 const Clients = () => {
+
+  // Column definitions for the Data Grid
   const columns = [
     {
       headerName: 'ID',
@@ -119,20 +121,40 @@ const Clients = () => {
       ),
     },
   ];
+
+  // State Variables
   const [clients, setClients] = useState([]);
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
-  const navigate = useNavigate();
 
+  // fetching rows
+  useEffect(() => {
+    getAllClients();
+  }, []);
+  const getAllClients = async () => {
+    setStatus('busy');
+    try {
+      const res = await axios.get(`http://localhost:3000/api/clients`);
+      setClients(res.data);
+      setStatus('Success');
+    } catch (error) {
+      setStatus('Error');
+      setMsg(errText(error));
+      timeoutId = setTimeout(goHome, 10000);
+    }
+  };
+
+  // Navigation and TimeOut
+  const navigate = useNavigate();
   let timeoutId;
   const goHome = () => {
     navigate('/');
   };
-
   useEffect(() => {
     return () => clearTimeout(timeoutId);
   }, []);
 
+  // Handling Events on the Form
   const deleteClientData = async (t) => {
     setStatus('busy');
     try {
@@ -147,23 +169,7 @@ const Clients = () => {
     }
   };
 
-  useEffect(() => {
-    getAllClients();
-  }, []);
-
-  const getAllClients = async () => {
-    setStatus('busy');
-    try {
-      const res = await axios.get(`http://localhost:3000/api/clients`);
-      setClients(res.data);
-      setStatus('Success');
-    } catch (error) {
-      setStatus('Error');
-      setMsg(errText(error));
-      timeoutId = setTimeout(goHome, 10000);
-    }
-  };
-
+  // User Interface
   if (status === 'Error') return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
   if (status === 'Deleted') return <h1 style={{ color: 'blue' }}> {msg}</h1>;
   if (status === 'busy') return <Spinner />;
@@ -180,7 +186,7 @@ const Clients = () => {
             },
           },
         }}
-        pageSizeOptions={[5,10]}
+        pageSizeOptions={[5, 10]}
       />
     </div>
   );

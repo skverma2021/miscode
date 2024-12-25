@@ -6,14 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import Spinner from '../home/Spinner';
 import SelectControl from '../util/SelectControl';
 
-// id	int identity
-// description	varchar(50)
-// clientId	int
-// ordDateStart	date
-// ordDateEnd	date
-// ordValue	money
-
 const JobAdd = () => {
+
+  // State Variables
   const [job, setJob] = useState({
     description: '',
     clientId: '',
@@ -25,25 +20,8 @@ const JobAdd = () => {
   const [status, setStatus] = useState('');
   const [errNo, setErrNo] = useState(0);
   const [clients, setClients] = useState([]);
-  const navigate = useNavigate();
 
-  const okSubmit = () => {
-    if (!job.description) return false;
-    if (!job.clientId) return false;
-    if (!job.ordDateStart) return false;
-    if (!job.ordDateEnd) return false;
-    if (!job.ordValue) return false;
-    if (Date.parse(job.ordDateEnd) - Date.parse(job.ordDateStart) < 0)
-      return false;
-    return true;
-  };
-
-  let timeoutId;
-  const goHome = () => {
-    navigate('/');
-  };
-
-  // options for select control
+  // fetching data for state variables
   useEffect(() => {
     const fetchData = async () => {
       setStatus('busy');
@@ -58,14 +36,30 @@ const JobAdd = () => {
     fetchData();
   }, []);
 
+  // Navigation and TimeOut
+  const navigate = useNavigate();
+  let timeoutId;
+  const goHome = () => {
+    navigate('/');
+  };
   useEffect(() => {
     return () => clearTimeout(timeoutId);
   }, []);
 
+  // Handling events on the form
+  const okSubmit = () => {
+    if (!job.description) return false;
+    if (!job.clientId) return false;
+    if (!job.ordDateStart) return false;
+    if (!job.ordDateEnd) return false;
+    if (!job.ordValue) return false;
+    if (Date.parse(job.ordDateEnd) - Date.parse(job.ordDateStart) < 0)
+      return false;
+    return true;
+  };
   const onValChange = (e) => {
     setJob({ ...job, [e.target.name]: e.target.value });
   };
-
   const postJobData = async (event) => {
     setStatus('busy');
     event.preventDefault();
@@ -81,6 +75,7 @@ const JobAdd = () => {
     }
   };
 
+  // User Interface
   if (status === 'Error-Client') {
     timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error Loading Clients</h1>;
@@ -89,12 +84,9 @@ const JobAdd = () => {
     timeoutId = setTimeout(goHome, 10000);
     return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
   }
-
   if (status === 'Added')
     return <h1 style={{ color: 'blue' }}>Record added successfully !</h1>;
-
   if (status === 'busy') return <Spinner />;
-
   return (
     <>
       <h4 style={{ color: 'red' }}>
@@ -202,4 +194,5 @@ const JobAdd = () => {
     </>
   );
 };
+
 export default JobAdd;

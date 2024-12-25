@@ -7,32 +7,16 @@ import Spinner from '../home/Spinner';
 import SelectControl from '../util/SelectControl';
 
 function JobUpd() {
+
+  // State Variables
   const [job, setJob] = useState({});
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
   const [errNo, setErrNo] = useState(0);
   const [clients, setClients] = useState([]);
 
+  // fetching data for state variables
   const { id } = useParams();
-  const navigate = useNavigate();
-
-  const okSubmit = () => {
-    if (!job.description) return false;
-    if (!job.clientId) return false;
-    if (!job.ordDateStart) return false;
-    if (!job.ordDateEnd) return false;
-    if (!job.ordValue) return false;
-    if (Date.parse(job.ordDateEnd) - Date.parse(job.ordDateStart) < 0)
-      return false;
-    return true;
-  };
-
-  let timeoutId;
-  const goHome = () => {
-    navigate('/');
-  };
-
-  // options for select control
   useEffect(() => {
     const fetchData = async () => {
       setStatus('busy');
@@ -46,11 +30,6 @@ function JobUpd() {
     };
     fetchData();
   }, []);
-
-  useEffect(() => {
-    return () => clearTimeout(timeoutId);
-  }, []);
-
   useEffect(() => {
     const fetchData = async () => {
       setStatus('busy');
@@ -67,10 +46,30 @@ function JobUpd() {
     fetchData();
   }, []);
 
+  // Navigation and TimeOut
+  const navigate = useNavigate();
+  let timeoutId;
+  const goHome = () => {
+    navigate('/');
+  };
+  useEffect(() => {
+    return () => clearTimeout(timeoutId);
+  }, []);
+
+  // Handling events on the form
+  const okSubmit = () => {
+    if (!job.description) return false;
+    if (!job.clientId) return false;
+    if (!job.ordDateStart) return false;
+    if (!job.ordDateEnd) return false;
+    if (!job.ordValue) return false;
+    if (Date.parse(job.ordDateEnd) - Date.parse(job.ordDateStart) < 0)
+      return false;
+    return true;
+  };
   const onValChange = (rec) => {
     setJob({ ...job, [rec.propName]: rec.propValue });
   };
-
   const updJobData = async (event) => {
     event.preventDefault();
     setStatus('busy');
@@ -86,20 +85,17 @@ function JobUpd() {
     }
   };
 
+  // User Interface
   if (status === 'Error-Client') {
     timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error Loading Clients</h1>;
   }
-
   if (status === 'Error' && errNo == 500) {
     timeoutId = setTimeout(goHome, 10000);
     return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
   }
-
   if (status === 'busy') return <Spinner />;
-
   if (status === 'Updated') return <h1 style={{ color: 'blue' }}>{msg}</h1>;
-
   return (
     <>
       <h4 style={{ color: 'red' }}>

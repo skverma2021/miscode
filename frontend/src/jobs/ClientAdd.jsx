@@ -6,18 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import Spinner from '../home/Spinner';
 import SelectControl from '../util/SelectControl';
 
-// id	int	Unchecked
-// shortName	nchar(10)	Unchecked
-// longName	varchar(100)	Checked
-// website	varchar(100)	Checked
-// contactName	varchar(50)	Unchecked
-// contactEMail	varchar(100)	Unchecked
-// contactMobile	bigint	Unchecked
-// addLine1	varchar(100)	Unchecked
-// street	varchar(50)	Checked
-// cityId	int	Unchecked
-
 function ClientAdd() {
+
+  // State Variables
   const [client, setClient] = useState({
     shortName: '',
     longName: '',
@@ -33,27 +24,8 @@ function ClientAdd() {
   const [status, setStatus] = useState('');
   const [errNo, setErrNo] = useState(0);
   const [cities, setCities] = useState([]);
-  const navigate = useNavigate();
 
-  const okSubmit = () => {
-    if (!client.shortName) return false;
-    if (!client.longName) return false;
-    if (!client.website) return false;
-    if (!client.contactName) return false;
-    if (!client.contactEMail) return false;
-    if (!client.contactMobile) return false;
-    if (!client.addLine1) return false;
-    if (!client.cityId) return false;
-    if (!client.street) return false;
-    return true;
-  };
-
-  let timeoutId;
-  const goHome = () => {
-    navigate('/');
-  };
-
-  // options for select control
+  // fetching data for state variables
   useEffect(() => {
     const fetchData = async () => {
       setStatus('busy');
@@ -67,14 +39,33 @@ function ClientAdd() {
     };
     fetchData();
   }, []);
+
+  // Navigation and TimeOut
+  const navigate = useNavigate();
+  let timeoutId;
+  const goHome = () => {
+    navigate('/');
+  };
   useEffect(() => {
     return () => clearTimeout(timeoutId);
   }, []);
 
+  // Handling events on the form
+  const okSubmit = () => {
+    if (!client.shortName) return false;
+    if (!client.longName) return false;
+    if (!client.website) return false;
+    if (!client.contactName) return false;
+    if (!client.contactEMail) return false;
+    if (!client.contactMobile) return false;
+    if (!client.addLine1) return false;
+    if (!client.cityId) return false;
+    if (!client.street) return false;
+    return true;
+  };
   const onValChange = (e) => {
     setClient({ ...client, [e.target.name]: e.target.value });
   };
-
   const postClientData = async (event) => {
     event.preventDefault();
     setStatus('busy');
@@ -90,18 +81,16 @@ function ClientAdd() {
     }
   };
 
+  // User Interface
   if (status === 'Error-City') {
     timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error Loading Cities</h1>;
   }
-
   if (status === 'Error' && errNo == 500) {
     timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
   }
-
   if (status === 'busy') return <Spinner />;
-
   if (status === 'Added') return <h1 style={{ color: 'blue' }}>{msg}</h1>;
 
   return (
