@@ -16,7 +16,7 @@ function JobUpd() {
   const [clients, setClients] = useState([]);
 
   // fetching data for state variables
-  const { id } = useParams();
+  const { jobId:id } = useParams();
   useEffect(() => {
     const fetchData = async () => {
       setStatus('busy');

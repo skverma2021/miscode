@@ -74,10 +74,10 @@ function App() {
         <Route path='/bd/clients/all/upd/:id' element={<ClientUpd />} />
         <Route path='/bd/clients/add' element={<ClientAdd />} />
         <Route path='/bd/jobs/all' element={<JobAll />} />
-        <Route path='/bd/jobs/all/upd/:id' element={<JobUpd />} />
+        <Route path='/bd/jobs/all/upd/:jobId' element={<JobUpd />} />
         <Route path='/bd/jobs/add' element={<JobAdd />} />
         <Route path='/bd/jobs/all/exPlan/:jobId' element={<JobExPlan />} />
-        <Route path='/bd/jobs/all/exAdd/:jobId' element={<WorkPlan />} />
+        <Route path='/bd/jobs/all/workPlan/:jobId' element={<WorkPlan />} />
 
         {/* Booking */}
         <Route path='/booking' element={<BookMonthYear />} />

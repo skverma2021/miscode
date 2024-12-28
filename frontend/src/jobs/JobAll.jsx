@@ -91,7 +91,7 @@ const JobAll = () => {
       headerName: 'ExPlan',
       field: 'link3',
       width: 80,
-      renderCell: (params) => <Link to={`./exAdd/${params.id}`}>WorkPlans</Link>
+      renderCell: (params) => <Link to={`./workPlan/${params.id}`}>WorkPlans</Link>
       ,
     },
     {
