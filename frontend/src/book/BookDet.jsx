@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect, useContext, useCallback } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { errText, errNumber } from '../util/errMsgText';
 import userContext from '../context/appUser/UserContext';
@@ -36,13 +36,13 @@ const BookDet = ({ bookDay }) => {
   };
 
   // for updating bData located at index
-  const handleInputChange = useCallback((index, rec) => {
+  const handleInputChange = (index, rec) => {
     setBData((prevBookData) => {
       const newBookData = [...prevBookData];
       newBookData[index][rec.propName] = rec.propValue;
       return newBookData;
     });
-  }, []);
+  };
 
   // handle - insert, delete and update on booking table
   const handleUpdAdd = () => {

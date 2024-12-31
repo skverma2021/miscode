@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { errText, errNumber } from '../util/errMsgText';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -129,13 +129,13 @@ function WorkPlan() {
   // use third bracket [] to access property of object rec
   // returning updatedStages replaces stages with its updated version
 
-  const handleInputChange = useCallback((index, rec) => {
+  const handleInputChange = (index, rec) => {
     setStages((prevStages) => {
       const updatedStages = [...prevStages];
       updatedStages[index][rec.propName] = rec.propValue;
       return updatedStages;
     });
-  }, []);
+  };
 
   const saveRec = async (stageId, depttId, startDt, endDt, theVal, toUpd) => {
     //  t: {stageId, theStage, depttId, startDt, endDt, theVal}
