@@ -25,6 +25,7 @@ import JobAll from './jobs/JobAll';
 import JobUpd from './jobs/JobUpd';
 import JobAdd from './jobs/JobAdd';
 import JobExPlan from './jobs/JobExPlan';
+import { WPState } from './context/wp/WPContext';
 import WorkPlan from './jobs/WorkPlan';
 
 // Booking
@@ -77,7 +78,7 @@ function App() {
         <Route path='/bd/jobs/all/upd/:jobId' element={<JobUpd />} />
         <Route path='/bd/jobs/add' element={<JobAdd />} />
         <Route path='/bd/jobs/all/exPlan/:jobId' element={<JobExPlan />} />
-        <Route path='/bd/jobs/all/workPlan/:jobId' element={<WorkPlan />} />
+        <Route path='/bd/jobs/all/workPlan/:jobId' element={<WPState><WorkPlan /></WPState>} />
 
         {/* Booking */}
         <Route path='/booking' element={<BookMonthYear />} />
