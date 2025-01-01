@@ -9,6 +9,8 @@ const WPReducer = (state, action) => {
       return { ...state, jobStart: action.payload.jobStart, jobEnd: action.payload.jobEnd };
     case 'SET_JOB_VAL':
       return { ...state, jobVal: action.payload.jobVal };
+    case 'SET_DEPARTMENTS':
+      return { ...state, deptts: action.payload.deptts };
     default:
       return state;
   }
@@ -22,6 +24,7 @@ export const WPState = (props) => {
     jobEnd: '', 
 
     jobVal: '', 
+    deptts:[]
 
   };
 
@@ -41,6 +44,10 @@ export const WPState = (props) => {
       dispatch({ type: 'SET_JOB_VAL', payload: {jobVal: theJobVal },
       });
     };
+  const setDepartments = (theDepartmentList) => {
+      dispatch({ type: 'SET_DEPARTMENTS', payload: {deptts: theDepartmentList },
+      });
+    };
 
   return (
     <WPContext.Provider
@@ -50,6 +57,7 @@ export const WPState = (props) => {
         setJob,
         setJobTimeline,
         setJobVal,
+        setDepartments,
       }}
     >
       {props.children}

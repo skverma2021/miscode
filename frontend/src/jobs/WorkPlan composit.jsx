@@ -119,13 +119,23 @@ function WorkPlan() {
       s = s + parseFloat(stages[i].theVal);
     return s;
   };
+  // const okSubmit = (depttId, startDt, endDt, theVal) => {
+  //   if (depttId === '') return false;
+  //   if (startDt === '') return false;
+  //   if (endDt === '') return false;
+  //   if (theVal === '') return false;
+  //   return true;
+  // };
   const okSubmit = (depttId, startDt, endDt, theVal) => {
-    if (depttId === '') return false;
-    if (startDt === '') return false;
-    if (endDt === '') return false;
-    if (theVal === '') return false;
+    if (!depttId) return false;
+    if (!startDt) return false;
+    if (!endDt) return false;
+    if (!theVal) return false;
+    if (theVal <= 0) return false;
+    if (endDt < startDt) return false;
+    if (theJob.jobValue < sumTheVal()) return false;
     return true;
-  };
+};
 
   // All stages have been pulled from jobExStages
   // where stageId starts with 1 and goes up to 10

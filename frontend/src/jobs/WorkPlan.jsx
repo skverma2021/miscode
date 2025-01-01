@@ -12,9 +12,9 @@ import Spinner from '../home/Spinner';
 function WorkPlan() {
 
   // State Variables  
-  const [deptts, setDeptts] = useState([]); // for dropDown to select department
+  // const [deptts, setDeptts] = useState([]); // for dropDown to select department
   const wpContext = useContext(WPContext);
-  const { setJob } = wpContext;
+  const { setJob, setDepartments } = wpContext;
 
   const [status, setStatus] = useState('');
   const [msg, setMsg] = useState('');
@@ -33,7 +33,8 @@ function WorkPlan() {
         const res = await axios.get(
           `http://localhost:3000/api/departments/select`
         );
-        setDeptts(res.data);
+        // setDeptts(res.data);
+        setDepartments(res.data)
         setStatus('Success');
       } catch (error) {
         setStatus('Error');
@@ -52,7 +53,7 @@ function WorkPlan() {
   return (
     <>
       <WorkPlanJob />
-      <WorkPlanStages deptts={deptts} />
+      <WorkPlanStages />
     </>
   );
 }

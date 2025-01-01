@@ -8,7 +8,7 @@ import SelectControl from '../util/SelectControl';
 import GoHome from '../util/GoHome';
 import { WPContext } from '../context/wp/WPContext';
 
-const WorkPlanStages = ({deptts}) => {
+const WorkPlanStages = () => {
 
     // State Variables  
     const [stages, setStages] = useState([]);
@@ -16,7 +16,7 @@ const WorkPlanStages = ({deptts}) => {
     const [msg, setMsg] = useState('');
 
     const wpContext = useContext(WPContext);
-    const { jobId, jobStart, jobEnd, jobVal } = wpContext.wpState;
+    const { jobId, jobStart, jobEnd, jobVal, deptts } = wpContext.wpState;
 
     // Getting all stages
     useEffect(() => {
