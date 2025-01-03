@@ -132,6 +132,39 @@ function JobUpd() {
                       });
                     }}
                   />
+{/* Closure: The arrow function (e) => { ... } creates a closure that captures the onValChange function 
+and the current state of job.description.
+
+Access to onValChange: When the event occurs, the arrow function executes and 
+uses the captured onValChange function to update the state.
+
+Access to job.description: The function also has access to the current state of job.description, 
+ensuring it reads the latest value when the event handler executes.
+
+This closure ensures that the event handler retains access to onValChange and can 
+update the state accurately, regardless of when the event occurs. 
+It allows the event handler to "remember" the environment in which it was created, 
+making it a powerful tool in React for managing state and handling events.
+
+In React, JSX elements like <input /> are essentially syntactic sugar for React.createElement(). 
+When you use JSX, it gets transpiled into React.createElement calls by tools like Babel.
+
+In this context:
+
+React.createElement generates a React element that describes what should be rendered.
+
+The onChange attribute is assigned a function, creating a closure over its enclosing scope.
+
+The closure ensures that the onChange function retains access to the job object 
+and the onValChange function when the event occurs.
+
+By returning React.createElement, React effectively maintains the connection 
+between the event handler and its surrounding scope, 
+enabling the input element to use the state and functions defined outside the React.createElement call.
+
+This approach allows React to manage the rendering of elements and the creation of closures, 
+facilitating consistent and predictable handling of events, state, and props within your components*/}
+
                 </td>
               </tr>
               <tr>
