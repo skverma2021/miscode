@@ -36,6 +36,10 @@ const Timesheet = () => {
   useEffect(() => {
     getBookingDates();
   }, []);
+
+  // get booking dates for the month and year 
+  // row: id, theDay, weekDay from allDays table
+  
   const getBookingDates = async () => {
     setStatus('busy');
     try {

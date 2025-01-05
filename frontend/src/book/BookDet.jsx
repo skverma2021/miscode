@@ -5,15 +5,23 @@ import { errText, errNumber } from '../util/errMsgText';
 import { BookingContext } from '../context/book/BookingContext';
 import GoHome from '../util/GoHome';
 
+//bookDay contains id, theDay, weekDay
 const BookDet = ({ bookDay }) => {
+  // state variables
   const [bData, setBData] = useState([]);
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
 
+  // get the context with empId and hourlyRate
   const bContext = useContext(BookingContext);
   const { empId, hourlyRate } = bContext.bookingState;
 
-  // get booking template - workPlanId, index, inError ?, booking - actual/null, toUpd ?, toEdit ?
+  // get booking template - theWpId, theBooking, toUpd, inError, toEdit
+  // theWpId: the workPlan ID
+  // theBooking: the booking value null or actual
+  // toUpd = 1 when booking is to be updated, 0 when it is a new booking case
+  // inError = 1 when booking is not acceptable
+  // toEdit = 1 when booking date is between schedule start and end date
   useEffect(() => {
     getBookingDet();
   }, []);
@@ -43,7 +51,13 @@ const BookDet = ({ bookDay }) => {
   // handle - insert, delete and update on booking table
   const handleUpdAdd = () => {
     bData.map((t, idx) => {
+      // t represents one of the bookings belonging to the day
+      // idx is the index of the booking supplied by React
       if (isNaN(t.theBooking) || t.theBooking < 0) {
+        // if booking is not a number or negative set inError = 1
+        // a 0 for booking is acceptable
+        // 0: ignored in insert cases
+        // 0: treated as delete in update cases
         handleInputChange(idx, {
           propName: 'inError',
           propValue: 1,
@@ -52,12 +66,14 @@ const BookDet = ({ bookDay }) => {
       }
       // bData contains booking data for each workPlan applicable for the day
       // t represents one of the bookings belonging to the day
-      // even if API returns tpUpd as 0 (POST/append case) it becomes an update case after 1 save
-      // when the form remains open and user revisits and saves it again
+      // even if API returns tpUpd as 0 (insert case) it becomes an update case after 1 save
+      // it is necessary because the form remains open and user may revisit an inserted record and save it again
       if (t.toUpd > 0) {
+        // update or delete when booking = 0
         updBooking(idx, empId, t.theWpId, bookDay.id, t.theBooking, hourlyRate);
       } else {
         if (t.theBooking > 0)
+          // 
           addBooking(
             idx,
             empId,
@@ -83,7 +99,9 @@ const BookDet = ({ bookDay }) => {
     setStatus('busy');
     try {
       await axios.put(`http://localhost:3000/api/bookings/`, rec);
-      // it helps to provide feedback to user in case of error inError=0 => no error in ith row
+      // it helps to provide feedback to user in case of error inError=0 
+      // useful when user corrects an invalid entry
+      // in that case it will change the color of the input field from red to black
       handleInputChange(i, {
         propName: 'inError',
         propValue: 0,
@@ -92,9 +110,11 @@ const BookDet = ({ bookDay }) => {
     } catch (error) {
       console.log('theError', errNumber(error));
       if (errNumber(error) == 500) {
+        // an error beyond user control
         setStatus('Error');
         setMsg(`[Error-Booking: ${errNumber(error)} - ${errText(error)}] `);
       } else {
+        // an error due to user input
         handleInputChange(i, {
           propName: 'inError',
           propValue: 1,
@@ -117,11 +137,11 @@ const BookDet = ({ bookDay }) => {
     setStatus('busy');
     try {
       await axios.post(`http://localhost:3000/api/bookings/`, rec);
-      // it helps to provide feedback to user in case of error inError=0 => no error in ith row
       handleInputChange(i, {
         propName: 'inError',
         propValue: 0,
       });
+      // set toUpd = 1 to make it an update case next time
       handleInputChange(i, {
         propName: 'toUpd',
         propValue: 1,
@@ -129,9 +149,11 @@ const BookDet = ({ bookDay }) => {
       setStatus('Success');
     } catch (error) {
       if (errNumber(error) == 500) {
+        // an error beyond user control
         setStatus('Error');
         setMsg(`[Error-Booking: ${errNumber(error)} - ${errText(error)}] `);
       } else {
+        // an error due to user input
         handleInputChange(i, {
           propName: 'inError',
           propValue: 1,
@@ -139,8 +161,9 @@ const BookDet = ({ bookDay }) => {
       }
     }
   };
-  
+
   if (status === 'Error') {
+    // in case of error return to home page
     return <GoHome secs={5000} msg={msg} />
   }
   return (
@@ -152,11 +175,9 @@ const BookDet = ({ bookDay }) => {
 
       {/* pring booking template for each workplan */}
       {bData.map((t, idx) => {
+        // t represents one of the bookings belonging to the day
+        // idx is the index of the booking supplied by React
         return (
-          // number of <td> each containing one <input> depends on no of rows in bData
-          // for the purpose of onChange each is to be accessed based on 'idx' property
-          // the route returns each row with idx = 0 or 'no of records '
-          // idx and event e is passed to handleInputChange to be used for updating the booking value
 
           <td
             key={idx}
@@ -176,11 +197,6 @@ const BookDet = ({ bookDay }) => {
                   propValue: e.target.value,
                 })
               }
-              // in case you want to see values of these
-              // theWpId, idx, inError, toSave, theBooking, toUpd, d1, d2
-              // d1 is +ve when schedule start is before booking date
-              // d2 is +ve when booking date is before schedule end date
-              // disabled={t.d1 < 0 || t.d2 < 0}
               disabled={t.toEdit == 0}
               style={{
                 border: 'none',
@@ -190,6 +206,8 @@ const BookDet = ({ bookDay }) => {
                 background: `${t.toEdit == 1 && 'lightgrey'}`,
                 fontWeight: `${t.inError ? 'bold' : 'normal'}`,
               }}
+              // title is a tooltip only for debugging
+              // remove it in production
               title={
                 'wpId:' +
                 t.theWpId +
