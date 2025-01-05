@@ -1,42 +1,66 @@
 import { createContext, useReducer } from 'react';
 export const BookingContext = createContext();
 
+// const BookingReducer = (state, action) => {
+//   return { ...state, ...action.payload };
+// };
+
 const BookingReducer = (state, action) => {
-  return { ...state, ...action.payLoad };
+  switch (action.type) {
+    case 'SET_EMP':
+      return { ...state, empId: action.payload.empId};
+    case 'SET_HOURLY_RATE':
+      return { ...state, hourlyRate: action.payload.hourlyRate };
+    case 'SET_MONTH':
+      return { ...state, month: action.payload.month };
+    case 'SET_YEAR':
+      return { ...state, year: action.payload.year };
+    default:
+      return state;
+  }
 };
 
 export const BookingState = (props) => {
   const initialState = {
-    bStatus: '',
-    bMsg: '',
+    empId:'',
+    hourlyRate:'',
+
+    month:'',
+    year:'',
+
   };
 
   const [state, dispatch] = useReducer(BookingReducer, initialState);
 
-  const setBStatus = (theTxt) => {
+  const setEmpId = (theEmp) => {
     dispatch({
-      payLoad: { bStatus: theTxt },
+      type: 'SET_EMP', payload: { empId: theEmp },
     });
   };
-  const setBMsg = (theTxt) => {
+  const setHourlyRate = (theHRate) => {
     dispatch({
-      payLoad: { bMsg: theTxt },
+      type: 'SET_HOURLY_RATE',payload: { hourlyRate: theHRate },
     });
   };
-  const getBStatus = () => {
-    return state.bStatus;
+  const setMonth = (theMonth) => {
+    dispatch({
+      type: 'SET_MONTH',payload: { month: theMonth },
+    });
   };
-  const getBMsg = () => {
-    return state.bMsg;
+  const setYear = (theYear) => {
+    dispatch({
+      type: 'SET_YEAR',payload: { year: theYear },
+    });
   };
 
   return (
     <BookingContext.Provider
       value={{
-        setBStatus,
-        getBStatus,
-        setBMsg,
-        getBMsg,
+        bookingState: state,
+        setEmpId,
+        setHourlyRate,
+        setMonth,
+        setYear,
       }}
     >
       {props.children}

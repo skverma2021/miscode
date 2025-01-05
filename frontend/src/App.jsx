@@ -31,7 +31,7 @@ import WorkPlan from './jobs/WorkPlan';
 // Booking
 import BookMonthYear from './book/BookMonthYear';
 import { BookingState } from './context/book/BookingContext';
-import BookHead from './book/BookHead';
+import Timesheet from './book/Timesheet';
 
 // Reports
 import ReportsHR from './reps/hr/ReportsHR';
@@ -86,7 +86,7 @@ function App() {
           path='/booking/:m/:y'
           element={
             <BookingState>
-              <BookHead />
+              <Timesheet />
             </BookingState>
           }
         />

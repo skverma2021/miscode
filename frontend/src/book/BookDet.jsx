@@ -2,18 +2,16 @@ import React from 'react';
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { errText, errNumber } from '../util/errMsgText';
-import userContext from '../context/appUser/UserContext';
 import { BookingContext } from '../context/book/BookingContext';
+import GoHome from '../util/GoHome';
 
 const BookDet = ({ bookDay }) => {
   const [bData, setBData] = useState([]);
-  // userId of Context will be accessed as empId and
-  // hrRate of Context will be accessed as hourlyRate
-  const { userId: empId, hrRate: hourlyRate } = useContext(userContext);
+  const [msg, setMsg] = useState('');
+  const [status, setStatus] = useState('');
 
-  // error reporting to parent via context
   const bContext = useContext(BookingContext);
-  const { setBStatus, setBMsg } = bContext;
+  const { empId, hourlyRate } = bContext.bookingState;
 
   // get booking template - workPlanId, index, inError ?, booking - actual/null, toUpd ?, toEdit ?
   useEffect(() => {
@@ -21,17 +19,15 @@ const BookDet = ({ bookDay }) => {
   }, []);
   const getBookingDet = async () => {
     try {
-      setBStatus('busy');
+      setStatus('busy');
       const res = await axios.get(
         `http://localhost:3000/api/bookings/${empId}/${bookDay.id}`
       );
       setBData(res.data);
-      setBStatus('Success');
+      setStatus('Success');
     } catch (error) {
-      setBStatus('Error');
-      setBMsg(
-        `[Error-Booking details: ${errNumber(error)} - ${errText(error)}]`
-      );
+      setStatus('Error');
+      setMsg(`[Error-Booking details: ${errNumber(error)} - ${errText(error)}]`);
     }
   };
 
@@ -84,7 +80,7 @@ const BookDet = ({ bookDay }) => {
       bookingVal: b * h,
     };
     // value of booking = hours worked x hourly rate
-    setBStatus('busy');
+    setStatus('busy');
     try {
       await axios.put(`http://localhost:3000/api/bookings/`, rec);
       // it helps to provide feedback to user in case of error inError=0 => no error in ith row
@@ -92,12 +88,12 @@ const BookDet = ({ bookDay }) => {
         propName: 'inError',
         propValue: 0,
       });
-      setBStatus('Success');
+      setStatus('Success');
     } catch (error) {
       console.log('theError', errNumber(error));
       if (errNumber(error) == 500) {
-        setBStatus('Error');
-        setBMsg(`[Error-Booking: ${errNumber(error)} - ${errText(error)}] `);
+        setStatus('Error');
+        setMsg(`[Error-Booking: ${errNumber(error)} - ${errText(error)}] `);
       } else {
         handleInputChange(i, {
           propName: 'inError',
@@ -118,7 +114,7 @@ const BookDet = ({ bookDay }) => {
       bookingVal: b * h,
     };
     // value of booking = hours worked x hourly rate
-    setBStatus('busy');
+    setStatus('busy');
     try {
       await axios.post(`http://localhost:3000/api/bookings/`, rec);
       // it helps to provide feedback to user in case of error inError=0 => no error in ith row
@@ -130,11 +126,11 @@ const BookDet = ({ bookDay }) => {
         propName: 'toUpd',
         propValue: 1,
       });
-      setBStatus('Success');
+      setStatus('Success');
     } catch (error) {
       if (errNumber(error) == 500) {
-        setBStatus('Error');
-        setBMsg(`[Error-Booking: ${errNumber(error)} - ${errText(error)}] `);
+        setStatus('Error');
+        setMsg(`[Error-Booking: ${errNumber(error)} - ${errText(error)}] `);
       } else {
         handleInputChange(i, {
           propName: 'inError',
@@ -143,7 +139,10 @@ const BookDet = ({ bookDay }) => {
       }
     }
   };
-
+  
+  if (status === 'Error') {
+    return <GoHome secs={5000} msg={msg} />
+  }
   return (
     <>
       {/* print date to start with */}
