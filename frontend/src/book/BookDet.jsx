@@ -44,6 +44,7 @@ const BookDet = ({ bookDay }) => {
     setBData((prevBookData) => {
       const newBookData = [...prevBookData];
       newBookData[index][rec.propName] = rec.propValue;
+      newBookData[index]['hasChanged'] = 1;
       return newBookData;
     });
   };
@@ -53,11 +54,15 @@ const BookDet = ({ bookDay }) => {
     bData.map((t, idx) => {
       // t represents one of the bookings belonging to the day
       // idx is the index of the booking supplied by React
+
+      // move to next booking if no change
+      if (t.hasChanged == 0) return;
+
       if (isNaN(t.theBooking) || t.theBooking < 0) {
         // if booking is not a number or negative set inError = 1
         // a 0 for booking is acceptable
-        // 0: ignored in insert cases
-        // 0: treated as delete in update cases
+        // booking = 0: ignored in insert cases
+        // booking = 0: treated as delete in update cases
         handleInputChange(idx, {
           propName: 'inError',
           propValue: 1,
@@ -166,19 +171,22 @@ const BookDet = ({ bookDay }) => {
     // in case of error return to home page
     return <GoHome secs={5000} msg={msg} />
   }
+
+  if (bData.length == 0) {
+    return <p>No workplans found</p>;
+}
   return (
     <>
-      {/* print date to start with */}
+      {/* print the date to start with */}
       <td style={{ border: '1px solid', background: 'lightblue' }}>
         <small>{bookDay.theDay}</small>
       </td>
 
-      {/* pring booking template for each workplan */}
+      {/* pring booking existing/template for each workplan */}
       {bData.map((t, idx) => {
         // t represents one of the bookings belonging to the day
         // idx is the index of the booking supplied by React
         return (
-
           <td
             key={idx}
             style={{
@@ -190,7 +198,6 @@ const BookDet = ({ bookDay }) => {
           >
             <input
               value={t.theBooking || ''}
-              // onChange={(e) => handleInputChange(idx, e)}
               onChange={(e) =>
                 handleInputChange(idx, {
                   propName: 'theBooking',
@@ -209,19 +216,9 @@ const BookDet = ({ bookDay }) => {
               // title is a tooltip only for debugging
               // remove it in production
               title={
-                'wpId:' +
-                t.theWpId +
-                ' idx:' +
-                idx +
-                ' inError:' +
-                t.inError +
-                ' booking:' +
-                t.theBooking +
-                ' toUpd:' +
-                t.toUpd +
-                ' toEdit:' +
-                t.toEdit
-              }
+                'wpId:' + t.theWpId + ', idx:' + idx + ', inError:' + t.inError +
+                ', booking:' + t.theBooking + ', toUpd:' + t.toUpd + ', toEdit:' + t.toEdit + 
+                ', hasChanged:' + t.hasChanged }
             />
           </td>
         );
