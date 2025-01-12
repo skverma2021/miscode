@@ -2,7 +2,6 @@ import React from 'react';
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import userContext from '../context/appUser/UserContext';
-import { BookingContext } from '../context/book/BookingContext';
 import BookDet from './BookDet';
 import BookHeader from './BookHeader';
 import { errText, errNumber } from '../util/errMsgText';
@@ -13,44 +12,28 @@ import GoHome from '../util/GoHome';
 const Timesheet = () => {
 
   // State Variables 
-  const [bookDays, setBookDays] = useState([]);
+  const [timesheetData, setTimesheetData] = useState([]);
 
   // status and error handling
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
-
-  // set the context with emp Id, hourly rate, month, and year
-  const bContext = useContext(BookingContext);
-  const { setEmpId, setHourlyRate, setMonth, setYear } = bContext;
-  const { userId, hrRate } = useContext(userContext);
+  const { userId: empId, hrRate, depttId } = useContext(userContext);
   const { m, y } = useParams();
 
   useEffect(() => {
-    setEmpId(userId);
-    setHourlyRate(hrRate);
-    setMonth(m);
-    setYear(y);
-  }, [userId, hrRate, m, y]);
-
-  // get booking dates when the component loads
-  useEffect(() => {
-    getBookingDates();
+    getBookingDet();
   }, []);
-
-  // get booking dates for the month and year 
-  // row: id, theDay, weekDay from allDays table
-  
-  const getBookingDates = async () => {
-    setStatus('busy');
+  const getBookingDet = async () => {
     try {
+      setStatus('busy');
       const res = await axios.get(
-        `http://localhost:3000/api/bookings/bookdates/${m}/${y}`
+        `http://localhost:3000/api/bookings/${empId}/${depttId}/${m}/${y}`
       );
-      setBookDays(res.data);
+      setTimesheetData(res.data);
       setStatus('Success');
     } catch (error) {
       setStatus('Error');
-      setMsg(`[Error loading dates: ${errNumber(error)} - ${errText(error)}] `);
+      setMsg(`[Error-Booking details: ${errNumber(error)} - ${errText(error)}]`);
     }
   };
 
@@ -58,7 +41,7 @@ const Timesheet = () => {
   if (status === 'Error') {
     return <GoHome secs={5000} msg={msg} />
   }
-  if (!userId) return <h1>Login again</h1>;
+  if (!empId) return <h1>Login again</h1>;
   if (status === 'busy') return <Spinner />;
 
   return (
@@ -66,20 +49,11 @@ const Timesheet = () => {
       <table
         style={{ marginTop: '7px', borderCollapse: 'collapse', width: '100%' }}
       >
-        {/* Columns: workPlan details -job, stage, department's share, start, finish etc. */}
         <thead>
-          <BookHeader />
+          <BookHeader empId={empId} month={m} year={y} />
         </thead>
-
-        {/* each <tr> is populated by BookDet component which displays date, and booking made (or yet to be made) by the employee */}
         <tbody>
-          {bookDays.map((d) => {
-            return (
-              <tr key={d.id}>
-                <BookDet bookDay={d} />
-              </tr>
-            );
-          })}
+          <BookDet empId={empId} bookingData={timesheetData} hourlyRate={hrRate} />
         </tbody>
       </table>
     </>

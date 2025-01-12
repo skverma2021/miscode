@@ -43,15 +43,37 @@ router.get('/bookdates/:m/:y', auth, async (req, res) => {
 
 // to fetch workplan id, theBooking, inError, toEdit, toUpd, and hasChanged
 // inError, toEdit, toUpd, and hasChanged are flags to control the booking form
-router.get('/:empId/:dtId', auth, async (req, res) => {
+// router.get('/:empId/:dtId', auth, async (req, res) => {
+//   try {
+//     const { empId, dtId} = req.params;
+//     const pool = await sql.connect(config);
+//     const result = await pool
+//       .request()
+//       .input('empId', sql.Int, empId)
+//       .input('dtId', sql.BigInt, dtId)
+//       .execute('getBookings');
+
+//     res.json(result.recordset);
+//   } catch (err) {
+//     handleError(err, res);
+//   }
+// });
+router.get('/:empId/:depttId/:m/:y', auth, async (req, res) => {
   try {
-    const { empId, dtId} = req.params;
+    // @empId int,
+    // @depttId tinyint,
+    // @m tinyint,
+    // @y int
+    const { empId, depttId, m, y} = req.params;
+    // console.log(empId, depttId, m, y);
     const pool = await sql.connect(config);
     const result = await pool
       .request()
       .input('empId', sql.Int, empId)
-      .input('dtId', sql.BigInt, dtId)
-      .execute('getBookings');
+      .input('depttId', sql.TinyInt, depttId)
+      .input('m', sql.TinyInt, m)
+      .input('y', sql.Int, y)
+      .execute('getBookingsAll');
 
     res.json(result.recordset);
   } catch (err) {

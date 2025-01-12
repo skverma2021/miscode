@@ -2,22 +2,18 @@ import React from 'react';
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { errText, errNumber } from '../util/errMsgText';
-import { BookingContext } from '../context/book/BookingContext';
 import GoHome from '../util/GoHome';
 
-const BookHeader = () => {
+const BookHeader = ({ empId, month, year }) => {
 
     // State Variables  
     const [wpDet, setWpDet] = useState([]);
     const [msg, setMsg] = useState('');
     const [status, setStatus] = useState('');
 
-    const bContext = useContext(BookingContext);
-    const { empId, month, year } = bContext.bookingState;
-
     // get employee's workplans for the selected month
     useEffect(() => {
-        if (empId && month && year) getWpDet();
+        getWpDet();
     }, [empId, month, year]);
 
     const getWpDet = async () => {
@@ -84,7 +80,7 @@ const BookHeader = () => {
                                     </tr>
                                     <tr>
                                         <td>
-                                            <b>{t.nameStage}</b>
+                                            <b>{t.nameStage}</b>[{t.wpId}]
                                         </td>
                                     </tr>
                                     <tr>
@@ -103,9 +99,9 @@ const BookHeader = () => {
                     </td>
                 );
             })}
-            <td style={{ border: '1px solid', background: 'lightgray' }}>
+            {/* <td style={{ border: '1px solid', background: 'lightgray' }}>
                 <strong>save</strong>
-            </td>
+            </td> */}
         </tr>
     );
 };
