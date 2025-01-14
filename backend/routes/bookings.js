@@ -8,13 +8,13 @@ const handleError = require('../util/handleError');
 
 // fetches job description, workplan description, shareVal, usedVal, 
 // and schedule for the month and year
-router.get('/bookheader/:id/:m/:y', auth, async (req, res) => {
+router.get('/bookheader/:depttId/:m/:y', auth, async (req, res) => {
 try {
-    const { id, m, y } = req.params;
+    const { depttId, m, y } = req.params;
     const pool = await sql.connect(config);
     const result = await pool
       .request()
-      .input('id', sql.Int, id)
+      .input('depttId', sql.TinyInt, depttId)
       .input('m', sql.Int, m)
       .input('y', sql.Int, y)
       .execute('getBookHeads');

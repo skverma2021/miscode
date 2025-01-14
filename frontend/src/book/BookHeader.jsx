@@ -4,7 +4,7 @@ import axios from 'axios';
 import { errText, errNumber } from '../util/errMsgText';
 import GoHome from '../util/GoHome';
 
-const BookHeader = ({ empId, month, year }) => {
+const BookHeader = ({ depttId, month, year }) => {
 
     // State Variables  
     const [wpDet, setWpDet] = useState([]);
@@ -14,13 +14,13 @@ const BookHeader = ({ empId, month, year }) => {
     // get employee's workplans for the selected month
     useEffect(() => {
         getWpDet();
-    }, [empId, month, year]);
+    }, [depttId, month, year]);
 
     const getWpDet = async () => {
         setStatus('busy');
         try {
             const res = await axios.get(
-                `http://localhost:3000/api/bookings/bookheader/${empId}/${month}/${year}`
+                `http://localhost:3000/api/bookings/bookheader/${depttId}/${month}/${year}`
             );
             setWpDet(res.data);
             setStatus('Success');

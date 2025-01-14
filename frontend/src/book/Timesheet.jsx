@@ -50,7 +50,7 @@ const Timesheet = () => {
         style={{ marginTop: '7px', borderCollapse: 'collapse', width: '100%' }}
       >
         <thead>
-          <BookHeader empId={empId} month={m} year={y} />
+          <BookHeader depttId={depttId} month={m} year={y} />
         </thead>
         <tbody>
           <BookDet empId={empId} bookingData={timesheetData} hourlyRate={hrRate} />
