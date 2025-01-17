@@ -168,7 +168,15 @@ const BookDet = ({ empId, bookingData, hourlyRate }) => {
   }
 
   return (
-    <><tr><td style={{textAlign:'center', backgroundColor:'Highlight'}}><button onClick={handleUpdAdd}>💾</button></td></tr>
+    <>
+      <tr>
+        <td style={{ textAlign: 'center', backgroundColor: 'Highlight' }}>
+          {bData.length > 0 && <button onClick={handleUpdAdd} title='Save'>
+            💾
+          </button>}
+
+        </td>
+      </tr>
       {Object.keys(groupedData).map((rowKey) => (
         <tr key={rowKey}>
           <td style={{ border: '1px solid', background: 'lightblue', fontSize: 'small' }}>
@@ -201,7 +209,7 @@ const BookDet = ({ empId, bookingData, hourlyRate }) => {
                   fontWeight: `${item.inError ? 'bold' : 'normal'}`,
                 }}
                 title={
-                  'wpId:' + item.theWpId + ', inError:' + item.inError + ', booking:' + item.theBooking + 
+                  'wpId:' + item.theWpId + ', inError:' + item.inError + ', booking:' + item.theBooking +
                   ', toUpd:' + item.toUpd + ', toEdit:' + item.toEdit + ', hasChanged:' + item.hasChanged}
               />
             </td>

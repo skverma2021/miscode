@@ -31,7 +31,7 @@ const BookHeader = ({ depttId, month, year }) => {
     };
 
     if (wpDet.length == 0) {
-        return <h1>Getting Work Plans ... [{wpDet.length}]</h1>;
+        return <tr><td><GoHome secs={3000} msg={'No Workplans found'} /></td></tr>;
     }
 
     if (status === 'Error') {
