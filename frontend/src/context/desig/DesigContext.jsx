@@ -9,10 +9,8 @@ const DesigReducer = (state, action) => {
       return { ...state, discpId: action.payload.discpId, discp: action.payload.discp };
     case 'SET_DESIG':
       return { ...state, desigId: action.payload.desigId, desigDes: action.payload.desigDes, desigGrade: action.payload.desigGrade };
-    case 'SET_DEL_FLAG':
-      return { ...state, delFlag: !state.delFlag };
-    case 'SET_ADD_EDIT_FLAG':
-      return { ...state, addEditFlag: !state.addEditFlag };
+    case 'SET_DESIG_FLAG':
+      return { ...state, desigFlag: !state.desigFlag };
     default:
       return state;
   }
@@ -25,8 +23,7 @@ export const DesigState = (props) => {
     desigId: 0,
     desigDes: '',
     desigGrade: '',
-    delFlag: false,
-    addEditFlag: false,
+    desigFlag: false,
   };
 
   const [state, dispatch] = useReducer(DesigReducer, initialState);
@@ -38,11 +35,8 @@ export const DesigState = (props) => {
     dispatch({ type: 'SET_DESIG', payload: { desigId: id, desigDes: des, desigGrade: grade } });
   };
 
-  const setDelFlag = () => {
-    dispatch({ type: 'SET_DEL_FLAG' });
-  };
-  const setAddEditFlag = () => {
-    dispatch({ type: 'SET_ADD_EDIT_FLAG' });
+  const setDesigFlag = () => {
+    dispatch({ type: 'SET_DESIG_FLAG' });
   };
 
   return (
@@ -51,8 +45,7 @@ export const DesigState = (props) => {
         ...state,
         setDiscp,
         setDesig,
-        setDelFlag,
-        setAddEditFlag,
+        setDesigFlag,
       }}
     >
       {props.children}

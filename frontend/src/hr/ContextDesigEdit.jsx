@@ -16,7 +16,7 @@ const ContextDesigEdit = () => {
     gradeId: '',
   });
   const {
-    setAddEditFlag,
+    setDesigFlag,
     setDesig,
     discpId,
     discp,
@@ -73,7 +73,7 @@ const ContextDesigEdit = () => {
         );
         setStatus('Updated');
       }
-      setAddEditFlag((t) => !t);
+      setDesigFlag((t) => !t);
       setDesig('', '','');
     } catch (error) {
       setStatus('Error');

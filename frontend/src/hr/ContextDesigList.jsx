@@ -13,10 +13,10 @@ const ContextDesigList = () => {
   const [designations, setDesignations] = useState([]);
   const {
     setDesig,
-    setDelFlag,
+    setDesigFlag,
     discpId,
-    delFlag,
-    addEditFlag,
+    desigFlag,
+    // addEditFlag,
   } = useContext(DesigContext);
   const [status, setStatus] = useState('');
   const [msg, setMsg] = useState('');
@@ -24,7 +24,7 @@ const ContextDesigList = () => {
 // fetching data for state variables
   useEffect(() => {
     getAllDesignations();
-  }, [discpId, addEditFlag, delFlag]);
+  }, [discpId, desigFlag]);
   const getAllDesignations = async () => {
     if (discpId === 0) { 
       setDesignations([]); 
@@ -50,7 +50,7 @@ const ContextDesigList = () => {
       const res = await axios.delete(`http://localhost:3000/api/designations/${t}`);
       setStatus('Deleted');
       setMsg(res.data.msg);
-      setDelFlag();
+      setDesigFlag();
     } catch (error) {
       setStatus('Error');
       setMsg(errText(error));

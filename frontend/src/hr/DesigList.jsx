@@ -13,8 +13,8 @@ const DesigList = ({ discpId, discp }) => {
     description: '',
     gradeId: 0,
   });
-  const [delFlag, setDelFlag] = useState(0);
-  const [addEditFlag, setAddEditFlag] = useState(0);
+  const [desigFlag, setDesigFlag] = useState(0);
+
   const [status, setStatus] = useState('');
   const [msg, setMsg] = useState('');
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ const DesigList = ({ discpId, discp }) => {
       description: '',
       gradeId: '',
     });
-  }, [discpId, addEditFlag, delFlag]);
+  }, [discpId, desigFlag]);
 
   const getAllDesignations = async () => {
     setStatus('busy');
@@ -57,7 +57,7 @@ const DesigList = ({ discpId, discp }) => {
       await axios.delete(`http://localhost:3000/api/designations/${t}`);
       setStatus('Deleted');
       setMsg('Successfully Deleted.');
-      setDelFlag((t) => !t);
+      setDesigFlag((t) => !t);
     } catch (error) {
       setStatus('Error');
       setMsg(errText(error));
@@ -125,7 +125,7 @@ const DesigList = ({ discpId, discp }) => {
           theDiscpId={discpId}
           theDiscp={discp}
           theRow={editRow}
-          setFlag={() => setAddEditFlag(t => !t)}
+          setFlag={() => setDesigFlag(t => !t)}
         />
       </div>
     </>
