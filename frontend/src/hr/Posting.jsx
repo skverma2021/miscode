@@ -96,7 +96,7 @@ if (status === 'Error') {
   return (
     <>
       <h5>
-        <button onClick={() => setPosting('', '', '')}>Add</button>
+        {postingId? <button onClick={() => setPosting('', '', '')}>Initialise</button>: 'New Posting'}
       </h5>
         <div style={{ display: 'flex',  justifyContent: 'space-between' }}>
           <SelectControl
@@ -111,7 +111,7 @@ if (status === 'Error') {
             type='date'
             onChange={(e) => setFromDt(e.target.value)}
           />
-          <button onClick={saveRec}>💾</button>
+          <button onClick={saveRec}>{postingId? 'Update':'Add'}</button>
         </div>
     </>
   );

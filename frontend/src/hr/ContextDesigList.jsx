@@ -115,7 +115,7 @@ if (status === 'busy') return <Spinner />;
           })}
           <tr>
             {/*  Designation edit/add window on the bottom right */}
-            <td colSpan={5}>{discpId && <ContextDesigEdit />}</td>
+            <td colSpan={5}>{designations.length > 0 && <ContextDesigEdit />}</td>
           </tr>
         </tbody>
       </table>

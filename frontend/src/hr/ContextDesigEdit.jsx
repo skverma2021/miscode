@@ -99,9 +99,9 @@ if (status === 'busy') return <Spinner />;
   return (
     <>
       <form>
-        <h3>Update Designation in {discp}</h3>
+        <h3><i><u>{theDesig.id ? 'Update the selected': 'Add a new'} Designation in {discp} Discipline</u></i></h3>
         <p style={{ textAlign: 'right' }}>
-          <Link onClick={() => setDesig('', '', '')}>AddNew</Link>
+          {theDesig.id ? <Link onClick={() => setDesig('', '', '')}>Initialize</Link>:'New Designation'}
         </p>
 
         <table style={{ width: '100%', border: '1px solid blue' }}>
@@ -147,7 +147,7 @@ if (status === 'busy') return <Spinner />;
               </td>
               <td>
                 {' '}
-                <Link onClick={() => handleSubmit()}>💾</Link>
+                <Link onClick={() => handleSubmit()}>{theDesig.id ? 'Update': 'Add'}</Link>
               </td>
             </tr>
           </tbody>

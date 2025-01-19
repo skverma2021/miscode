@@ -94,7 +94,7 @@ if (status === 'Error') {
   return (
     <>
       <h5>
-        <button onClick={() => setTransfer('', '', '')}>Add</button>
+        {transferId? <button onClick={() => setTransfer('', '', '')}>Initialise</button>: 'New Transfer'}
       </h5>
         <div style={{ display: 'flex',  justifyContent: 'space-between' }}>
           <SelectControl
@@ -109,7 +109,7 @@ if (status === 'Error') {
             type='date'
             onChange={(e) => setFromDt(e.target.value)}
           />
-          <button onClick={saveRec}>💾</button>
+          <button onClick={saveRec}>{transferId? 'Update':'Add'}</button>
         </div>
     </>
   );
