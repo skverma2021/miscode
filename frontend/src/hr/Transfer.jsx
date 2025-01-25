@@ -93,9 +93,7 @@ if (status === 'Error') {
 }
   return (
     <>
-      <h5>
         {transferId? <button onClick={() => setTransfer('', '', '')}>Initialise</button>: 'New Transfer'}
-      </h5>
         <div style={{ display: 'flex',  justifyContent: 'space-between' }}>
           <SelectControl
             optionsRows={deptts}

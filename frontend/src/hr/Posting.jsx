@@ -95,9 +95,7 @@ if (status === 'Error') {
 }
   return (
     <>
-      <h5>
         {postingId? <button onClick={() => setPosting('', '', '')}>Initialise</button>: 'New Posting'}
-      </h5>
         <div style={{ display: 'flex',  justifyContent: 'space-between' }}>
           <SelectControl
             optionsRows={desigs}
