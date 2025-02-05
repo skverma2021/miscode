@@ -37,7 +37,6 @@ const WorkPlanStages = () => {
     };
 
     // Handling events on the form
-    // t: {stageId, theStage, depttId, startDt, endDt, theVal}
     const sumTheVal = () => {
         let s = 0;
         for (let i = 0; i < stages.length; i++)
@@ -55,9 +54,6 @@ const WorkPlanStages = () => {
         return true;
     };
 
-    // All stages have been pulled from jobExStages
-    // where stageId starts with 1 and goes up to 10
-    // the parameter index has been passed after deducting 1 from stageId
     // create a copy of stages
     // update the propName property at location index with propValue
     // use third bracket [] to access property of object rec
@@ -70,17 +66,12 @@ const WorkPlanStages = () => {
             return updatedStages;
         });
     };
-    const saveRec = async (stageId, depttId, startDt, endDt, theVal, toUpd) => {
-
-        //  t: {stageId, theStage, depttId, startDt, endDt, theVal}
+    const saveRec = async (index, stageId, depttId, startDt, endDt, theVal, toUpd) => {
+        // Alternative 1: You can use inError property to highlight the error in the UI
         // in the next 3 tests the property inError is set to 1 and saveRec exits immediately
         // if any one of the tests fails
-        // stageId-1 is required because stages is an array and starts with 0
-        // 1 indicates Error
-
-        // console.log('Job',jobVal, 'allocation', sumTheVal());
         // if (jobVal < sumTheVal()) {
-        //     handleInputChange(stageId - 1, {
+        //     handleInputChange(index, {
         //         propName: 'inError',
         //         propValue: 1,
         //     });
@@ -88,7 +79,7 @@ const WorkPlanStages = () => {
         //     return;
         // }
         // if (theVal < 0) {
-        //     handleInputChange(stageId - 1, {
+        //     handleInputChange(index, {
         //         propName: 'inError',
         //         propValue: 1,
         //     });
@@ -96,14 +87,14 @@ const WorkPlanStages = () => {
         //     return;
         // }
         // if (endDt < startDt) {
-        //     handleInputChange(stageId - 1, {
+        //     handleInputChange(index, {
         //         propName: 'inError',
         //         propValue: 1,
         //     });
         //     alert('Job cannot end before it has started!');
         //     return;
         // }
-
+        // Alternative 2: You can use the okSubmit function to check all conditions
         setStatus('busy');
         try {
             if (toUpd == 0) {
@@ -127,23 +118,18 @@ const WorkPlanStages = () => {
                 );
             }
             setStatus('Success');
-
-            // even if it is an insert case with toUpd = 0
-            // it qualifies for update after it has been saved once
-
-            // now it is time to set toUpd = 1 so that it becomes an update case
-            handleInputChange(stageId - 1, {
+            // even if it is an insert template with toUpd = 0
+            // it becomes an update template after it has been saved once
+            handleInputChange(index, {
                 propName: 'toUpd',
                 propValue: 1,
             });
-            // also, it is time to set inError = 0 to indicate an OK condition
-            handleInputChange(stageId - 1, {
-                propName: 'inError',
-                propValue: 0,
-            });
-            // setAllocatedVal(sumTheVal())
+            // For Alternative-1: insert or update succeeded so, set inError = 0 to indicate an OK condition
+            // handleInputChange(index, {
+            //     propName: 'inError',
+            //     propValue: 0,
+            // });
         } catch (error) {
-
             // It must be a system error because user inputs have already been checked
             // So, it is time to close and navigate back to home page
             setStatus('Error');
@@ -187,25 +173,25 @@ const WorkPlanStages = () => {
             </tr>
           </thead>
           <tbody>
-            {/* t: {stageId, theStage, depttId, startDt, endDt, theVal} */}
-            {stages.map((t) => {
+            {stages.map((item, index) => {
               return (
-                <tr key={t.stageId}>
-                  <td>{t.stageId}</td>
+                <tr key={index}>
+                  <td>{item.stageId}</td>
                   <td
-                    style={{
-                      color: `${t.inError == 1 ? 'red' : 'black'}`,
-                      fontWeight: `${t.inError == 1 ? 'bold' : 'normal'}`,
-                    }}
+                    // apply style based on inError property in case you are using alternative 1
+                    // style={{
+                    //   color: `${item.inError == 1 ? 'red' : 'black'}`,
+                    //   fontWeight: `${item.inError == 1 ? 'bold' : 'normal'}`,
+                    // }}
                   >
-                    {t.theStage}
+                    {item.theStage}
                   </td>
                   <td>
                     <SelectControl
                       optionsRows={deptts}
-                      selectedId={t.depttId}
+                      selectedId={item.depttId}
                       onSelect={(d) =>
-                        handleInputChange(t.stageId - 1, {
+                        handleInputChange(index, {
                           propName: 'depttId',
                           propValue: d,
                         })
@@ -217,13 +203,13 @@ const WorkPlanStages = () => {
                     <input
                       name='startDt'
                       id='startDt'
-                      value={t.startDt || ''}
+                      value={item.startDt || ''}
                       type='date'
                       min={jobStart}
                       max={jobEnd}
                       required
                       onChange={(e) =>
-                        handleInputChange(t.stageId - 1, {
+                        handleInputChange(index, {
                           propName: 'startDt',
                           propValue: e.target.value,
                         })
@@ -234,13 +220,13 @@ const WorkPlanStages = () => {
                     <input
                       name='endDt'
                       id='endDt'
-                      value={t.endDt || ''}
+                      value={item.endDt || ''}
                       type='date'
                       min={jobStart}
                       max={jobEnd}
                       required
                       onChange={(e) =>
-                        handleInputChange(t.stageId - 1, {
+                        handleInputChange(index, {
                           propName: 'endDt',
                           propValue: e.target.value,
                         })
@@ -252,9 +238,9 @@ const WorkPlanStages = () => {
                       name='theVal'
                       id='theVal'
                       type='number'
-                      value={t.theVal || ''}
+                      value={item.theVal || ''}
                       onChange={(e) =>
-                        handleInputChange(t.stageId - 1, {
+                        handleInputChange(index, {
                           propName: 'theVal',
                           propValue: e.target.value,
                         })
@@ -265,17 +251,18 @@ const WorkPlanStages = () => {
                     <button
                       onClick={() =>
                         saveRec(
-                          t.stageId,
-                          t.depttId,
-                          t.startDt,
-                          t.endDt,
-                          t.theVal,
-                          t.toUpd
+                          index,
+                          item.stageId,
+                          item.depttId,
+                          item.startDt,
+                          item.endDt,
+                          item.theVal,
+                          item.toUpd
                         )
                       }
                       type='submit'
                       disabled={
-                        !okSubmit(t.depttId, t.startDt, t.endDt, t.theVal)
+                        !okSubmit(item.depttId, item.startDt, item.endDt, item.theVal)
                       }
                     >
                       save
