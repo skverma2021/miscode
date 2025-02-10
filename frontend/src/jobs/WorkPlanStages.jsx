@@ -48,16 +48,17 @@ const WorkPlanStages = () => {
         if (!startDt) return false;
         if (!endDt) return false;
         if (!theVal) return false;
-        if (theVal <= 0) return false;
-        if (endDt < startDt) return false;
-        if (jobVal < sumTheVal()) return false;
+        // an alternative approach to keep submit button disabled
+        // if (theVal <= 0) return false;
+        // if (endDt < startDt) return false;
+        // if (jobVal < sumTheVal()) return false;
         return true;
     };
 
-    // create a copy of stages
+    // create a copy of stages array
     // update the propName property at location index with propValue
     // use third bracket [] to access property of object rec
-    // returning updatedStages replaces stages with its updated version
+    // returning updatedStages replaces stages array with its updated version
 
     const handleInputChange = (index, rec) => {
         setStages((prevStages) => {
@@ -67,34 +68,34 @@ const WorkPlanStages = () => {
         });
     };
     const saveRec = async (index, stageId, depttId, startDt, endDt, theVal, toUpd) => {
-        // Alternative 1: You can use inError property to highlight the error in the UI
-        // in the next 3 tests the property inError is set to 1 and saveRec exits immediately
-        // if any one of the tests fails
-        // if (jobVal < sumTheVal()) {
-        //     handleInputChange(index, {
-        //         propName: 'inError',
-        //         propValue: 1,
-        //     });
-        //     alert('Allocation exceeded the Job Value!');
-        //     return;
-        // }
-        // if (theVal < 0) {
-        //     handleInputChange(index, {
-        //         propName: 'inError',
-        //         propValue: 1,
-        //     });
-        //     alert('Allocation cannot be negative!');
-        //     return;
-        // }
-        // if (endDt < startDt) {
-        //     handleInputChange(index, {
-        //         propName: 'inError',
-        //         propValue: 1,
-        //     });
-        //     alert('Job cannot end before it has started!');
-        //     return;
-        // }
-        // Alternative 2: You can use the okSubmit function to check all conditions
+        // in the next 3 tests the property inError is set to 1 and 
+        // saveRec exits immediately if any one of the tests fails
+
+        if (jobVal < sumTheVal()) {
+            handleInputChange(index, {
+                propName: 'inError',
+                propValue: 1,
+            });
+            alert('Allocation exceeded the Job Value!');
+            return;
+        }
+        if (theVal < 0) {
+            handleInputChange(index, {
+                propName: 'inError',
+                propValue: 1,
+            });
+            alert('Allocation cannot be negative!');
+            return;
+        }
+        if (endDt < startDt) {
+            handleInputChange(index, {
+                propName: 'inError',
+                propValue: 1,
+            });
+            alert('Job cannot end before it has started!');
+            return;
+        }
+
         setStatus('busy');
         try {
             if (toUpd == 0) {
@@ -124,11 +125,11 @@ const WorkPlanStages = () => {
                 propName: 'toUpd',
                 propValue: 1,
             });
-            // For Alternative-1: insert or update succeeded so, set inError = 0 to indicate an OK condition
-            // handleInputChange(index, {
-            //     propName: 'inError',
-            //     propValue: 0,
-            // });
+
+            handleInputChange(index, {
+                propName: 'inError',
+                propValue: 0,
+            });
         } catch (error) {
             // It must be a system error because user inputs have already been checked
             // So, it is time to close and navigate back to home page
@@ -178,11 +179,10 @@ const WorkPlanStages = () => {
                 <tr key={index}>
                   <td>{item.stageId}</td>
                   <td
-                    // apply style based on inError property in case you are using alternative 1
-                    // style={{
-                    //   color: `${item.inError == 1 ? 'red' : 'black'}`,
-                    //   fontWeight: `${item.inError == 1 ? 'bold' : 'normal'}`,
-                    // }}
+                    style={{
+                      color: `${item.inError == 1 ? 'red' : 'black'}`,
+                      fontWeight: `${item.inError == 1 ? 'bold' : 'normal'}`,
+                    }}
                   >
                     {item.theStage}
                   </td>

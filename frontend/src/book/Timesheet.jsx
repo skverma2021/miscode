@@ -41,7 +41,6 @@ const Timesheet = () => {
   if (status === 'Error') {
     return <GoHome secs={5000} msg={msg} />
   }
-  if (!empId) return <h1>Login again</h1>;
   if (status === 'busy') return <Spinner />;
 
   return (
