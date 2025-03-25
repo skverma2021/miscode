@@ -44,7 +44,7 @@ const BookDet = ({ empId, bookingData, hourlyRate }) => {
     // console.log('handleUpdAdd');
     bData.map((t) => {
       // t represents one of the bookings belonging to the day and a workplan
-      // t: theDate, theDateId, theRow, theCol, theWpId, theBooking,  toUpd, inError, toEdit, hasChanged
+      // t: theDate, theDateId, theRow, theCol, theWpId, theBooking,  toUpd, inError, enabled, hasChanged
 
       // move to next booking if no change
       if (t.hasChanged == 0) return;
@@ -199,18 +199,18 @@ const BookDet = ({ empId, bookingData, hourlyRate }) => {
                     theValue: e.target.value,
                   })
                 }
-                disabled={item.toEdit == 0}
+                disabled={item.enabled == 0}
                 style={{
                   border: 'none',
                   padding: '0',
                   width: '100%',
                   color: `${item.inError ? 'red' : 'black'}`,
-                  background: `${item.toEdit == 1 && 'lightgrey'}`,
+                  background: `${item.enabled == 1 && 'lightgrey'}`,
                   fontWeight: `${item.inError ? 'bold' : 'normal'}`,
                 }}
                 title={
                   'wpId:' + item.theWpId + ', inError:' + item.inError + ', booking:' + item.theBooking +
-                  ', toUpd:' + item.toUpd + ', toEdit:' + item.toEdit + ', hasChanged:' + item.hasChanged}
+                  ', toUpd:' + item.toUpd + ', enabled:' + item.enabled + ', hasChanged:' + item.hasChanged}
               />
             </td>
           ))}
