@@ -32,11 +32,11 @@ const BookMonthYear = () => {
               />
             </td></tr>
             <tr><td>
-              <Link
+              {mtext !== '' && <Link
                 to={`/booking/${mtext.substring(5, 7)}/${mtext.substring(0, 4)}`}
               >
                 <br /><small><i>Log Hours Worked [for Year - Month: {mtext}]</i></small>
-              </Link>
+              </Link> }
             </td></tr>
           </tbody>
 
