@@ -1,6 +1,6 @@
 const theConfig = require('config');
 
-const config = {
+const dbConfig = {
   // server: 'SKVERMA',
   server: theConfig.get('theDB'),
   database: 'sern',
@@ -11,4 +11,4 @@ const config = {
 
 //PS C:\uproj-three\node> $env:cjisPass="theApiUser"
 
-module.exports = config;
+module.exports = dbConfig;
