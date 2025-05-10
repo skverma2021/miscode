@@ -27,11 +27,13 @@ const ChangePass = () => {
   
   // Navigation and TimeOut
   const navigate = useNavigate();
-  let timeoutId;
+  // let timeoutId;
   const goHome = () => {
     navigate('/');
   };
   useEffect(() => {
+    const timeoutId = (status === 'Error' || status === 'Success') && setTimeout(goHome, 2000);
+
     return () => clearTimeout(timeoutId);
   }, []);
 
@@ -52,12 +54,10 @@ const ChangePass = () => {
       logOutUser();
       setMsg(res.data.msg);
       setStatus('Success');
-      timeoutId = setTimeout(goHome, 2000);
     } catch (error) {
       logOutUser();
       setStatus('Error');
       setMsg(errText(error));
-      timeoutId = setTimeout(goHome, 2000);
     }
   };
 

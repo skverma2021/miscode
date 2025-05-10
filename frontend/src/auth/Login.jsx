@@ -3,6 +3,7 @@ import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '../home/Spinner';
 import userContext from '../context/appUser/UserContext';
+import Home from '../home/Home'
 
 const Login = () => {
   // State Variables
@@ -15,11 +16,17 @@ const Login = () => {
 
   // Navigation and TimeOut
   const navigate = useNavigate();
-  let timeoutId;
   const goHome = () => {
     navigate('/');
   };
   useEffect(() => {
+    const timeoutId =
+  status === 'Success'
+    ? setTimeout(goHome, 500)
+    : status === 'Error'
+    ? setTimeout(goHome, 1000)
+    : null;
+
     return () => clearTimeout(timeoutId);
   }, []);
   
@@ -37,10 +44,11 @@ const Login = () => {
     event.preventDefault();
     try {
       await authUser(emp.eMail, emp.pass);
-      timeoutId = setTimeout(goHome, 500);
+      setStatus('Success');
+      // timeoutId = setTimeout(goHome, 500);
     } catch (error) {
       setStatus('error');
-      timeoutId = setTimeout(goHome, 1000);
+      // timeoutId = setTimeout(goHome, 1000);
       console.log(error);
     }
   };
@@ -50,6 +58,8 @@ const Login = () => {
     return <h1 style={{ color: 'blue' }}>Error Occured !</h1>;
   }
   if (status === 'busy') return <Spinner />;
+  if (status === 'Success') return <Home />;
+
   return (
     <div
       style={{
