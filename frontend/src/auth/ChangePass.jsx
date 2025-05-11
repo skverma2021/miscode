@@ -27,7 +27,6 @@ const ChangePass = () => {
   
   // Navigation and TimeOut
   const navigate = useNavigate();
-  // let timeoutId;
   const goHome = () => {
     navigate('/');
   };
@@ -35,7 +34,7 @@ const ChangePass = () => {
     const timeoutId = (status === 'Error' || status === 'Success') && setTimeout(goHome, 2000);
 
     return () => clearTimeout(timeoutId);
-  }, []);
+  }, [status, navigate]);
 
 // Handling Events on the Form
   const onValChange = (e) => {

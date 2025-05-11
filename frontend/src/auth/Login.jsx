@@ -20,16 +20,19 @@ const Login = () => {
     navigate('/');
   };
   useEffect(() => {
-    const timeoutId =
-  status === 'Success'
-    ? setTimeout(goHome, 500)
-    : status === 'Error'
-    ? setTimeout(goHome, 1000)
-    : null;
+    let timeoutId;
+
+    if (status === 'busy') {
+      // Successful login triggers a short delay
+      timeoutId = setTimeout(() => navigate('/'), 500);
+    } else if (status === 'error') {
+      // Error case triggers a longer delay
+      timeoutId = setTimeout(() => navigate('/'), 1000);
+    }
 
     return () => clearTimeout(timeoutId);
-  }, []);
-  
+  }, [status, navigate]);
+
   // Handling Events on the Form
   const okSubmit = () => {
     if (emp.eMail.length == 0) return false;
@@ -53,7 +56,7 @@ const Login = () => {
     }
   };
 
-// User Interface
+  // User Interface
   if (status === 'error') {
     return <h1 style={{ color: 'blue' }}>Error Occured !</h1>;
   }
