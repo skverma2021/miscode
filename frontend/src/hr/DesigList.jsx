@@ -3,8 +3,8 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { errText } from '../util/errMsgText';
 import Spinner from '../home/Spinner';
-import { useNavigate } from 'react-router-dom';
 import DesigEdit from './DesigEdit';
+import GoHome from '../util/GoHome';
 
 const DesigList = ({ discpId, discp }) => {
   const [designations, setDesignations] = useState([]);
@@ -14,27 +14,12 @@ const DesigList = ({ discpId, discp }) => {
     gradeId: 0,
   });
   const [desigFlag, setDesigFlag] = useState(0);
-
   const [status, setStatus] = useState('');
   const [msg, setMsg] = useState('');
-  const navigate = useNavigate();
 
-  let timeoutId;
-  const goHome = () => {
-    navigate('/');
-  };
-
-  useEffect(() => {
-    return () => clearTimeout(timeoutId);
-  }, []);
-  
   useEffect(() => {
     getAllDesignations();
-    setEditRow({
-      id: '',
-      description: '',
-      gradeId: '',
-    });
+    setEditRow({ id: '', description: '', gradeId: '' });
   }, [discpId, desigFlag]);
 
   const getAllDesignations = async () => {
@@ -65,15 +50,16 @@ const DesigList = ({ discpId, discp }) => {
   };
 
   if (status === 'Error') {
-    timeoutId = setTimeout(goHome, 5000);
     return (
-      <h1 style={{ color: 'red' }}>
-        Error: Disciplines could not be loaded [ {msg} ]
-      </h1>
+      <GoHome
+        secs={5000}
+        msg={`Error: Disciplines could not be loaded [ ${msg} ]`}
+      />
     );
   }
 
   if (status === 'busy') return <Spinner />;
+
   return (
     <>
       <table style={{ width: '100%', border: '1px solid blue' }}>
@@ -87,45 +73,38 @@ const DesigList = ({ discpId, discp }) => {
           </tr>
         </thead>
         <tbody>
-          {designations.map((t) => {
-            return (
-              <tr key={t.id}>
-                <td>{t.theDesig}</td>
-                <td>{t.theGrade}</td>
-                <td>{t.theHourlyRate}</td>
-                <td>
-                  <Link
-                    onClick={() => {
-                      setEditRow({
-                        id: `${t.id}`,
-                        description: `${t.theDesig}`,
-                        gradeId: `${t.theGradeId}`,
-                      });
-                    }}
-                  >
-                    🖍️
-                  </Link>
-                </td>
-                <td>
-                  <Link
-                    onClick={() => {
-                      deleteDesigData(t.id);
-                    }}
-                  >
-                    ✖️
-                  </Link>
-                </td>
-              </tr>
-            );
-          })}
+          {designations.map((t) => (
+            <tr key={t.id}>
+              <td>{t.theDesig}</td>
+              <td>{t.theGrade}</td>
+              <td>{t.theHourlyRate}</td>
+              <td>
+                <Link
+                  onClick={() => {
+                    setEditRow({
+                      id: `${t.id}`,
+                      description: `${t.theDesig}`,
+                      gradeId: `${t.theGradeId}`,
+                    });
+                  }}
+                >
+                  🖍️
+                </Link>
+              </td>
+              <td>
+                <Link onClick={() => deleteDesigData(t.id)}>✖️</Link>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
+
       <div>
         <DesigEdit
           theDiscpId={discpId}
           theDiscp={discp}
           theRow={editRow}
-          setFlag={() => setDesigFlag(t => !t)}
+          setFlag={() => setDesigFlag((t) => !t)}
         />
       </div>
     </>

@@ -1,17 +1,13 @@
-import React from 'react';
-import { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { TPContext } from '../context/tp/TPContext';
 import { errText } from '../util/errMsgText';
 import Spinner from '../home/Spinner';
+import GoHome from '../util/GoHome';
 
 const TransferTrail = () => {
-
-// State Variables
   const [transfers, setTransfers] = useState([]);
-  
   const [status, setStatus] = useState('');
   const [msg, setMsg] = useState('');
 
@@ -19,7 +15,6 @@ const TransferTrail = () => {
   const { transferFlag, empId } = tpContext.tpState;
   const { toggleTransferFlag, setTransfer } = tpContext;
 
-// Updating State
   useEffect(() => {
     const fetchData = async () => {
       setStatus('busy');
@@ -37,7 +32,6 @@ const TransferTrail = () => {
     if (empId) fetchData();
   }, [transferFlag]);
 
-// Handling events on the form
   const deleteTransfer = async (theEmpDepttId) => {
     setStatus('busy');
     try {
@@ -52,22 +46,11 @@ const TransferTrail = () => {
     }
   };
 
-// Navigation and TimeOut
-  const navigate = useNavigate();
-  let timeoutId;
-  const goHome = () => {
-    navigate('/');
-  };
-  useEffect(() => {
-    return () => clearTimeout(timeoutId);
-  }, []);
+  if (status === 'busy') return <Spinner />;
+  if (status === 'Error') {
+    return <GoHome secs={5000} msg={`Error: ${msg}`} />;
+  }
 
-// User Interface
-if (status === 'busy') return <Spinner />;
-if (status === 'Error') {
-  timeoutId = setTimeout(goHome, 5000);
-  return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
-}
   return (
     <>
       <h4>Past Transfers</h4>
@@ -97,16 +80,13 @@ if (status === 'Error') {
             <div style={{ width: '45%', border: '1px solid black' }}>
               {t.theFromDt}
             </div>
-            {/*  to initialize the context with record to be updated */}
-            {/*  The record will be made available in the lower edit window */}
             <div style={{ width: '5%', border: '1px solid black' }}>
               <Link onClick={() => setTransfer(t.theId, t.theDepttId, t.theFromDt)}>
                 🖍️
               </Link>
             </div>
-            {/* will execute delete and also reset trail window */}
             <div style={{ width: '5%', border: '1px solid black' }}>
-              <Link onClick={() => deleteTransfer(`${t.theId}`)}> ✖️</Link>
+              <Link onClick={() => deleteTransfer(`${t.theId}`)}>✖️</Link>
             </div>
           </div>
         );
@@ -114,4 +94,5 @@ if (status === 'Error') {
     </>
   );
 };
+
 export default TransferTrail;

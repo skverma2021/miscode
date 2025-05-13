@@ -3,14 +3,9 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { errText } from '../util/errMsgText';
 import Spinner from '../home/Spinner';
-import { useNavigate } from 'react-router-dom';
+import GoHome from '../util/GoHome';
 
-const DesigEdit = ({
-  theDiscpId,
-  theDiscp,
-  theRow,
-  setFlag,
-}) => {
+const DesigEdit = ({ theDiscpId, theDiscp, theRow, setFlag }) => {
   const [grades, setGrades] = useState([]);
   const [theDesig, setTheDesig] = useState({
     id: 0,
@@ -19,17 +14,7 @@ const DesigEdit = ({
   });
   const [status, setStatus] = useState('');
   const [msg, setMsg] = useState('');
-  const navigate = useNavigate();
 
-  let timeoutId;
-  const goHome = () => {
-    navigate('/');
-  };
-
-  useEffect(() => {
-    return () => clearTimeout(timeoutId);
-  }, []);
-  
   useEffect(() => {
     setTheDesig({
       id: theRow.id,
@@ -53,6 +38,7 @@ const DesigEdit = ({
       setMsg(errText(error));
     }
   };
+
   const onValChange = (e) => {
     setTheDesig({ ...theDesig, [e.target.name]: e.target.value });
   };
@@ -62,7 +48,6 @@ const DesigEdit = ({
     try {
       if (theDesig.id == 0) {
         await axios.post('http://localhost:3000/api/designations', {
-          // id to be computed by postDesignation stored procedure
           discpId: theDiscpId,
           description: theDesig.description,
           gradeId: theDesig.gradeId,
@@ -87,15 +72,16 @@ const DesigEdit = ({
   };
 
   if (status === 'Error') {
-    timeoutId = setTimeout(goHome, 5000);
     return (
-      <h1 style={{ color: 'red' }}>
-        Error: Disciplines could not be loaded [ {msg} ]
-      </h1>
+      <GoHome
+        secs={5000}
+        msg={`Error: Disciplines could not be loaded [ ${msg} ]`}
+      />
     );
   }
 
   if (status === 'busy') return <Spinner />;
+
   return (
     <>
       <form>
@@ -116,9 +102,7 @@ const DesigEdit = ({
                   minLength={3}
                   required
                   value={theDesig.description || ''}
-                  onChange={(e) => {
-                    return onValChange(e);
-                  }}
+                  onChange={onValChange}
                   type='text'
                   size={45}
                 />
@@ -128,22 +112,17 @@ const DesigEdit = ({
                   name='gradeId'
                   id='gradeId'
                   value={theDesig.gradeId || ''}
-                  onChange={(e) => {
-                    return onValChange(e);
-                  }}
+                  onChange={onValChange}
                 >
-                  {grades.map((g) => {
-                    return (
-                      <option key={g.id} value={g.id}>
-                        {g.description + ' [' + g.hourlyRate + ']'}
-                      </option>
-                    );
-                  })}
+                  {grades.map((g) => (
+                    <option key={g.id} value={g.id}>
+                      {g.description + ' [' + g.hourlyRate + ']'}
+                    </option>
+                  ))}
                 </select>
               </td>
               <td>
-                {' '}
-                <Link onClick={() => handleSubmit()}>💾</Link>
+                <Link onClick={handleSubmit}>💾</Link>
               </td>
             </tr>
           </tbody>

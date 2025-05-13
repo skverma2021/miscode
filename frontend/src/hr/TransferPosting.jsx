@@ -1,6 +1,5 @@
-import React from 'react';
-import { useState, useEffect, useContext } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Posting from './Posting';
 import Transfer from './Transfer';
@@ -9,23 +8,26 @@ import TransferTrail from './TransferTrail';
 import { TPContext } from '../context/tp/TPContext';
 import { errText } from '../util/errMsgText';
 import Spinner from '../home/Spinner';
+import GoHome from '../util/GoHome';
 
 const TransferPosting = () => {
-
-// State Variables
   const [empDet, setEmpDet] = useState({});
   const [status, setStatus] = useState('');
   const [msg, setMsg] = useState('');
-  
+
   const tpContext = useContext(TPContext);
   const { postingFlag, transferFlag } = tpContext.tpState;
   const { setEmp } = tpContext;
-  
-  // Updating State
+
   const { id } = useParams();
-  useEffect(()=>{
-    setEmp(id)
-  },[id]);
+
+  useEffect(() => {
+    setEmp(id);
+  }, [id]);
+
+  useEffect(() => {
+    getEmpDet();
+  }, [postingFlag, transferFlag]);
 
   const getEmpDet = async () => {
     setStatus('busy');
@@ -39,27 +41,13 @@ const TransferPosting = () => {
       setStatus('Error');
       setMsg(errText(error));
     }
-  };  
-   useEffect(() => {
-    getEmpDet();
-  }, [postingFlag, transferFlag]); 
-
-// Navigation and TimeOut
-  const navigate = useNavigate();
-  let timeoutId;
-  const goHome = () => {
-    navigate('/');
   };
-  useEffect(() => {
-    return () => clearTimeout(timeoutId);
-  }, []);
 
-// User Interface
   if (status === 'busy') return <Spinner />;
   if (status === 'Error') {
-    timeoutId = setTimeout(goHome, 5000);
-    return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
+    return <GoHome secs={5000} msg={`Error: ${msg}`} />;
   }
+
   return (
     <>
       <div
@@ -71,7 +59,6 @@ const TransferPosting = () => {
         }}
       >
         <div style={{ marginBottom: '25px' }}>
-          {/* empDetails */}
           <div>
             <b>{empDet.theName}</b> {empDet.theDesig}, [{empDet.theGrade}]
           </div>
@@ -94,11 +81,9 @@ const TransferPosting = () => {
               height: '50vh',
             }}
           >
-            {/* Shows all change in designation */}
             <div style={{ padding: '10px', height: '40vh' }}>
               <PostingTrail />
             </div>
-            {/* shows the edit window for adding/updating any change in designation */}
             <div style={{ padding: '10px' }}>
               <Posting />
             </div>
@@ -114,11 +99,9 @@ const TransferPosting = () => {
               height: '50vh',
             }}
           >
-            {/* Shows all change in department */}
             <div style={{ padding: '10px', height: '40vh' }}>
               <TransferTrail />
             </div>
-            {/* shows the edit window for adding/updating any change in department */}
             <div style={{ padding: '10px' }}>
               <Transfer />
             </div>

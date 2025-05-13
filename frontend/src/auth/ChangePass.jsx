@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import Spinner from '../home/Spinner';
 import userContext from '../context/appUser/UserContext';
 import { errText } from '../util/errMsgText';
+import GoHome from '../util/GoHome'; // Import GoHome component
 
 const ChangePass = () => {
-
-  // State Variables
   const [pass, setPass] = useState({
     email: '',
     oldPass: '',
@@ -17,29 +15,20 @@ const ChangePass = () => {
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
   const { userId, logOutUser } = useContext(userContext);
+
   useEffect(() => {
     setPass({
       ...pass,
       email: 'Enter eMail and Password',
       oldPass: 'xxxxxx',
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
-  // Navigation and TimeOut
-  const navigate = useNavigate();
-  const goHome = () => {
-    navigate('/');
-  };
-  useEffect(() => {
-    const timeoutId = (status === 'Error' || status === 'Success') && setTimeout(goHome, 2000);
 
-    return () => clearTimeout(timeoutId);
-  }, [status, navigate]);
-
-// Handling Events on the Form
   const onValChange = (e) => {
     setPass({ ...pass, [e.target.name]: e.target.value });
   };
+
   const handlePassChange = async (event) => {
     setStatus('busy');
     event.preventDefault();
@@ -60,120 +49,99 @@ const ChangePass = () => {
     }
   };
 
-  // User Interface
-  if (status === 'Error') return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
-  if (status === 'Success') return <h1 style={{ color: 'blue' }}>{msg}</h1>;
+  // Replace conditional UI with GoHome for timed redirection
+  if (status === 'Error') return <GoHome secs={2000} msg={`Error: ${msg}`} />;
+  if (status === 'Success') return <GoHome secs={2000} msg={msg} />;
   if (status === 'busy') return <Spinner />;
+
   return (
-    <>
-      <div
-        style={{
-          marginTop: '100px',
-          height: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignContent: 'center',
-        }}
-      >
-        <div>
-          <form onSubmit={handlePassChange}>
-            <table style={{ lineHeight: '75px' }}>
-              <tbody>
-                <tr>
-                  <td colSpan={3}>
-                    <h2>Login</h2>
-                  </td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>
-                    <label>eMail</label>
-                  </td>
-                  <td>:</td>
-                  <td>
-                    <input
-                      type='email'
-                      name='email'
-                      value={pass.email || ''}
-                      onChange={(e) => {
-                        return onValChange(e);
-                      }}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label>Old Password</label>
-                  </td>
-                  <td>:</td>
-                  <td>
-                    <input
-                      type='password'
-                      name='oldPass'
-                      value={pass.oldPass || ''}
-                      onChange={(e) => {
-                        return onValChange(e);
-                      }}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label>New Password</label>
-                  </td>
-                  <td>:</td>
-                  <td>
-                    <input
-                      type='password'
-                      name='newPass'
-                      value={pass.newPass || ''}
-                      onChange={(e) => {
-                        return onValChange(e);
-                      }}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label>Repeat Password</label>
-                  </td>
-                  <td>:</td>
-                  <td>
-                    <input
-                      type='password'
-                      name='repeatPass'
-                      value={pass.repeatPass || ''}
-                      onChange={(e) => {
-                        return onValChange(e);
-                      }}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <button
-                      type='submit'
-                      disabled={
-                        !pass.email ||
-                        !pass.oldPass ||
-                        !pass.newPass ||
-                        !pass.repeatPass ||
-                        pass.newPass !== pass.repeatPass
-                      }
-                    >
-                      Update
-                    </button>
-                  </td>
-                  <td></td>
-                  <td></td>
-                </tr>
-              </tbody>
-            </table>
-          </form>
-        </div>
+    <div
+      style={{
+        marginTop: '100px',
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignContent: 'center',
+      }}
+    >
+      <div>
+        <form onSubmit={handlePassChange}>
+          <table style={{ lineHeight: '75px' }}>
+            <tbody>
+              <tr>
+                <td colSpan={3}>
+                  <h2>Login</h2>
+                </td>
+              </tr>
+              <tr>
+                <td><label>eMail</label></td>
+                <td>:</td>
+                <td>
+                  <input
+                    type='email'
+                    name='email'
+                    value={pass.email || ''}
+                    onChange={onValChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td><label>Old Password</label></td>
+                <td>:</td>
+                <td>
+                  <input
+                    type='password'
+                    name='oldPass'
+                    value={pass.oldPass || ''}
+                    onChange={onValChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td><label>New Password</label></td>
+                <td>:</td>
+                <td>
+                  <input
+                    type='password'
+                    name='newPass'
+                    value={pass.newPass || ''}
+                    onChange={onValChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td><label>Repeat Password</label></td>
+                <td>:</td>
+                <td>
+                  <input
+                    type='password'
+                    name='repeatPass'
+                    value={pass.repeatPass || ''}
+                    onChange={onValChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <button
+                    type='submit'
+                    disabled={
+                      !pass.email ||
+                      !pass.oldPass ||
+                      !pass.newPass ||
+                      !pass.repeatPass ||
+                      pass.newPass !== pass.repeatPass
+                    }
+                  >
+                    Update
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </form>
       </div>
-    </>
+    </div>
   );
 };
 

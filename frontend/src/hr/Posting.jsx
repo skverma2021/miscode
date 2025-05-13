@@ -1,22 +1,20 @@
-import React from 'react';
-import { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { TPContext } from '../context/tp/TPContext';
 import { errText } from '../util/errMsgText';
 import SelectControl from '../util/SelectControl';
 import Spinner from '../home/Spinner';
+import GoHome from '../util/GoHome';
 
 const Posting = () => {
-
-// State Variables
-  // for input controls in the form
+  // Input state
   const [theDesig, setTheDesig] = useState('');
   const [fromDt, setFromDt] = useState('');
 
-  // options for select control
+  // Dropdown options
   const [desigs, setPostings] = useState([]);
 
+  // Status handling
   const [status, setStatus] = useState('');
   const [msg, setMsg] = useState('');
 
@@ -24,15 +22,13 @@ const Posting = () => {
   const { postingId, postingDesigId, postingDt, empId } = tpContext.tpState;
   const { setPosting, togglePostingFlag } = tpContext;
 
-// Updating State
-  // to initialise lower window with context
-  // the context gets filled by edit button in
-  // trail window using setter by context
+  // Sync state with context on edit
   useEffect(() => {
     setTheDesig(postingDesigId);
     setFromDt(postingDt);
   }, [postingDesigId, postingDt]);
 
+  // Fetch dropdown data
   useEffect(() => {
     const fetchData = async () => {
       setStatus('busy');
@@ -50,22 +46,22 @@ const Posting = () => {
     fetchData();
   }, []);
 
-// Handling events on the form
+  // Save data
   const saveRec = async () => {
-    if (theDesig == '') return;
+    if (theDesig === '') return;
     setStatus('busy');
     try {
       if (postingId) {
         await axios.put(`http://localhost:3000/api/tp/empDesig/${postingId}`, {
-          empId: empId, // parameter received
-          desigId: theDesig, // state variable
-          fromDt: fromDt, // state variable
+          empId,
+          desigId: theDesig,
+          fromDt,
         });
       } else {
-        await axios.post('http://localhost:3000/api/tp/empdesig', {
-          empId: empId, // parameter received
-          desigId: theDesig, // state variable
-          fromDt: fromDt, // state variable
+        await axios.post(`http://localhost:3000/api/tp/empdesig`, {
+          empId,
+          desigId: theDesig,
+          fromDt,
         });
       }
       togglePostingFlag();
@@ -77,40 +73,34 @@ const Posting = () => {
     }
   };
 
-// Navigation and TimeOut
-  const navigate = useNavigate();
-  let timeoutId;
-  const goHome = () => {
-    navigate('/');
-  };
-  useEffect(() => {
-    return () => clearTimeout(timeoutId);
-  }, []);
+  // UI rendering
+  if (status === 'busy') return <Spinner />;
+  if (status === 'Error') {
+    return <GoHome secs={5000} msg={`Error: ${msg}`} />;
+  }
 
-  // User Interface
-if (status === 'busy') return <Spinner />;
-if (status === 'Error') {
-  timeoutId = setTimeout(goHome, 5000);
-  return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
-}
   return (
     <>
-        {postingId? <button onClick={() => setPosting('', '', '')}>Initialise</button>: 'New Posting'}
-        <div style={{ display: 'flex',  justifyContent: 'space-between' }}>
-          <SelectControl
-            optionsRows={desigs}
-            selectedId={theDesig}
-            onSelect={(d) => setTheDesig(d)}
-            prompt={'Designation'}
-          />
-          <input
-            name='fromDt'
-            value={fromDt}
-            type='date'
-            onChange={(e) => setFromDt(e.target.value)}
-          />
-          <button onClick={saveRec}>{postingId? 'Update':'Add'}</button>
-        </div>
+      {postingId ? (
+        <button onClick={() => setPosting('', '', '')}>Initialise</button>
+      ) : (
+        'New Posting'
+      )}
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <SelectControl
+          optionsRows={desigs}
+          selectedId={theDesig}
+          onSelect={(d) => setTheDesig(d)}
+          prompt="Designation"
+        />
+        <input
+          name="fromDt"
+          value={fromDt}
+          type="date"
+          onChange={(e) => setFromDt(e.target.value)}
+        />
+        <button onClick={saveRec}>{postingId ? 'Update' : 'Add'}</button>
+      </div>
     </>
   );
 };

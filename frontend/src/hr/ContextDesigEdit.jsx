@@ -3,12 +3,10 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { errText } from '../util/errMsgText';
 import Spinner from '../home/Spinner';
-import { useNavigate } from 'react-router-dom';
 import { DesigContext } from '../context/desig/DesigContext';
+import GoHome from '../util/GoHome';
 
 const ContextDesigEdit = () => {
-
-// State Variables
   const [grades, setGrades] = useState([]);
   const [theDesig, setTheDesig] = useState({
     id: 0,
@@ -27,13 +25,14 @@ const ContextDesigEdit = () => {
   const [status, setStatus] = useState('');
   const [msg, setMsg] = useState('');
 
-// fetching data for state variables
   useEffect(() => {
     setTheDesig({ id: desigId, description: desigDes, gradeId: desigGrade });
   }, [desigId, desigDes, desigGrade]);
+
   useEffect(() => {
     getAllGrades();
   }, []);
+
   const getAllGrades = async () => {
     setStatus('busy');
     try {
@@ -46,17 +45,15 @@ const ContextDesigEdit = () => {
     }
   };
 
-// Handling events on the form
   const onValChange = (e) => {
     setTheDesig({ ...theDesig, [e.target.name]: e.target.value });
   };
+
   const handleSubmit = async () => {
     setStatus('busy');
     try {
-      // if (theDesig.id == 0) {
       if (!theDesig.id) {
         await axios.post('http://localhost:3000/api/designations', {
-          // id to be computed by postDesignation stored procedure
           discpId: discpId,
           description: theDesig.description,
           gradeId: theDesig.gradeId,
@@ -74,34 +71,35 @@ const ContextDesigEdit = () => {
         setStatus('Updated');
       }
       setDesigFlag((t) => !t);
-      setDesig('', '','');
+      setDesig('', '', '');
     } catch (error) {
       setStatus('Error');
       setMsg(errText(error));
     }
   };
 
-// Navigation and TimeOut
-  const navigate = useNavigate();
-  let timeoutId;
-  const goHome = () => {
-    navigate('/');
-  };
-  useEffect(() => {
-    return () => clearTimeout(timeoutId);
-  }, []);  
-// User Interface
-if (status === 'Error') {
-  timeoutId = setTimeout(goHome, 5000);
-  return <h1 style={{ color: 'red' }}>Error: [ {msg} ]</h1>;
-}
-if (status === 'busy') return <Spinner />;
+  if (status === 'Error') {
+    return <GoHome secs={5000} msg={`Error: [ ${msg} ]`} />;
+  }
+
+  if (status === 'busy') return <Spinner />;
+
   return (
     <>
       <form>
-        <h3><i><u>{theDesig.id ? 'Update the selected': 'Add a new'} Designation in {discp} Discipline</u></i></h3>
+        <h3>
+          <i>
+            <u>
+              {theDesig.id ? 'Update the selected' : 'Add a new'} Designation in {discp} Discipline
+            </u>
+          </i>
+        </h3>
         <p style={{ textAlign: 'right' }}>
-          {theDesig.id ? <Link onClick={() => setDesig('', '', '')}>Initialize</Link>:'New Designation'}
+          {theDesig.id ? (
+            <Link onClick={() => setDesig('', '', '')}>Initialize</Link>
+          ) : (
+            'New Designation'
+          )}
         </p>
 
         <table style={{ width: '100%', border: '1px solid blue' }}>
@@ -120,9 +118,7 @@ if (status === 'busy') return <Spinner />;
                   minLength={3}
                   required
                   value={theDesig.description || ''}
-                  onChange={(e) => {
-                    return onValChange(e);
-                  }}
+                  onChange={onValChange}
                   type='text'
                   size={45}
                 />
@@ -132,22 +128,19 @@ if (status === 'busy') return <Spinner />;
                   name='gradeId'
                   id='gradeId'
                   value={theDesig.gradeId || ''}
-                  onChange={(e) => {
-                    return onValChange(e);
-                  }}
+                  onChange={onValChange}
                 >
-                  {grades.map((g) => {
-                    return (
-                      <option key={g.id} value={g.id}>
-                        {g.description + ' [' + g.hourlyRate + ']'}
-                      </option>
-                    );
-                  })}
+                  {grades.map((g) => (
+                    <option key={g.id} value={g.id}>
+                      {g.description + ' [' + g.hourlyRate + ']'}
+                    </option>
+                  ))}
                 </select>
               </td>
               <td>
-                {' '}
-                <Link onClick={() => handleSubmit()}>{theDesig.id ? 'Update': 'Add'}</Link>
+                <Link onClick={handleSubmit}>
+                  {theDesig.id ? 'Update' : 'Add'}
+                </Link>
               </td>
             </tr>
           </tbody>

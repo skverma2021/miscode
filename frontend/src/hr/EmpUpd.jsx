@@ -1,14 +1,13 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { errText, errNumber } from '../util/errMsgText';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Spinner from '../home/Spinner';
 import RadioButton from '../util/RadioButton';
 import SelectControl from '../util/SelectControl';
+import { errText, errNumber } from '../util/errMsgText';
+import GoHome from '../util/GoHome';
 
 const EmpUpd = () => {
-// State Variables
   const [emp, setEmp] = useState({});
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
@@ -17,20 +16,20 @@ const EmpUpd = () => {
   const [cities, setCities] = useState([]);
   const { id } = useParams();
 
-// fetching data for state variables
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCities = async () => {
       setCityStatus('busy');
       try {
-        const res = await axios.get(`http://localhost:3000/api/cities/select`);
+        const res = await axios.get('http://localhost:3000/api/cities/select');
         setCities(res.data);
         setCityStatus('Success');
       } catch (error) {
         setCityStatus('Error');
       }
     };
-    fetchData();
+    fetchCities();
   }, []);
+
   useEffect(() => {
     const fetchEmpData = async () => {
       try {
@@ -44,35 +43,27 @@ const EmpUpd = () => {
       }
     };
     fetchEmpData();
-  }, []);  
-  
-// Navigation and TimeOut
-  const navigate = useNavigate();
-  let timeoutId;
-  const goHome = () => {
-    navigate('/');
-  };
-  useEffect(() => {
-    return () => clearTimeout(timeoutId);
-  }, []);
+  }, [id]);
 
-// Handling events on the form
   const okSubmit = () => {
-  if (!emp.uId) return false;
-  if (!emp.fName) return false;
-  if (!emp.title) return false;
-  if (!emp.dob) return false;
-  if (!emp.gender) return false;
-  if (!emp.addLine1) return false;
-  if (!emp.cityId) return false;
-  if (!emp.mobile) return false;
-  if (!emp.eMailId) return false;
-  if (!emp.passwd) return false;
-  return true;
+    return (
+      emp.uId &&
+      emp.fName &&
+      emp.title &&
+      emp.dob &&
+      emp.gender &&
+      emp.addLine1 &&
+      emp.cityId &&
+      emp.mobile &&
+      emp.eMailId &&
+      emp.passwd
+    );
   };
+
   const onValChange = (e) => {
     setEmp({ ...emp, [e.target.name]: e.target.value });
   };
+
   const updEmpData = async (event) => {
     event.preventDefault();
     try {
@@ -80,7 +71,6 @@ const EmpUpd = () => {
       const res = await axios.put(`http://localhost:3000/api/emps/${id}`, emp);
       setStatus('Updated');
       setMsg(res.data.msg);
-      timeoutId = setTimeout(goHome, 500);
     } catch (error) {
       setStatus('Error');
       setMsg(errText(error));
@@ -88,34 +78,19 @@ const EmpUpd = () => {
     }
   };
 
-// User Interface
-  if (cityStatus === 'Error') {
-    timeoutId = setTimeout(goHome, 5000);
-    return <h1 style={{ color: 'red' }}>Error Loading Cities</h1>;
-  }
-  if (status === 'Error-Fetch') {
-    timeoutId = setTimeout(goHome, 5000);
-    return <h1 style={{ color: 'red' }}>Error Fetching record for updation</h1>;
-  }
-  if (status === 'Error' && errNo == 500) {
-    timeoutId = setTimeout(goHome, 5000);
-    return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
-  }
-  if (status === 'Error' && errNo !== 2627 && errNo !== 2601) {
-    timeoutId = setTimeout(goHome, 5000);
-    return (
-      <h1 style={{ color: 'red' }}>
-        Error {errNo}: {msg}
-      </h1>
-    );
-  }
+  // Error/UI Handling
+  if (cityStatus === 'Error') return <GoHome secs={5000} msg="Error Loading Cities" />;
+  if (status === 'Error-Fetch') return <GoHome secs={5000} msg="Error Fetching record for updation" />;
+  if (status === 'Error' && errNo === 500) return <GoHome secs={5000} msg={`Error: ${msg}`} />;
+  if (status === 'Error' && errNo !== 2627 && errNo !== 2601)
+    return <GoHome secs={5000} msg={`Error ${errNo}: ${msg}`} />;
   if (status === 'busy') return <Spinner />;
-  if (status === 'Updated') return <h1 style={{ color: 'blue' }}>{msg}</h1>;
+  if (status === 'Updated') return <GoHome secs={500} msg={msg} />;
 
   return (
     <>
       <h4 style={{ color: 'red' }}>
-        {status === 'Error' && (errNo == 2627 || errNo == 2601) && msg}
+        {status === 'Error' && (errNo === 2627 || errNo === 2601) && msg}
       </h4>
       <div
         style={{
@@ -133,212 +108,124 @@ const EmpUpd = () => {
                 <td colSpan={3}>
                   <h2>Edit an Employee</h2>
                 </td>
-                <td></td>
-                <td></td>
               </tr>
               <tr>
-                <td>
-                  <strong>Unique ID</strong>
-                </td>
+                <td><strong>Unique ID</strong></td>
                 <td>:</td>
                 <td>
-                  <input
-                    name='uId'
-                    value={emp.uId || ''}
-                    onChange={(e) => {
-                      return onValChange(e);
-                    }}
-                  />
+                  <input name="uId" value={emp.uId || ''} onChange={onValChange} />
                 </td>
               </tr>
               <tr>
-                <td>
-                  <strong>First Name:</strong>
-                </td>
+                <td><strong>First Name:</strong></td>
                 <td>:</td>
                 <td>
-                  <input
-                    name='fName'
-                    minLength={3}
-                    required
-                    value={emp.fName || ''}
-                    onChange={(e) => {
-                      return onValChange(e);
-                    }}
-                  />
+                  <input name="fName" minLength={3} required value={emp.fName || ''} onChange={onValChange} />
                 </td>
               </tr>
               <tr>
-                <td>
-                  <strong>Middle Name</strong>
-                </td>
+                <td><strong>Middle Name</strong></td>
                 <td>:</td>
                 <td>
-                  <input
-                    name='mName'
-                    value={emp.mName || ''}
-                    onChange={(e) => {
-                      return onValChange(e);
-                    }}
-                  />
+                  <input name="mName" value={emp.mName || ''} onChange={onValChange} />
                 </td>
               </tr>
               <tr>
-                <td>
-                  <strong>Surname</strong>
-                </td>
+                <td><strong>Surname</strong></td>
                 <td>:</td>
                 <td>
-                  <input
-                    name='sName'
-                    value={emp.sName || ''}
-                    onChange={(e) => {
-                      return onValChange(e);
-                    }}
-                  />
+                  <input name="sName" value={emp.sName || ''} onChange={onValChange} />
                 </td>
               </tr>
               <tr>
-                <td>
-                  <strong>Title</strong>
-                </td>
+                <td><strong>Title</strong></td>
                 <td>:</td>
                 <td>
                   <RadioButton
-                    options={[
-                      { value: 'Mr', label: 'Mr' },
-                      { value: 'Ms', label: 'Ms' },
-                    ]}
+                    options={[{ value: 'Mr', label: 'Mr' }, { value: 'Ms', label: 'Ms' }]}
                     selectedOption={emp.title}
-                    onOptionChange={(selectedValue) =>
-                      setEmp({ ...emp, title: selectedValue })
-                    }
-                    radioName='title'
+                    onOptionChange={(val) => setEmp({ ...emp, title: val })}
+                    radioName="title"
                   />
                 </td>
               </tr>
               <tr>
-                <td>
-                  <strong>Date of Birth</strong>
-                </td>
+                <td><strong>Date of Birth</strong></td>
                 <td>:</td>
                 <td>
                   <input
-                    name='dob'
-                    type='date'
-                    min='1960-01-01'
-                    max='2004-12-31'
+                    name="dob"
+                    type="date"
+                    min="1960-01-01"
+                    max="2004-12-31"
                     value={emp.dob || ''}
-                    onChange={(e) => {
-                      return onValChange(e);
-                    }}
+                    onChange={onValChange}
                   />
                 </td>
               </tr>
               <tr>
-                <td>
-                  <strong>Gender</strong>
-                </td>
+                <td><strong>Gender</strong></td>
                 <td>:</td>
                 <td>
                   <RadioButton
-                    options={[
-                      { value: 'M', label: 'Male' },
-                      { value: 'F', label: 'Female' },
-                    ]}
+                    options={[{ value: 'M', label: 'Male' }, { value: 'F', label: 'Female' }]}
                     selectedOption={emp.gender}
-                    onOptionChange={(selectedValue) =>
-                      setEmp({ ...emp, gender: selectedValue })
-                    }
-                    radioName='gender'
+                    onOptionChange={(val) => setEmp({ ...emp, gender: val })}
+                    radioName="gender"
                   />
                 </td>
               </tr>
               <tr>
-                <td>
-                  <strong>Address</strong>
-                </td>
+                <td><strong>Address</strong></td>
                 <td>:</td>
                 <td>
-                  <input
-                    name='addLine1'
-                    value={emp.addLine1 || ''}
-                    onChange={(e) => {
-                      return onValChange(e);
-                    }}
-                  />
+                  <input name="addLine1" value={emp.addLine1 || ''} onChange={onValChange} />
                 </td>
               </tr>
               <tr>
-                <td>
-                  <strong>City</strong>
-                </td>
+                <td><strong>City</strong></td>
                 <td>:</td>
                 <td>
                   <SelectControl
                     optionsRows={cities}
                     selectedId={emp.cityId}
                     onSelect={(c) => setEmp({ ...emp, cityId: c })}
-                    prompt={'City'}
+                    prompt="City"
                   />
                 </td>
               </tr>
               <tr>
-                <td>
-                  <strong>Mobile</strong>
-                </td>
+                <td><strong>Mobile</strong></td>
                 <td>:</td>
                 <td>
                   <input
-                    name='mobile'
-                    type='number'
-                    min='1000000000'
-                    max='9999999999'
+                    name="mobile"
+                    type="number"
+                    min="1000000000"
+                    max="9999999999"
                     value={emp.mobile || ''}
-                    onChange={(e) => {
-                      return onValChange(e);
-                    }}
+                    onChange={onValChange}
                   />
                 </td>
               </tr>
               <tr>
-                <td>
-                  <strong>eMail ID</strong>
-                </td>
+                <td><strong>eMail ID</strong></td>
                 <td>:</td>
                 <td>
-                  <input
-                    name='eMailId'
-                    type='email'
-                    value={emp.eMailId || ''}
-                    onChange={(e) => {
-                      return onValChange(e);
-                    }}
-                  />
+                  <input name="eMailId" type="email" value={emp.eMailId || ''} onChange={onValChange} />
                 </td>
               </tr>
               <tr>
-                <td>
-                  <strong>Password</strong>
-                </td>
+                <td><strong>Password</strong></td>
                 <td>:</td>
                 <td>
-                  <input
-                    name='passwd'
-                    type='password'
-                    value={emp.passwd || ''}
-                    onChange={(e) => {
-                      return onValChange(e);
-                    }}
-                  />
+                  <input name="passwd" type="password" value={emp.passwd || ''} onChange={onValChange} />
                 </td>
               </tr>
               <tr>
-                <td colSpan={'3'} style={{ textAlign: 'right' }}>
-                  <input type='submit' disabled={!okSubmit()} />
+                <td colSpan={3} style={{ textAlign: 'right' }}>
+                  <input type="submit" disabled={!okSubmit()} />
                 </td>
-                <td></td>
-                <td></td>
               </tr>
             </tbody>
           </table>

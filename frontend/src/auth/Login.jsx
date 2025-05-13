@@ -1,76 +1,47 @@
-import React from 'react';
-import { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
 import Spinner from '../home/Spinner';
 import userContext from '../context/appUser/UserContext';
-import Home from '../home/Home'
+import GoHome from '../util/GoHome'; 
 
 const Login = () => {
-  // State Variables
   const { authUser } = useContext(userContext);
-  const [emp, setEmp] = useState({
-    eMail: '',
-    pass: '',
-  });
+  const [emp, setEmp] = useState({ eMail: '', pass: '' });
   const [status, setStatus] = useState('');
 
-  // Navigation and TimeOut
-  const navigate = useNavigate();
-  const goHome = () => {
-    navigate('/');
-  };
-  useEffect(() => {
-    let timeoutId;
+  const okSubmit = () => emp.eMail.length > 0 && emp.pass.length > 0;
 
-    if (status === 'busy') {
-      // Successful login triggers a short delay
-      timeoutId = setTimeout(() => navigate('/'), 500);
-    } else if (status === 'error') {
-      // Error case triggers a longer delay
-      timeoutId = setTimeout(() => navigate('/'), 1000);
-    }
-
-    return () => clearTimeout(timeoutId);
-  }, [status, navigate]);
-
-  // Handling Events on the Form
-  const okSubmit = () => {
-    if (emp.eMail.length == 0) return false;
-    if (emp.pass.length == 0) return false;
-    return true;
-  };
   const onValChange = (e) => {
     setEmp({ ...emp, [e.target.name]: e.target.value });
   };
+
   const logInUser = async (event) => {
-    setStatus('busy');
     event.preventDefault();
+    setStatus('busy');
     try {
       await authUser(emp.eMail, emp.pass);
-      setStatus('Success');
-      // timeoutId = setTimeout(goHome, 500);
+      setStatus('Success'); // New status
     } catch (error) {
-      setStatus('error');
-      // timeoutId = setTimeout(goHome, 1000);
+      setStatus('Error');
       console.log(error);
     }
   };
 
-  // User Interface
-  if (status === 'error') {
-    return <h1 style={{ color: 'blue' }}>Error Occured !</h1>;
+  if (status === 'Error') {
+    return <GoHome secs={1000} msg="Error Occurred!" />;
   }
+
+  if (status === 'Success') {
+    return <GoHome secs={100} msg="Logging in..." />;
+  }
+
   if (status === 'busy') return <Spinner />;
-  if (status === 'Success') return <Home />;
 
   return (
     <div
       style={{
         marginTop: '100px',
-        height: '100%',
         display: 'flex',
         justifyContent: 'center',
-        alignContent: 'center',
       }}
     >
       <form onSubmit={logInUser}>
@@ -80,19 +51,16 @@ const Login = () => {
               <td colSpan={2}>
                 <h2>LOGIN</h2>
               </td>
-              <td></td>
             </tr>
             <tr>
               <td>eMail ID</td>
               <td>
                 <input
-                  name='eMail'
-                  type='email'
+                  name="eMail"
+                  type="email"
                   required
-                  value={emp.eMail || ''}
-                  onChange={(e) => {
-                    return onValChange(e);
-                  }}
+                  value={emp.eMail}
+                  onChange={onValChange}
                 />
               </td>
             </tr>
@@ -100,28 +68,24 @@ const Login = () => {
               <td>Password</td>
               <td>
                 <input
-                  name='pass'
-                  type='password'
+                  name="pass"
+                  type="password"
                   minLength={3}
                   required
-                  value={emp.pass || ''}
-                  onChange={(e) => {
-                    return onValChange(e);
-                  }}
+                  value={emp.pass}
+                  onChange={onValChange}
                 />
               </td>
             </tr>
             <tr>
               <td colSpan={2}>
-                <button type='submit' disabled={!okSubmit()}>
+                <button type="submit" disabled={!okSubmit()}>
                   Login
                 </button>
               </td>
-              <td></td>
             </tr>
           </tbody>
         </table>
-        <br />
       </form>
     </div>
   );

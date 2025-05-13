@@ -1,18 +1,18 @@
+// Desig1.jsx
+
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { errText, errNumber } from '../util/errMsgText';
 import Spinner from '../home/Spinner';
-import { useNavigate } from 'react-router-dom';
 
 const Desig1 = () => {
-  const [disciplines, setDisciplines] = useState([]); // for the discipline window
-  const [theDiscp, setTheDiscp] = useState(0); // for designation window - both edit and browse window - foreign key
-  const [theDiscpName, setTheDiscpName] = useState(''); // for display in the designation edit window
-  const [designations, setDesignations] = useState([]); // all designations belonging to the discipline
-  const [grades, setGrades] = useState([]); // for the select control in edit window
+  const [disciplines, setDisciplines] = useState([]);
+  const [theDiscp, setTheDiscp] = useState(0);
+  const [theDiscpName, setTheDiscpName] = useState('');
+  const [designations, setDesignations] = useState([]);
+  const [grades, setGrades] = useState([]);
 
-  // the designation record to be edited the foreign key is available as theDiscp
   const [theDesig, setTheDesig] = useState({
     id: '',
     description: '',
@@ -30,27 +30,35 @@ const Desig1 = () => {
 
   const navigate = useNavigate();
 
-  let timeoutId;
-  const goHome = () => {
-    navigate('/');
-  };
-  // clear timer
   useEffect(() => {
-    return () => clearTimeout(timeoutId);
-  }, []);
-  // get all disciplines when the component loads
+  const shouldRedirect =
+    discpStatus === 'Error' ||
+    desigStatus === 'Error' ||
+    gradeStatus === 'Error' ||
+    (status === 'Error' && errNo === 500);
+
+  if (!shouldRedirect) return;
+
+  const id = setTimeout(() => {
+    navigate('/');
+  }, 5000);
+
+  // Cleanup function to clear timeout
+  return () => clearTimeout(id);
+}, [discpStatus, desigStatus, gradeStatus, status, errNo]);
+
   useEffect(() => {
     getAllDisciplines();
   }, []);
-  // get all designations whenever  discipline or desigFlag changes
+
   useEffect(() => {
     getAllDesignations();
   }, [theDiscp, desigFlag]);
-  // get all grades
+
   useEffect(() => {
     getAllGrades();
   }, []);
-  // fetch discipline rows
+
   const getAllDisciplines = async () => {
     setDiscpStatus('busy');
     try {
@@ -60,10 +68,9 @@ const Desig1 = () => {
     } catch (error) {
       setDiscpStatus('Error');
       setMsg(errText(error));
-      timeoutId = setTimeout(goHome, 10000);
     }
   };
-  // fetch all designations belonging to the discipline selected
+
   const getAllDesignations = async () => {
     setDesigStatus('busy');
     try {
@@ -75,10 +82,9 @@ const Desig1 = () => {
     } catch (error) {
       setDesigStatus('Error');
       setMsg(errText(error));
-      timeoutId = setTimeout(goHome, 10000);
     }
   };
-  // fetch all grades
+
   const getAllGrades = async () => {
     setGradeStatus('busy');
     try {
@@ -88,23 +94,18 @@ const Desig1 = () => {
     } catch (error) {
       setGradeStatus('Error');
       setMsg(errText(error));
-      timeoutId = setTimeout(goHome, 10000);
     }
   };
-  // update editDesig form controls
+
   const onValChange = (e) => {
     setTheDesig({ ...theDesig, [e.target.name]: e.target.value });
   };
 
-  // insert or update designation rows - [id] ,[discpId] ,[description] ,[gradeId]
   const handleSubmit = async () => {
     setStatus('busy');
     try {
       if (theDesig.id === '') {
-        console.log('theDesigId: ', theDesig.id == 0);
         await axios.post('http://localhost:3000/api/designations', {
-          // id to be computed by postDesignation stored procedure
-          // id: theDesig.id,
           discpId: theDiscp,
           description: theDesig.description,
           gradeId: theDesig.gradeId,
@@ -129,7 +130,7 @@ const Desig1 = () => {
       setErrNo(errNumber(error));
     }
   };
-  // delete a designation
+
   const deleteDesigData = async (t) => {
     setStatus('busy');
     try {
@@ -145,46 +146,32 @@ const Desig1 = () => {
   };
 
   if (discpStatus === 'Error') {
-    timeoutId = setTimeout(goHome, 5000);
-    return (
-      <h1 style={{ color: 'red' }}>Error: Disciplines could not be loaded</h1>
-    );
+    return <h1 style={{ color: 'red' }}>Error: Disciplines could not be loaded</h1>;
   }
   if (desigStatus === 'Error') {
-    timeoutId = setTimeout(goHome, 5000);
-    return (
-      <h1 style={{ color: 'red' }}>Error: Designations could not be loaded</h1>
-    );
+    return <h1 style={{ color: 'red' }}>Error: Designations could not be loaded</h1>;
   }
   if (gradeStatus === 'Error') {
-    timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error: Grades could not be loaded</h1>;
   }
-
   if (status === 'Error' && errNo == 500) {
-    timeoutId = setTimeout(goHome, 5000);
     return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
   }
-
-  if (status === 'busy')
+  if (status === 'busy') {
     return (
       <>
         <h1>Status: {status}</h1>
         <Spinner />
       </>
     );
+  }
 
   return (
     <>
       <h4 style={{ color: 'red' }}>
         {status === 'Error' && errNo !== 500 && msg}
       </h4>
-      <table
-        style={{
-          width: '100%',
-          height: '80vh',
-        }}
-      >
+      <table style={{ width: '100%', height: '80vh' }}>
         <thead>
           <tr>
             <th style={{ width: '50%' }}>DISCIPLINES</th>
@@ -193,7 +180,6 @@ const Desig1 = () => {
         </thead>
         <tbody>
           <tr>
-            {/*  Discipline window on the left */}
             <td style={{ verticalAlign: 'top' }}>
               <table style={{ width: '100%', border: '1px solid red' }}>
                 <thead>
@@ -202,85 +188,65 @@ const Desig1 = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {disciplines.map((t) => {
-                    return (
-                      <tr key={t.id}>
-                        <td>
-                          <Link
-                            onClick={() => {
-                              setTheDiscp(t.id);
-                              setTheDiscpName(t.description);
-                              setTheDesig({
-                                id: '',
-                                description: '',
-                                gradeId: '',
-                              });
-                            }}
-                          >
-                            {' '}
-                            {t.description}
-                          </Link>
-                        </td>
-                      </tr>
-                    );
-                  })}
+                  {disciplines.map((t) => (
+                    <tr key={t.id}>
+                      <td>
+                        <Link
+                          onClick={() => {
+                            setTheDiscp(t.id);
+                            setTheDiscpName(t.description);
+                            setTheDesig({ id: '', description: '', gradeId: '' });
+                          }}
+                        >
+                          {t.description}
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </td>
-            {/*  Designation window on the right */}
             <td style={{ verticalAlign: 'top' }}>
               <table style={{ width: '100%', border: '1px solid blue' }}>
                 <thead>
                   <tr>
-                    <th style={{ textAlign: 'left' }}>Designations</th>
-                    <th style={{ textAlign: 'left' }}>Grade</th>
-                    <th style={{ textAlign: 'left' }}>Hourly Rate</th>
-                    <th style={{ textAlign: 'left' }}>edit</th>
-                    <th style={{ textAlign: 'left' }}>del</th>
+                    <th>Description</th>
+                    <th>Grade</th>
+                    <th>Hourly Rate</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {designations.map((t) => {
-                    return (
-                      <tr key={t.id}>
-                        <td>{t.theDesig}</td>
-                        <td>{t.theGrade}</td>
-                        <td>{t.theHourlyRate}</td>
-                        <td>
-                          <Link
-                            onClick={() => {
-                              setTheDesig({
-                                id: `${t.id}`,
-                                description: `${t.theDesig}`,
-                                gradeId: `${t.theGradeId}`,
-                              });
-                            }}
-                          >
-                            🖍️
-                          </Link>
-                        </td>
-                        <td>
-                          <Link
-                            onClick={() => {
-                              deleteDesigData(t.id);
-                            }}
-                          >
-                            ✖️
-                          </Link>
-                        </td>
-                      </tr>
-                    );
-                  })}
+                  {designations.map((t) => (
+                    <tr key={t.id}>
+                      <td>{t.theDesig}</td>
+                      <td>{t.theGrade}</td>
+                      <td>{t.theHourlyRate}</td>
+                      <td>
+                        <Link
+                          onClick={() =>
+                            setTheDesig({
+                              id: `${t.id}`,
+                              description: `${t.theDesig}`,
+                              gradeId: `${t.theGradeId}`,
+                            })
+                          }
+                        >
+                          🖍️
+                        </Link>
+                      </td>
+                      <td>
+                        <Link onClick={() => deleteDesigData(t.id)}>✖️</Link>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </td>
           </tr>
           <tr>
-            {/*  Blank */}
-            <td style={{ verticalAlign: 'top', border: '0px solid gray' }}>
-              {/* Blank */}
-            </td>
-            {/* // edit window on bottom right */}
+            <td></td>
             <td style={{ verticalAlign: 'top' }}>
               <form>
                 {theDiscp > 0 && (
@@ -289,8 +255,8 @@ const Desig1 = () => {
                     <table style={{ width: '100%', border: '1px solid blue' }}>
                       <thead>
                         <tr>
-                          <th style={{ textAlign: 'left' }}>Description</th>
-                          <th style={{ textAlign: 'left' }}>Grade</th>
+                          <th>Description</th>
+                          <th>Grade</th>
                           <th></th>
                         </tr>
                       </thead>
@@ -298,38 +264,30 @@ const Desig1 = () => {
                         <tr>
                           <td>
                             <input
-                              name='description'
+                              name="description"
                               minLength={3}
                               required
                               value={theDesig.description || ''}
-                              onChange={(e) => {
-                                return onValChange(e);
-                              }}
-                              type='text'
+                              onChange={onValChange}
+                              type="text"
                               size={45}
                             />
                           </td>
                           <td>
                             <select
-                              name='gradeId'
-                              id='gradeId'
+                              name="gradeId"
                               value={theDesig.gradeId || ''}
-                              onChange={(e) => {
-                                return onValChange(e);
-                              }}
+                              onChange={onValChange}
                             >
-                              {grades.map((g) => {
-                                return (
-                                  <option key={g.id} value={g.id}>
-                                    {g.description + ' [' + g.hourlyRate + ']'}
-                                  </option>
-                                );
-                              })}
+                              {grades.map((g) => (
+                                <option key={g.id} value={g.id}>
+                                  {g.description + ' [' + g.hourlyRate + ']'}
+                                </option>
+                              ))}
                             </select>
                           </td>
                           <td>
-                            {' '}
-                            <Link onClick={() => handleSubmit()}>💾</Link>
+                            <Link onClick={handleSubmit}>💾</Link>
                           </td>
                         </tr>
                       </tbody>
@@ -344,6 +302,5 @@ const Desig1 = () => {
     </>
   );
 };
-// [id] ,[discpId] ,[description] ,[gradeId]
 
 export default Desig1;
