@@ -70,7 +70,7 @@ const ChangePass = () => {
             <tbody>
               <tr>
                 <td colSpan={3}>
-                  <h2>Login</h2>
+                  <h2>Change Password</h2>
                 </td>
               </tr>
               <tr>

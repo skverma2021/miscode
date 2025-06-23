@@ -4,10 +4,9 @@ import { Link } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
 import { errText } from '../util/errMsgText';
 import Spinner from '../home/Spinner';
-import { useNavigate } from 'react-router-dom';
+import GoHome from '../util/GoHome';
 
 const Clients = () => {
-
   // Column definitions for the Data Grid
   const columns = [
     {
@@ -131,6 +130,7 @@ const Clients = () => {
   useEffect(() => {
     getAllClients();
   }, []);
+
   const getAllClients = async () => {
     setStatus('busy');
     try {
@@ -140,40 +140,28 @@ const Clients = () => {
     } catch (error) {
       setStatus('Error');
       setMsg(errText(error));
-      timeoutId = setTimeout(goHome, 10000);
     }
   };
 
-  // Navigation and TimeOut
-  const navigate = useNavigate();
-  let timeoutId;
-  const goHome = () => {
-    navigate('/');
-  };
-  useEffect(() => {
-    return () => clearTimeout(timeoutId);
-  }, []);
-
-  // Handling Events on the Form
+  // Handling Delete
   const deleteClientData = async (t) => {
     setStatus('busy');
     try {
       await axios.delete(`http://localhost:3000/api/clients/${t}`);
       setStatus('Deleted');
       setMsg('Successfully Deleted.');
-      timeoutId = setTimeout(goHome, 2000);
     } catch (error) {
       setStatus('Error');
       setMsg(errText(error));
-      timeoutId = setTimeout(goHome, 10000);
     }
   };
 
-  // User Interface
-  if (status === 'Error') return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
-  if (status === 'Deleted') return <h1 style={{ color: 'blue' }}> {msg}</h1>;
+  // Conditional Rendering
+  if (status === 'Error') return <GoHome secs={10000} msg={`Error: ${msg}`} />;
+  if (status === 'Deleted') return <GoHome secs={2000} msg={msg} />;
   if (status === 'busy') return <Spinner />;
 
+  // UI
   return (
     <div sx={{ height: 500, width: '100%' }}>
       <DataGrid

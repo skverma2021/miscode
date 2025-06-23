@@ -1,37 +1,36 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { errText, errNumber } from '../util/errMsgText';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Spinner from '../home/Spinner';
 import SelectControl from '../util/SelectControl';
+import GoHome from '../util/GoHome';
 
 function JobUpd() {
-
-  // State Variables
   const [job, setJob] = useState({});
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
   const [errNo, setErrNo] = useState(0);
   const [clients, setClients] = useState([]);
 
-  // fetching data for state variables
-  const { jobId:id } = useParams();
+  const { jobId: id } = useParams();
+
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchClients = async () => {
       setStatus('busy');
       try {
         const res = await axios.get(`http://localhost:3000/api/clients/select`);
         setClients(res.data);
         setStatus('Success');
-      } catch (error) {
+      } catch {
         setStatus('Error-Client');
       }
     };
-    fetchData();
+    fetchClients();
   }, []);
+
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchJob = async () => {
       setStatus('busy');
       try {
         const res = await axios.get(`http://localhost:3000/api/jobs/${id}`);
@@ -43,33 +42,19 @@ function JobUpd() {
         setErrNo(500);
       }
     };
-    fetchData();
-  }, []);
+    fetchJob();
+  }, [id]);
 
-  // Navigation and TimeOut
-  const navigate = useNavigate();
-  let timeoutId;
-  const goHome = () => {
-    navigate('/');
-  };
-  useEffect(() => {
-    return () => clearTimeout(timeoutId);
-  }, []);
-
-  // Handling events on the form
   const okSubmit = () => {
-    if (!job.description) return false;
-    if (!job.clientId) return false;
-    if (!job.ordDateStart) return false;
-    if (!job.ordDateEnd) return false;
-    if (!job.ordValue) return false;
-    if (Date.parse(job.ordDateEnd) - Date.parse(job.ordDateStart) < 0)
+    if (!job.description || !job.clientId || !job.ordDateStart || !job.ordDateEnd || !job.ordValue)
       return false;
-    return true;
+    return Date.parse(job.ordDateEnd) >= Date.parse(job.ordDateStart);
   };
-  const onValChange = (rec) => {
-    setJob({ ...job, [rec.propName]: rec.propValue });
+
+  const onValChange = ({ propName, propValue }) => {
+    setJob({ ...job, [propName]: propValue });
   };
+
   const updJobData = async (event) => {
     event.preventDefault();
     setStatus('busy');
@@ -77,7 +62,6 @@ function JobUpd() {
       await axios.put(`http://localhost:3000/api/jobs/${id}`, job);
       setStatus('Updated');
       setMsg('Updated Successfully');
-      timeoutId = setTimeout(goHome, 1000);
     } catch (error) {
       setStatus('Error');
       setMsg(errText(error));
@@ -85,17 +69,12 @@ function JobUpd() {
     }
   };
 
-  // User Interface
-  if (status === 'Error-Client') {
-    timeoutId = setTimeout(goHome, 5000);
-    return <h1 style={{ color: 'red' }}>Error Loading Clients</h1>;
-  }
-  if (status === 'Error' && errNo == 500) {
-    timeoutId = setTimeout(goHome, 10000);
-    return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
-  }
+  // Conditional UI rendering
+  if (status === 'Error-Client') return <GoHome seconds={5} msg="Error Loading Clients" />;
+  if (status === 'Error' && errNo === 500) return <GoHome seconds={10} msg={`Error: ${msg}`} />;
+  if (status === 'Updated') return <GoHome seconds={1} msg={msg} />;
   if (status === 'busy') return <Spinner />;
-  if (status === 'Updated') return <h1 style={{ color: 'blue' }}>{msg}</h1>;
+
   return (
     <>
       <h4 style={{ color: 'red' }}>
@@ -117,60 +96,20 @@ function JobUpd() {
           <table style={{ lineHeight: '3' }}>
             <tbody>
               <tr>
-                <td>
-                  <label>JobDescription:</label>
-                </td>
+                <td><label>JobDescription:</label></td>
                 <td>
                   <input
                     name='description'
                     size='50'
                     value={job.description || ''}
-                    onChange={(e) => {
-                      return onValChange({
-                        propName: 'description',
-                        propValue: e.target.value,
-                      });
-                    }}
+                    onChange={(e) =>
+                      onValChange({ propName: 'description', propValue: e.target.value })
+                    }
                   />
-{/* Closure: The arrow function (e) => { ... } creates a closure that captures the onValChange function 
-and the current state of job.description.
-
-Access to onValChange: When the event occurs, the arrow function executes and 
-uses the captured onValChange function to update the state.
-
-Access to job.description: The function also has access to the current state of job.description, 
-ensuring it reads the latest value when the event handler executes.
-
-This closure ensures that the event handler retains access to onValChange and can 
-update the state accurately, regardless of when the event occurs. 
-It allows the event handler to "remember" the environment in which it was created, 
-making it a powerful tool in React for managing state and handling events.
-
-In React, JSX elements like <input /> are essentially syntactic sugar for React.createElement(). 
-When you use JSX, it gets transpiled into React.createElement calls by tools like Babel.
-
-In this context:
-
-React.createElement generates a React element that describes what should be rendered.
-
-The onChange attribute is assigned a function, creating a closure over its enclosing scope.
-
-The closure ensures that the onChange function retains access to the job object 
-and the onValChange function when the event occurs.
-
-By returning React.createElement, React effectively maintains the connection 
-between the event handler and its surrounding scope, 
-enabling the input element to use the state and functions defined outside the React.createElement call.
-
-This approach allows React to manage the rendering of elements and the creation of closures, 
-facilitating consistent and predictable handling of events, state, and props within your components*/}
-
                 </td>
               </tr>
               <tr>
-                <td>
-                  <label>Client:</label>
-                </td>
+                <td><label>Client:</label></td>
                 <td>
                   <SelectControl
                     optionsRows={clients}
@@ -183,55 +122,40 @@ facilitating consistent and predictable handling of events, state, and props wit
                 </td>
               </tr>
               <tr>
-                <td>
-                  <label>StartDate:</label>
-                </td>
+                <td><label>StartDate:</label></td>
                 <td>
                   <input
                     name='ordDateStart'
                     type='date'
                     value={job.ordDateStart || ''}
-                    onChange={(e) => {
-                      return onValChange({
-                        propName: 'ordDateStart',
-                        propValue: e.target.value,
-                      });
-                    }}
+                    onChange={(e) =>
+                      onValChange({ propName: 'ordDateStart', propValue: e.target.value })
+                    }
                   />
                 </td>
               </tr>
               <tr>
-                <td>
-                  <label>EndDate:</label>
-                </td>
+                <td><label>EndDate:</label></td>
                 <td>
                   <input
                     name='ordDateEnd'
                     type='date'
                     value={job.ordDateEnd || ''}
-                    onChange={(e) => {
-                      return onValChange({
-                        propName: 'ordDateEnd',
-                        propValue: e.target.value,
-                      });
-                    }}
+                    onChange={(e) =>
+                      onValChange({ propName: 'ordDateEnd', propValue: e.target.value })
+                    }
                   />
                 </td>
               </tr>
               <tr>
-                <td>
-                  <label>OrderValue:</label>
-                </td>
+                <td><label>OrderValue:</label></td>
                 <td>
                   <input
                     name='ordValue'
                     value={job.ordValue || ''}
-                    onChange={(e) => {
-                      return onValChange({
-                        propName: 'ordValue',
-                        propValue: e.target.value,
-                      });
-                    }}
+                    onChange={(e) =>
+                      onValChange({ propName: 'ordValue', propValue: e.target.value })
+                    }
                   />
                 </td>
               </tr>
@@ -252,3 +176,4 @@ facilitating consistent and predictable handling of events, state, and props wit
 }
 
 export default JobUpd;
+

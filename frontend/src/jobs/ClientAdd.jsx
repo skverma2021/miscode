@@ -1,14 +1,11 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { errText, errNumber } from '../util/errMsgText';
-import { useNavigate } from 'react-router-dom';
 import Spinner from '../home/Spinner';
 import SelectControl from '../util/SelectControl';
+import GoHome from '../util/GoHome';
 
 function ClientAdd() {
-
-  // State Variables
   const [client, setClient] = useState({
     shortName: '',
     longName: '',
@@ -20,12 +17,13 @@ function ClientAdd() {
     street: '',
     cityId: '',
   });
+
   const [msg, setMsg] = useState('');
   const [status, setStatus] = useState('');
   const [errNo, setErrNo] = useState(0);
   const [cities, setCities] = useState([]);
 
-  // fetching data for state variables
+  // Load city options
   useEffect(() => {
     const fetchData = async () => {
       setStatus('busy');
@@ -40,32 +38,25 @@ function ClientAdd() {
     fetchData();
   }, []);
 
-  // Navigation and TimeOut
-  const navigate = useNavigate();
-  let timeoutId;
-  const goHome = () => {
-    navigate('/');
-  };
-  useEffect(() => {
-    return () => clearTimeout(timeoutId);
-  }, []);
-
-  // Handling events on the form
+  // Form validation
   const okSubmit = () => {
-    if (!client.shortName) return false;
-    if (!client.longName) return false;
-    if (!client.website) return false;
-    if (!client.contactName) return false;
-    if (!client.contactEMail) return false;
-    if (!client.contactMobile) return false;
-    if (!client.addLine1) return false;
-    if (!client.cityId) return false;
-    if (!client.street) return false;
-    return true;
+    return (
+      client.shortName &&
+      client.longName &&
+      client.website &&
+      client.contactName &&
+      client.contactEMail &&
+      client.contactMobile &&
+      client.addLine1 &&
+      client.cityId &&
+      client.street
+    );
   };
+
   const onValChange = (e) => {
     setClient({ ...client, [e.target.name]: e.target.value });
   };
+
   const postClientData = async (event) => {
     event.preventDefault();
     setStatus('busy');
@@ -73,7 +64,6 @@ function ClientAdd() {
       await axios.post(`http://localhost:3000/api/clients`, client);
       setStatus('Added');
       setMsg('Added Successfully');
-      timeoutId = setTimeout(goHome, 1000);
     } catch (error) {
       setStatus('Error');
       setMsg(errText(error));
@@ -81,17 +71,17 @@ function ClientAdd() {
     }
   };
 
-  // User Interface
+  // Conditional renders
   if (status === 'Error-City') {
-    timeoutId = setTimeout(goHome, 5000);
-    return <h1 style={{ color: 'red' }}>Error Loading Cities</h1>;
+    return <GoHome msg='Error Loading Cities' secs={5000} />;
   }
-  if (status === 'Error' && errNo == 500) {
-    timeoutId = setTimeout(goHome, 5000);
-    return <h1 style={{ color: 'red' }}>Error: {msg}</h1>;
+  if (status === 'Error' && errNo === 500) {
+    return <GoHome msg={`Error: ${msg}`} secs={5000} />;
+  }
+  if (status === 'Added') {
+    return <GoHome msg={msg} secs={1000} />;
   }
   if (status === 'busy') return <Spinner />;
-  if (status === 'Added') return <h1 style={{ color: 'blue' }}>{msg}</h1>;
 
   return (
     <>
@@ -114,117 +104,87 @@ function ClientAdd() {
           <table style={{ lineHeight: '3' }}>
             <tbody>
               <tr>
-                <td>
-                  <label>ShortName:</label>
-                </td>
+                <td><label>ShortName:</label></td>
                 <td>
                   <input
                     name='shortName'
                     value={client.shortName || ''}
                     required
-                    onChange={(e) => {
-                      return onValChange(e);
-                    }}
+                    onChange={onValChange}
                   />
                 </td>
               </tr>
               <tr>
-                <td>
-                  <label>LongName:</label>
-                </td>
+                <td><label>LongName:</label></td>
                 <td>
                   <input
                     name='longName'
                     value={client.longName || ''}
                     required
-                    onChange={(e) => {
-                      return onValChange(e);
-                    }}
+                    onChange={onValChange}
                   />
                 </td>
               </tr>
               <tr>
-                <td>
-                  <label>WebSite:</label>
-                </td>
+                <td><label>WebSite:</label></td>
                 <td>
                   <input
                     name='website'
                     type='url'
                     required
                     value={client.website || ''}
-                    onChange={(e) => {
-                      return onValChange(e);
-                    }}
+                    onChange={onValChange}
                   />
                 </td>
               </tr>
               <tr>
-                <td>
-                  <label>ContactName:</label>
-                </td>
+                <td><label>ContactName:</label></td>
                 <td>
                   <input
                     name='contactName'
                     value={client.contactName || ''}
                     required
-                    onChange={(e) => {
-                      return onValChange(e);
-                    }}
+                    onChange={onValChange}
                   />
                 </td>
               </tr>
               <tr>
-                <td>
-                  <label>ContactEMail:</label>
-                </td>
+                <td><label>ContactEMail:</label></td>
                 <td>
                   <input
                     name='contactEMail'
                     value={client.contactEMail || ''}
                     type='email'
                     required
-                    onChange={(e) => {
-                      return onValChange(e);
-                    }}
+                    onChange={onValChange}
                   />
                 </td>
               </tr>
               <tr>
-                <td>
-                  <label>ContactMobile:</label>
-                </td>
+                <td><label>ContactMobile:</label></td>
                 <td>
                   <input
                     name='contactMobile'
                     value={client.contactMobile || ''}
                     type='number'
                     required
-                    onChange={(e) => {
-                      return onValChange(e);
-                    }}
+                    onChange={onValChange}
                   />
                 </td>
               </tr>
               <tr>
-                <td>
-                  <label>AddLine1:</label>
-                </td>
+                <td><label>AddLine1:</label></td>
                 <td>
                   <input
                     name='addLine1'
                     required
                     value={client.addLine1 || ''}
-                    onChange={(e) => {
-                      return onValChange(e);
-                    }}
+                    onChange={onValChange}
                   />
                 </td>
               </tr>
               <tr>
-                <td>
-                  <label>City:</label>
-                </td>
+                <td><label>City:</label></td>
                 <td>
                   <SelectControl
                     optionsRows={cities}
@@ -235,17 +195,13 @@ function ClientAdd() {
                 </td>
               </tr>
               <tr>
-                <td>
-                  <label>Street:</label>
-                </td>
+                <td><label>Street:</label></td>
                 <td>
                   <input
                     name='street'
                     value={client.street || ''}
                     required
-                    onChange={(e) => {
-                      return onValChange(e);
-                    }}
+                    onChange={onValChange}
                   />
                 </td>
               </tr>
